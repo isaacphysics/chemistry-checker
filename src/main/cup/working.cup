@@ -1,0 +1,30 @@
+package minimal_example;
+
+import java_cup.runtime.*;
+import java.io.InputStreamReader;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		new parser(new Yylex(new InputStreamReader(System.in))).parse();
+	}
+:}
+
+terminal SEMI, PLUS, MINUS, TIMES, UMINUS, LPAREN, RPAREN;
+terminal Double NUMBER;
+
+non terminal expr_list, expr_part;
+non terminal Double expr;
+
+precedence left PLUS, MINUS;
+precedence left TIMES;
+precedence left UMINUS;
+
+expr_list   ::= expr_list expr_part | expr_part;
+expr_part   ::= expr:e                              {: System.out.println(" = "+e+";"); :} SEMI;
+expr        ::= NUMBER:n                            {: RESULT=n; :}
+                | expr:l PLUS expr:r                {: RESULT=new Double(l.doubleValue() + r.doubleValue()); :}
+                | expr:l MINUS expr:r               {: RESULT=new Double(l.doubleValue() - r.doubleValue()); :}
+                | MINUS expr:e                      {: RESULT=new Double(-e.doubleValue()); :} %prec UMINUS
+	            | expr:l TIMES expr:r               {: RESULT=new Double(l.doubleValue() * r.doubleValue()); :}
+	            | LPAREN expr:e RPAREN              {: RESULT=e; :}
+                ;

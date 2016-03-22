@@ -1,0 +1,42 @@
+package minimal_example;
+
+import java_cup.runtime.*;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
+
+parser code {:
+	public static void main(String args[]) throws Exception {
+		//new parser(new Yylex(new InputStreamReader(System.in))).parse();
+		new parser(new Yylex(new InputStreamReader(new FileInputStream("src/test.txt")))).parse();
+	}
+:}
+
+terminal END, PLUS, TO, LPAREN, RPAREN, ELEMENT, CHARGE, STATE;
+terminal Integer NUMBER;
+
+non terminal expr_list, expr_part;
+non terminal String expr;
+non terminal String group, molecule;
+
+precedence left PLUS;
+precedence left TO;
+
+expr_list   ::= expr_list expr_part | expr_part;
+expr_part   ::= expr:e                                  {: System.out.println(" = "+e+";"); :} END;
+
+expr        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new String(n.toString() + m.toString() + s.toString()); :}
+                | NUMBER:n molecule:m                   {: RESULT=new String(n.toString() + m.toString()); :}
+                | molecule:m STATE:s                    {: RESULT=new String(m.toString() + s.toString()); :}
+                | molecule:m                            {: RESULT=new String(m.toString()); :}
+                | expr:l PLUS expr:r                    {: RESULT=new String(l + " + " + r); :}
+                | expr:l TO expr:r                      {: RESULT=new String(l + " -> " + r); :}
+                ;
+group       ::= ELEMENT:e                               {: RESULT=new String(e.toString()); :}
+                | ELEMENT:e NUMBER:n                    {: RESULT=new String(e.toString() + "_{" + n.toString() + "}"); :}
+                | group:g CHARGE:c                      {: RESULT=new String(g.toString() + c.toString()); :}
+                | LPAREN molecule:m RPAREN NUMBER:n     {: RESULT=new String("(" + m.toString() + ")" + "_{" + n.toString() + "}"); :}
+                ;
+molecule    ::= group:g                                 {: RESULT=new String(g.toString()); :}
+                | group:g molecule:m                    {: RESULT=new String(g.toString() + "." + m.toString()); :}
+                ;
+

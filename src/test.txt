@@ -1,0 +1,22 @@
+
+NH3;
+
+HNO3;
+
+Ca(NO3)2;
+
+C2O4H2 + H2O2 -> 2CO2 + 2H2O;
+
+Co^{2+} -> Co^{3+} + e^{-};
+
+3CH3CH2CH2OH(l) + CrO7^{2+}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);
+
+2BaFeO4(s) + 16HCl(aq) -> 2BaCl2(aq) + 2FeCl3(aq) + 8H2O(l) + 3Cl2(g);
+
+C_{2}O_{4}H^{+};
+
+This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letters!;
+
+2H2SO4 + Jjj2H2 -> H2) + Hibberish!;
+
+Mg(CH3COO)2;
