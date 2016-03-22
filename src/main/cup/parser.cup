@@ -2,18 +2,27 @@ package chemistry_checker;
 
 import java_cup.runtime.*;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * This is a test!
- */
+import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 
 parser code {:
 	public static void main(String args[]) throws Exception {
-		//new parser(new Yylex(new InputStreamReader(System.in))).parse();
-		new parser(new Yylex(new InputStreamReader(new FileInputStream("src/test.txt")))).parse();
+		if (args.length > 0) {
+            String input = "";
+            for (String s: args) {
+                input += s + "; ";
+            }
+            new parser(new Yylex(new StringReader(input))).parse();
+		} else {
+		    new parser(new Yylex(new InputStreamReader(new FileInputStream("src/test.txt")))).parse();
+        }
 	}
 :}
 action code {:
@@ -28,6 +37,14 @@ action code {:
 	    result = result.replace("[", "").replace("]", "").replace(", ", " + ");
 	    return result;
     }
+
+    public String toJSON(String input, String result) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node1 = mapper.createObjectNode();
+        node1.put("result", result);
+        node1.put("input", input);
+        return mapper.writeValueAsString(node1);
+    }
 :}
 
 terminal END, PLUS, TO, LPAREN, RPAREN, ELEMENT, CHARGE, STATE;
@@ -40,9 +57,10 @@ non terminal String group, molecule;
 precedence left PLUS;
 precedence left TO;
 
-expr_list   ::= expr_list expr_part | expr_part;
-expr_part   ::= expr:e                                  {: Collections.sort(e); System.out.println(exprToString(e)); :} END
-                | expr:l TO expr:r                      {: Collections.sort(l); Collections.sort(r); System.out.println(eqnToString(l, r)); :} END
+expr_list   ::= expr_list:l expr_part:e
+                | expr_part: e;
+expr_part   ::= expr:e                                  {: String input = exprToString(e); Collections.sort(e); System.out.println(toJSON(input, exprToString(e))); :} END
+                | expr:l TO expr:r                      {: String input = eqnToString(l, r); Collections.sort(l); Collections.sort(r); System.out.println(toJSON(input, eqnToString(l, r))); :} END
                 ;
 expr        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new ArrayList<String>(); RESULT.add(n.toString() + ".\\mol{" + m.toString() + "}\\state{" + s.toString() + "}"); :}
                 | NUMBER:n molecule:m                   {: RESULT=new ArrayList<String>(); RESULT.add(n.toString() + ".\\mol{" + m.toString() + "}"); :}
