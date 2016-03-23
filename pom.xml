@@ -33,7 +33,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <jlex>true</jlex>
+                            <!--<jlex>true</jlex>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -49,6 +49,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <cupDefinition>src/main/cup/ChemistryParser.cup</cupDefinition>
+                    <className>ChemistryParser</className>
+                </configuration>
             </plugin>
         </plugins>
     </build>

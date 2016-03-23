@@ -3,10 +3,11 @@ package chemistry_checker;
 import java_cup.runtime.Symbol;
 
 /**
- * The Yylex class is a scanner automatically generated
+ * The fkjshgfkljd class is a scanner automatically generated
  * from the specification file 'src/main/jflex/lexer.lex'
  */
 %%
+%class ChemistryLexer
 %cup
 %%
 
