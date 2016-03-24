@@ -3,16 +3,17 @@ package chemistry_checker;
 import java.util.ArrayList;
 
 
-terminal END, PLUS, TO, LPAREN, RPAREN, ELEMENT, CHARGE;
-terminal String STATE;
+terminal END, PLUS, TO, LPAREN, RPAREN;
+terminal String STATE, CHARGE;
 terminal Integer NUMBER;
+terminal String ELEMENT;
 
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
 non terminal Expression expr;
 non terminal Term term;
 non terminal Molecule molecule;
-non terminal String group;
+non terminal Group group;
 
 precedence left PLUS;
 precedence left TO;
@@ -23,10 +24,10 @@ statement_list  ::= statement_list:l statement:s        {: RESULT=new ArrayList<
 statement   ::= expr:e END                              {: RESULT=new ExpressionStatement(e); :}
                 | expr:l TO expr:r END                  {: RESULT=new EquationStatement(l, r); :}
                 ;
-expr        ::=  expr:l PLUS term:r                     {: RESULT=new Expression(); RESULT.addAll(l); RESULT.add(r); :}
-                | term:t                                {: RESULT=new Expression(); RESULT.add(t); :}
-                | expr:e PLUS error                     {: RESULT=new Expression(); RESULT.add(new ErrorTerm()); RESULT.addAll(e); :}
-                | error                                 {: RESULT=new Expression(); RESULT.add(new ErrorTerm()); :}
+expr        ::=  expr:l PLUS term:r                     {: RESULT=new Expression(l, r); :}
+                | term:t                                {: RESULT=new Expression(t); :}
+                | expr:e PLUS error                     {: RESULT=new Expression(e, new ErrorTerm()); :}
+                | error                                 {: RESULT=new Expression(new ErrorTerm()); :}
                 ;
 term        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new Term(n, m, s); :}
                 | NUMBER:n molecule:m                   {: RESULT=new Term(n, m); :}
@@ -36,9 +37,11 @@ term        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new Term(n, m,
 molecule    ::= group:g                                 {: RESULT=new Molecule(g); :}
                 | molecule:m group:g                    {: RESULT=new Molecule(m, g); :}
                 ;
-group       ::= ELEMENT:e                               {: RESULT=new String(e.toString()); :}
-                | ELEMENT:e NUMBER:n                    {: RESULT=new String(e.toString() + "_{" + n.toString() + "}"); :}
-                | group:g CHARGE:c                      {: RESULT=new String(g.toString() + c.toString()); :}
-                | LPAREN molecule:m RPAREN NUMBER:n     {: RESULT=new String("(" + m.toString() + ")" + "_{" + n.toString() + "}"); :}
+group       ::= ELEMENT:e                               {: RESULT=new Group(e, 1); :}
+                | ELEMENT:e NUMBER:n                    {: RESULT=new Group(e, n); :}
+                | ELEMENT:e CHARGE:c NUMBER:n           {: RESULT=new Group(e, n, c, true); :}
+                | ELEMENT:e NUMBER:n CHARGE:c           {: RESULT=new Group(e, n, c, false); :}
+                | ELEMENT:e CHARGE:c                    {: RESULT=new Group(e, 1, c, false); :}
+                | LPAREN molecule:m RPAREN NUMBER:n     {: RESULT=new Group(m, n); :}
                 ;
 

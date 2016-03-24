@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class Test {
+public class RunParser {
 
     public static void main(String args[]) throws Exception {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
@@ -19,13 +19,18 @@ public class Test {
         System.out.println();
         for (Statement statement : statements) {
             System.out.println(statement);
+            if (statement instanceof ExpressionStatement) {
+                System.out.println("Total atoms: " + ((ExpressionStatement) statement).getAtomCount());
+                System.out.println("Total charge: " + ((ExpressionStatement) statement).getCharge());
+            } else if (statement instanceof EquationStatement) {
+                System.out.println("Is balanced? " + ((EquationStatement) statement).isBalanced());
+                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).left.getAtomCount());
+                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).right.getAtomCount());
+                System.out.println("Total charge LHS: " + ((EquationStatement) statement).left.getCharge());
+                System.out.println("Total charge RHS: " + ((EquationStatement) statement).right.getCharge());
+            }
+            System.out.println("\n");
         }
-    }
-
-    public String eqnToString(ArrayList<String> l, ArrayList<String> r) {
-        String result = l.toString() + " -> " + r.toString();
-        result = result.replace("[", "").replace("]", "").replace(", ", " + ");
-        return result;
     }
 
     public String toJSON(String input, String result) throws IOException {

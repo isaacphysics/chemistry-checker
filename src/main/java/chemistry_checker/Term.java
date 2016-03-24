@@ -1,6 +1,8 @@
 package chemistry_checker;
 
-public class Term {
+import java.util.HashMap;
+
+public class Term implements CountableCharge {
 
     public enum PhysicalState {
         SOLID,
@@ -41,8 +43,6 @@ public class Term {
         this(1, m);
     }
 
-    //public static Term ERROR = new Term(0, null, null);
-
     public String toString() {
         String t = "";
         if (number > 1) {
@@ -53,5 +53,17 @@ public class Term {
             t += "(" + state.toString() + ")";
         }
         return t;
+    }
+
+    public HashMap<String, Integer> getAtomCount() {
+        HashMap<String, Integer> h = new HashMap<String, Integer>();
+        for (String e: molecule.getAtomCount().keySet()) {
+            h.put(e, molecule.getAtomCount().get(e) * number);
+        }
+        return h;
+    }
+
+    public Integer getCharge() {
+        return molecule.getCharge() * number;
     }
 }
