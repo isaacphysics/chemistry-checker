@@ -18,13 +18,8 @@ public class Molecule {
 
     public String toString() {
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < groups.size(); i++) {
-            Group g = groups.get(i);
-            if (i == 0) {
-                b.append(g.toString());
-            } else {
-                b.append("." + g.toString());
-            }
+        for (Group g : groups) {
+            b.append(g.toString());
         }
         return b.toString();
     }

@@ -5,10 +5,10 @@ import java.util.HashMap;
 public class Term implements CountableCharge {
 
     public enum PhysicalState {
-        SOLID,
-        LIQUID,
-        GAS,
-        AQUEOUS
+        s,
+        l,
+        g,
+        aq
     }
 
     Molecule molecule;
@@ -21,13 +21,13 @@ public class Term implements CountableCharge {
         if (null == s) {
             this.state = null;
         } else if (s.equals("s")) {
-            this.state = PhysicalState.SOLID;
+            this.state = PhysicalState.s;
         } else if (s.equals("l")) {
-            this.state = PhysicalState.LIQUID;
+            this.state = PhysicalState.l;
         } else if (s.equals("g")) {
-            this.state = PhysicalState.GAS;
+            this.state = PhysicalState.g;
         } else if (s.equals("aq")) {
-            this.state = PhysicalState.AQUEOUS;
+            this.state = PhysicalState.aq;
         }
     }
 

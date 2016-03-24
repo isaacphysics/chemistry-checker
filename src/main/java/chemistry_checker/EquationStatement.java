@@ -18,14 +18,18 @@ public class EquationStatement extends Statement {
     }
 
     public boolean isBalancedAtoms() {
-        return left.getAtomCount().equals(right.getAtomCount());
+        return !containsError() && left.getAtomCount().equals(right.getAtomCount());
     }
 
     public boolean isBalancedCharge() {
-        return left.getCharge() == right.getCharge();
+        return !containsError() && (left.getCharge() == right.getCharge());
     }
 
     public boolean isBalanced() {
         return isBalancedAtoms() && isBalancedCharge();
+    }
+
+    public boolean containsError() {
+        return left.containsError() || right.containsError();
     }
 }

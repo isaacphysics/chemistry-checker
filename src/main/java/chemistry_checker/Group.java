@@ -51,9 +51,9 @@ public class Group implements CountableCharge {
             c = "^{" + Math.abs(charge) + "-}";
         }
         if (null != molecule) {
-            return "(" + molecule.toString() + ")_{" + number.toString() + "}" + c;
+            return "(" + molecule.toString() + ")" + number.toString() + c;
         } else {
-            return element.toString() + (number > 1 ? "_{" + number.toString() + "}" : "") + c;
+            return element.toString() + (number > 1 ? number.toString() : "") + c;
         }
     }
 

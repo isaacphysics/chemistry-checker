@@ -49,4 +49,13 @@ public class Expression implements CountableCharge {
         }
         return c;
     }
+
+    public boolean containsError() {
+        for (Term t : terms) {
+            if (t instanceof ErrorTerm) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
