@@ -15,8 +15,16 @@ Co^{2+} -> Co^{3+} + e^{-};
 
 C_{2}O_{4}H^{+};
 
-This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letters!;
+Mg(CH3COO)2;
+
+Bi2(MoO4)3 + Fe3H2Na2O45Si + MgNaAl5(Si4O10)3(OH)6 -> MnPb8(Si2O7)3;
+
+(CH3)2S^{+}CH2CH2COO^{-};
+
+Co3(Fe(CN)6)2;
+
+NaFe^{2+}3Al6(BO3)3Si6O18O3F;
 
 2H2SO4 + Jjj2H2 -> H2) + Hibberish!;
 
-Mg(CH3COO)2;
+This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letters!;

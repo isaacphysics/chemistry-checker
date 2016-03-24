@@ -1,8 +1,8 @@
 package chemistry_checker;
 
-public class TermError extends Term {
+public class ErrorTerm extends Term {
 
-    public TermError() {
+    public ErrorTerm() {
         super(null);
     }
     public String toString() {

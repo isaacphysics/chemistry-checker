@@ -16,6 +16,7 @@ public class Test {
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt"))), new DefaultSymbolFactory()).parse().value;
         System.err.flush();
         System.out.flush();
+        System.out.println();
         for (Statement statement : statements) {
             System.out.println(statement);
         }

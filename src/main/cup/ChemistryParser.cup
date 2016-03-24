@@ -17,7 +17,7 @@ non terminal String group;
 precedence left PLUS;
 precedence left TO;
 
-statement_list   ::= statement_list:l statement:s       {: RESULT=new ArrayList<Statement>(l); RESULT.add(s); :}
+statement_list  ::= statement_list:l statement:s        {: RESULT=new ArrayList<Statement>(l); RESULT.add(s); :}
                 | statement: s                          {: RESULT=new ArrayList<Statement>(); RESULT.add(s); :}
                 ;
 statement   ::= expr:e END                              {: RESULT=new ExpressionStatement(e); :}
@@ -25,8 +25,8 @@ statement   ::= expr:e END                              {: RESULT=new Expression
                 ;
 expr        ::=  expr:l PLUS term:r                     {: RESULT=new Expression(); RESULT.addAll(l); RESULT.add(r); :}
                 | term:t                                {: RESULT=new Expression(); RESULT.add(t); :}
-                | expr:e PLUS error                     {: RESULT=new Expression(); RESULT.add(new TermError()); RESULT.addAll(e); :}
-                | error                                 {: RESULT=new Expression(); RESULT.add(new TermError()); :}
+                | expr:e PLUS error                     {: RESULT=new Expression(); RESULT.add(new ErrorTerm()); RESULT.addAll(e); :}
+                | error                                 {: RESULT=new Expression(); RESULT.add(new ErrorTerm()); :}
                 ;
 term        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new Term(n, m, s); :}
                 | NUMBER:n molecule:m                   {: RESULT=new Term(n, m); :}
