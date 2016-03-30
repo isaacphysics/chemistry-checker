@@ -1,8 +1,8 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class Term implements CountableCharge {
+public class Term implements Countable {
 
     public enum PhysicalState {
         s,
@@ -53,6 +53,20 @@ public class Term implements CountableCharge {
             t += "(" + state.toString() + ")";
         }
         return t;
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof ErrorTerm) {
+            return false;
+        } else if (o instanceof Term) {
+            Term other = (Term) o;
+            return (this.molecule.equals(other.molecule) && this.number.equals(other.number) && (this.state == other.state));
+        }
+        return false;
+    }
+
+    public int hashCode () {
+        return this.molecule.groups.size();
     }
 
     public HashMap<String, Integer> getAtomCount() {

@@ -1,7 +1,4 @@
-package chemistry_checker;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+package org.isaacphysics.labs.chemistry.checker;
 
 public class EquationStatement extends Statement {
 
@@ -17,6 +14,18 @@ public class EquationStatement extends Statement {
         return left.toString() + " -> " + right.toString();
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof EquationStatement) {
+            EquationStatement other = (EquationStatement) o;
+            return this.left.equals(other.left) && this.right.equals(other.right);
+        }
+        return false;
+    }
+
+    public boolean containsError() {
+        return left.containsError() || right.containsError();
+    }
+
     public boolean isBalancedAtoms() {
         return !containsError() && left.getAtomCount().equals(right.getAtomCount());
     }
@@ -29,7 +38,4 @@ public class EquationStatement extends Statement {
         return isBalancedAtoms() && isBalancedCharge();
     }
 
-    public boolean containsError() {
-        return left.containsError() || right.containsError();
-    }
 }

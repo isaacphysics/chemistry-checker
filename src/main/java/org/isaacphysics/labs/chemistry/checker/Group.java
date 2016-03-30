@@ -1,8 +1,8 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class Group implements CountableCharge {
+public class Group implements Countable {
 
     Molecule molecule;
     String element;
@@ -55,6 +55,14 @@ public class Group implements CountableCharge {
         } else {
             return element.toString() + (number > 1 ? number.toString() : "") + c;
         }
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Group) {
+            Group other = (Group) o;
+            return this.toString() == other.toString();
+        }
+        return false;
     }
 
     private static Integer chargeToInt(String c) {

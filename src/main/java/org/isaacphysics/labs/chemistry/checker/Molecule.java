@@ -1,4 +1,4 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +22,14 @@ public class Molecule {
             b.append(g.toString());
         }
         return b.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Molecule) {
+            Molecule other = (Molecule) o;
+            return this.toString().equals(other.toString());
+        }
+        return false;
     }
 
     public HashMap<String, Integer> getAtomCount() {

@@ -1,9 +1,10 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
-public class Expression implements CountableCharge {
+public class Expression implements Countable {
     ArrayList<Term> terms;
 
     public Expression(Term t) {
@@ -27,6 +28,16 @@ public class Expression implements CountableCharge {
         return b.toString();
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof Expression) {
+            Expression other = (Expression) o;
+            HashSet<Term> termSet = new HashSet<Term>(terms);
+            HashSet<Term> otherTermSet = new HashSet<Term>(other.terms);
+            return termSet.equals(otherTermSet);
+        }
+        return false;
+    }
+
     public HashMap<String, Integer> getAtomCount() {
         HashMap<String, Integer> h = new HashMap<String, Integer>();
         for (Term t : terms) {
@@ -40,7 +51,6 @@ public class Expression implements CountableCharge {
         }
         return h;
     }
-
 
     public Integer getCharge() {
         Integer c = 0;

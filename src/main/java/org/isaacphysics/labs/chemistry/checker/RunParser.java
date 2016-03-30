@@ -1,4 +1,4 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -30,6 +30,21 @@ public class RunParser {
                 System.out.println("Total charge RHS: " + ((EquationStatement) statement).right.getCharge());
             }
             System.out.println("\n");
+        }
+
+        System.out.println();
+        EquationStatement a = (EquationStatement) statements.get(5);
+        EquationStatement b = (EquationStatement) statements.get(6);
+        if (a.equals(b)) {
+            System.out.println("\"" + a.toString() + "\" == \"" + b.toString() + "\"");
+            if (!b.equals(a)) {
+                System.err.println("Equality not symmetric!");
+            }
+        } else {
+            System.out.println("\"" + a.toString() + "\" != \"" + b.toString() + "\"");
+            if (b.equals(a)) {
+                System.err.println("Equality not symmetric!");
+            }
         }
     }
 

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>uk.ac.cam.cl.dtg.teaching</groupId>
+    <groupId>org.isaacphysics.labs.chemistry</groupId>
     <artifactId>chemistry-checker</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -33,7 +33,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <!--<jlex>true</jlex>-->
+                            <jlex>true</jlex>
                         </configuration>
                     </execution>
                 </executions>

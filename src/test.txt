@@ -9,7 +9,9 @@ C2O4H2 + H2O2 -> 2CO2 + 2H2O;
 
 Co^{2+} -> Co^{3+} + e^{-};
 
-3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);
+8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);
+
+3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(g);
 
 2BaFeO4(s) + 16HCl(aq) -> 2BaCl2(aq) + 2FeCl3(aq) + 8H2O(l) + 3Cl2(g);
 

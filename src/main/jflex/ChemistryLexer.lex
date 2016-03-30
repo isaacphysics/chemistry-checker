@@ -1,4 +1,4 @@
-package chemistry_checker;
+package org.isaacphysics.labs.chemistry.checker;
 
 import java_cup.runtime.Symbol;
 
