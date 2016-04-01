@@ -19,7 +19,7 @@ package org.isaacphysics.labs.chemistry.checker;
 import java_cup.runtime.Symbol;
 
 /**
- * The fkjshgfkljd class is a scanner automatically generated
+ * The ChemistryLexer class is a scanner automatically generated
  * from the specification file 'src/main/jflex/lexer.lex'
  */
 %%

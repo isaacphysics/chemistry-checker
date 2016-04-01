@@ -24,6 +24,7 @@ terminal String STATE, CHARGE;
 terminal Integer NUMBER;
 terminal String ELEMENT;
 
+non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
 non terminal Expression expr;
@@ -34,6 +35,11 @@ non terminal Group group;
 precedence left PLUS;
 precedence left TO;
 
+
+result      ::= statement_list:l                        {: RESULT=new ArrayList<Statement>(l); :}
+                | expr:e                                {: RESULT=new ArrayList<Statement>(); RESULT.add(new ExpressionStatement(e)); :}
+                | expr:l TO expr:r                      {: RESULT=new ArrayList<Statement>(); RESULT.add(new EquationStatement(l, r)); :}
+                ;
 statement_list  ::= statement_list:l statement:s        {: RESULT=new ArrayList<Statement>(l); RESULT.add(s); :}
                 | statement: s                          {: RESULT=new ArrayList<Statement>(); RESULT.add(s); :}
                 ;

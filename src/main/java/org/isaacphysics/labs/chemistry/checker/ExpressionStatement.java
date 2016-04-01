@@ -38,6 +38,10 @@ public class ExpressionStatement extends Statement implements Countable {
         return false;
     }
 
+    public boolean containsError() {
+        return terms.containsError();
+    }
+
     public HashMap<String, Integer> getAtomCount() {
         return terms.getAtomCount();
     }
