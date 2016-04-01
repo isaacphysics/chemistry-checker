@@ -20,33 +20,39 @@ import java.util.HashMap;
 
 public class ExpressionStatement extends Statement implements Countable {
 
-    Expression terms;
+    private Expression expr;
 
     public ExpressionStatement(Expression e) {
-        terms=e;
+        expr = e;
     }
 
+    @Override
     public String toString() {
-        return terms.toString();
+        return expr.toString();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof ExpressionStatement) {
             ExpressionStatement other = (ExpressionStatement) o;
-            return this.terms.equals(other.terms);
+            return this.expr.equals(other.expr);
         }
         return false;
     }
 
     public boolean containsError() {
-        return terms.containsError();
+        return expr.containsError();
     }
 
     public HashMap<String, Integer> getAtomCount() {
-        return terms.getAtomCount();
+        return expr.getAtomCount();
     }
 
     public Integer getCharge() {
-        return terms.getCharge();
+        return expr.getCharge();
+    }
+
+    public Expression getExpression() {
+        return this.expr;
     }
 }

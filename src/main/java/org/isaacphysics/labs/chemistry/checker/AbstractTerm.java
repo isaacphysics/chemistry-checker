@@ -16,8 +16,5 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public abstract class Statement {
-
-    abstract boolean containsError();
-
+public abstract class AbstractTerm implements Countable {
 }

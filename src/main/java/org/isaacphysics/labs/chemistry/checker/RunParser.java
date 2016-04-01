@@ -40,10 +40,10 @@ public class RunParser {
                 System.out.println("Total charge: " + ((ExpressionStatement) statement).getCharge());
             } else if (statement instanceof EquationStatement) {
                 System.out.println("Is balanced? " + ((EquationStatement) statement).isBalanced());
-                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).left.getAtomCount());
-                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).right.getAtomCount());
-                System.out.println("Total charge LHS: " + ((EquationStatement) statement).left.getCharge());
-                System.out.println("Total charge RHS: " + ((EquationStatement) statement).right.getCharge());
+                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).getLeftExpression().getAtomCount());
+                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).getRightExpression().getAtomCount());
+                System.out.println("Total charge LHS: " + ((EquationStatement) statement).getLeftExpression().getCharge());
+                System.out.println("Total charge RHS: " + ((EquationStatement) statement).getRightExpression().getCharge());
             }
             System.out.println("\n");
         }

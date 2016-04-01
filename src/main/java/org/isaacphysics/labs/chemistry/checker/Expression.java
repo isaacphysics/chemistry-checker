@@ -21,18 +21,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Expression implements Countable {
-    ArrayList<Term> terms;
+    private ArrayList<AbstractTerm> terms;
 
-    public Expression(Term t) {
-        terms = new ArrayList<Term>();
+    public Expression(AbstractTerm t) {
+        terms = new ArrayList<AbstractTerm>();
         terms.add(t);
     }
 
-    public Expression(Expression e, Term t) {
-        terms = new ArrayList<Term>(e.terms);
+    public Expression(Expression e, AbstractTerm t) {
+        terms = new ArrayList<AbstractTerm>(e.terms);
         terms.add(t);
     }
 
+    @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < terms.size(); i++) {
@@ -44,11 +45,12 @@ public class Expression implements Countable {
         return b.toString();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof Expression) {
             Expression other = (Expression) o;
-            HashSet<Term> termSet = new HashSet<Term>(terms);
-            HashSet<Term> otherTermSet = new HashSet<Term>(other.terms);
+            HashSet<AbstractTerm> termSet = new HashSet<AbstractTerm>(terms);
+            HashSet<AbstractTerm> otherTermSet = new HashSet<AbstractTerm>(other.terms);
             return termSet.equals(otherTermSet);
         }
         return false;
@@ -56,7 +58,7 @@ public class Expression implements Countable {
 
     public HashMap<String, Integer> getAtomCount() {
         HashMap<String, Integer> h = new HashMap<String, Integer>();
-        for (Term t : terms) {
+        for (AbstractTerm t : terms) {
             for (String e : t.getAtomCount().keySet()) {
                 if (!h.containsKey(e)) {
                     h.put(e,  t.getAtomCount().get(e));
@@ -70,18 +72,22 @@ public class Expression implements Countable {
 
     public Integer getCharge() {
         Integer c = 0;
-        for (Term t : terms) {
+        for (AbstractTerm t : terms) {
             c += t.getCharge();
         }
         return c;
     }
 
     public boolean containsError() {
-        for (Term t : terms) {
+        for (AbstractTerm t : terms) {
             if (t instanceof ErrorTerm) {
                 return true;
             }
         }
         return false;
+    }
+
+    public ArrayList<AbstractTerm> getTerms() {
+        return this.terms;
     }
 }

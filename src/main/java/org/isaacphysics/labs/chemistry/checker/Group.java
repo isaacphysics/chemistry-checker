@@ -20,10 +20,10 @@ import java.util.HashMap;
 
 public class Group implements Countable {
 
-    Molecule molecule;
-    String element;
-    Integer number;
-    Integer charge;
+    private Molecule molecule;
+    private String element;
+    private Integer number;
+    private Integer charge;
 
     public Group(String e, Integer n) {
         element = e;
@@ -39,7 +39,7 @@ public class Group implements Countable {
 
     public Group(Molecule m, Integer n, String c) {
         this(m, n);
-        // Assert that molecule not charged!
+        // TODO: Check that molecule not charged!
         charge = chargeToInt(c);
     }
 
@@ -53,13 +53,14 @@ public class Group implements Countable {
         }
     }
 
+    @Override
     public String toString() {
         String c;
-        if (charge == null || charge == 0) {
+        if (null == charge || 0 == charge) {
             c = "";
-        } else if (charge == 1) {
+        } else if (1 == charge) {
             c = "^{+}";
-        } else if (charge == -1) {
+        } else if (-1 == charge) {
             c = "^{-}";
         } else if (charge > 1) {
             c = "^{" + charge.toString() + "+}";
@@ -69,14 +70,15 @@ public class Group implements Countable {
         if (null != molecule) {
             return "(" + molecule.toString() + ")" + number.toString() + c;
         } else {
-            return element.toString() + (number > 1 ? number.toString() : "") + c;
+            return element + (number > 1 ? number.toString() : "") + c;
         }
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof Group) {
             Group other = (Group) o;
-            return this.toString() == other.toString();
+            return this.toString().equals(other.toString());
         }
         return false;
     }
@@ -104,8 +106,8 @@ public class Group implements Countable {
                 h.put(element, number);
             }
         } else {
-            for (String e : molecule.getAtomCount().keySet()) {
-                h.put(e, molecule.getAtomCount().get(e) * number);
+            for (String element : molecule.getAtomCount().keySet()) {
+                h.put(element, molecule.getAtomCount().get(element) * number);
             }
         }
         return h;

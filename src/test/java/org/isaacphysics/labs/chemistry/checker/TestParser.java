@@ -25,23 +25,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TestParser {
-    String simpleMolecule = "H2SO4;";
-    String simpleMoleculeNumber = "2NO2;";
-    String simpleMoleculeState = "NH3(aq);";
-    String diffNotationAndMoleculeCharge = "C_{2}O_{4}H^{+};";
-    String expressionStatement = "C2O4H2 + H2O2";
-    String equationStatement1 = "8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);";
-    String equationStatement2 = "3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);";
-    String syntaxError = "2H2S(O4;";
-    String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6";
+    private String simpleMolecule = "H2SO4;";
+    private String simpleMoleculeNumber = "2NO2;";
+    private String simpleMoleculeState = "NH3(aq);";
+    private String diffNotationAndMoleculeCharge = "C_{2}O_{4}H^{+};";
+    private String expressionStatement = "C2O4H2 + H2O2";
+    private String equationStatement1 = "8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);";
+    private String equationStatement2 = "3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);";
+    private String syntaxError = "2H2S(O4;";
+    private String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6";
+
+    @SuppressWarnings({"deprecation", "unchecked"})
+    private ArrayList<Statement> stringParser(String s) throws Exception {
+        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(s)), new DefaultSymbolFactory()).parse().value;
+
+        return (ArrayList<Statement>) output;
+    }
 
     @Test
     public void testParserSimpleMolecule() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(simpleMolecule)), new DefaultSymbolFactory()).parse().value;
-
-        assertTrue("Output not an ArrayList!", output instanceof ArrayList<?>);
-
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(simpleMolecule);
         assertTrue(statements.size() == 1);
 
         Statement result = statements.get(0);
@@ -50,86 +53,96 @@ public class TestParser {
         assertTrue("Result is not an ExpressionStatement!", result instanceof ExpressionStatement);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
 
-        Expression expr = exprStatement.terms;
-        assertTrue("Expected only one term in the expression, got " + expr.terms.size() + "!", expr.terms.size() == 1);
-        Term term = expr.terms.get(0);
+        Expression expr = exprStatement.getExpression();
+        assertTrue("Expected only one term in the expression, got " + expr.getTerms().size() + "!", expr.getTerms().size() == 1);
+        AbstractTerm t = expr.getTerms().get(0);
 
-        assertTrue("Implicit count of 1 for Terms failed, got " + term.number + "!", term.number == 1);
+        if (t instanceof Term) {
+            Term term = (Term) t;
+            assertTrue("Implicit count of 1 for Terms failed, got " + term.getNumber() + "!", term.getNumber() == 1);
 
-        HashMap<String, Integer> atomCount = term.getAtomCount();
-        assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!", atomCount.get("O") == 4);
+            HashMap<String, Integer> atomCount = term.getAtomCount();
+            assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!", atomCount.get("O") == 4);
 
-        assertTrue("Charge of parsed molecule incorrect! Expected no charge (0), got " + term.getCharge() + "!", term.getCharge() == 0);
+            assertTrue("Charge of parsed molecule incorrect! Expected no charge (0), got " + term.getCharge() + "!", term.getCharge() == 0);
 
-        assertTrue("Physical State of parsed molecule incorrect! Expected null, got " + term.state + "!", term.state == null);
+            assertTrue("Physical State of parsed molecule incorrect! Expected null, got " + term.getState() + "!", term.getState() == null);
+        } else {
+            assertTrue("Unexpected ErrorTerm present!", false);
+        }
 
     }
 
     @Test
     public void testSimpleMoleculeNumber() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(simpleMoleculeNumber)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(simpleMoleculeNumber);
         Statement result = statements.get(0);
 
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!", result.toString().equals("2NO2"));
-        Term term = ((ExpressionStatement) result).terms.terms.get(0);
+        AbstractTerm t = ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
-        assertTrue("Setting number of molecule in term failed! Expected 2, got " + term.number + "!", term.number == 2);
+        if (t instanceof Term) {
+            Term term = (Term) t;
+            assertTrue("Setting number of molecule in term failed! Expected 2, got " + term.getNumber() + "!", term.getNumber() == 2);
 
-        HashMap<String, Integer> atomCount = term.getAtomCount();
-        assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!" , atomCount.get("O") == 4);
+            HashMap<String, Integer> atomCount = term.getAtomCount();
+            assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!", atomCount.get("O") == 4);
+        } else {
+            assertTrue("Unexpected ErrorTerm present!", false);
+        }
     }
 
     @Test
     public void testSimpleMoleculeState() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(simpleMoleculeState)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(simpleMoleculeState);
         Statement result = statements.get(0);
 
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!", result.toString().equals("NH3(aq)"));
-        Term term = ((ExpressionStatement) result).terms.terms.get(0);
+        AbstractTerm t = ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
-        assertTrue("Physical State of parsed molecule incorrect! Expected (aq), got " + term.state + "!", term.state.equals(Term.PhysicalState.aq));
+        if (t instanceof Term) {
+            Term term = (Term) t;
+            assertTrue("Physical State of parsed molecule incorrect! Expected (aq), got " + term.getState() + "!", term.getState().equals(Term.PhysicalState.aq));
+        } else {
+            assertTrue("Unexpected ErrorTerm present!", false);
+        }
     }
 
     @Test
     public void testDiffNotationAndMoleculeCharge() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(diffNotationAndMoleculeCharge)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(diffNotationAndMoleculeCharge);
         Statement result = statements.get(0);
 
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!", result.toString().equals("C2O4H^{+}"));
-        Term term = ((ExpressionStatement) result).terms.terms.get(0);
+        Term term = (Term) ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
         assertTrue("Charge of parsed molecule incorrect! Expected 1, got " + term.getCharge() + "!", term.getCharge() == 1);
     }
 
     @Test
     public void testExpressionStatement() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(expressionStatement)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(expressionStatement);
         Statement result = statements.get(0);
 
         assertTrue("Expected 1 statement out, got " + statements.size() + "!", statements.size() == 1);
 
         assertTrue("Result is not an ExpressionStatement!", result instanceof ExpressionStatement);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
-        Expression expr = exprStatement.terms;
+        Expression expr = exprStatement.getExpression();
 
-        assertTrue("Expected 2 terms, got " + expr.terms.size() + "!", expr.terms.size() == 2);
+        assertTrue("Expected 2 terms, got " + expr.getTerms().size() + "!", expr.getTerms().size() == 2);
 
         HashMap<String, Integer> atomCount = expr.getAtomCount();
         assertTrue("Parsed oxygen atom count incorrect! Expected 6, got " + atomCount.get("O") + "!" , atomCount.get("O") == 6);
 
-        Term t = expr.terms.get(0);
+        AbstractTerm t = expr.getTerms().get(0);
         assertTrue("Printed output \"" + t.toString() + "\" not in mhchem format!", t.toString().equals("C2O4H2"));
 
     }
 
     @Test
     public void testEquationStatement() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(equationStatement1)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(equationStatement1);
         Statement result = statements.get(0);
 
         assertTrue("Expected 1 statement out, got " + statements.size() + "!", statements.size() == 1);
@@ -137,8 +150,8 @@ public class TestParser {
         assertTrue("Result is not an EquationStatement!", result instanceof EquationStatement);
         EquationStatement eqnStatement = (EquationStatement) result;
 
-        Expression left = eqnStatement.left;
-        Expression right = eqnStatement.right;
+        Expression left = eqnStatement.getLeftExpression();
+        Expression right = eqnStatement.getRightExpression();
         assertTrue("The LHS is not an Expression!", null != left);
         assertTrue("The RHS is not an Expression!", null != right);
 
@@ -151,8 +164,7 @@ public class TestParser {
 
     @Test
     public void testEquationStatementEquality() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(equationStatement1 + equationStatement2)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(equationStatement1 + equationStatement2);
 
         assertTrue("Expected 2 statements out, got " + statements.size() + "!", statements.size() == 2);
 
@@ -167,8 +179,7 @@ public class TestParser {
 
     @Test
     public void testNestedGroupMolecule() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(nestedGroupMolecule)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(nestedGroupMolecule);
         Statement result = statements.get(0);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
 
@@ -178,10 +189,9 @@ public class TestParser {
 
     @Test
     public void testSyntaxErrors() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(syntaxError)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(syntaxError);
         ExpressionStatement result = (ExpressionStatement) statements.get(0);
-        Term t = result.terms.terms.get(0);
+        AbstractTerm t = result.getExpression().getTerms().get(0);
 
         assertTrue("ExpressionStatement not recognised as containing an error!", result.containsError());
 
@@ -191,8 +201,7 @@ public class TestParser {
 
     @Test
     public void testSyntaxErrorEquality() throws Exception {
-        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(syntaxError + syntaxError)), new DefaultSymbolFactory()).parse().value;
-        ArrayList<Statement> statements = (ArrayList<Statement>) output;
+        ArrayList<Statement> statements = stringParser(syntaxError + syntaxError);
         Statement result1 = statements.get(0);
         Statement result2 = statements.get(1);
         ExpressionStatement exprStatement1 = (ExpressionStatement) result1;

@@ -18,18 +18,20 @@ package org.isaacphysics.labs.chemistry.checker;
 
 public class EquationStatement extends Statement {
 
-    Expression left;
-    Expression right;
+    private Expression left;
+    private Expression right;
 
     public EquationStatement(Expression l, Expression r) {
         left = l;
         right = r;
     }
 
+    @Override
     public String toString() {
         return left.toString() + " -> " + right.toString();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof EquationStatement) {
             EquationStatement other = (EquationStatement) o;
@@ -47,11 +49,19 @@ public class EquationStatement extends Statement {
     }
 
     public boolean isBalancedCharge() {
-        return !containsError() && (left.getCharge() == right.getCharge());
+        return !containsError() && (left.getCharge().equals(right.getCharge()));
     }
 
     public boolean isBalanced() {
         return isBalancedAtoms() && isBalancedCharge();
+    }
+
+    public Expression getLeftExpression() {
+        return this.left;
+    }
+
+    public Expression getRightExpression() {
+        return this.right;
     }
 
 }

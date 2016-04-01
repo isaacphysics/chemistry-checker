@@ -18,23 +18,21 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class ErrorTerm extends Term {
+public class ErrorTerm extends AbstractTerm {
 
     public ErrorTerm() {
-        super(null);
+        super();
     }
 
+    @Override
     public String toString() {
         return "ERROR";
     }
 
+    @Override
     public boolean equals(Object o) {
         // Enforce assertion that error terms can never be equal.
         return false;
-    }
-
-    public int hashCode() {
-        return 1;
     }
 
     public HashMap<String, Integer> getAtomCount() {

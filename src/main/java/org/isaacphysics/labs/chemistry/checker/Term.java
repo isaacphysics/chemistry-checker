@@ -18,8 +18,9 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class Term implements Countable {
+public class Term extends AbstractTerm {
 
+    // Solid, Liquid, Gas, Aqueous in standard chemical notation
     public enum PhysicalState {
         s,
         l,
@@ -27,9 +28,9 @@ public class Term implements Countable {
         aq
     }
 
-    Molecule molecule;
-    Integer number;
-    PhysicalState state;
+    private Molecule molecule;
+    private Integer number;
+    private PhysicalState state;
 
     public Term(int n, Molecule m, String s) {
         this.number = n;
@@ -59,6 +60,7 @@ public class Term implements Countable {
         this(1, m);
     }
 
+    @Override
     public String toString() {
         String t = "";
         if (number > 1) {
@@ -71,29 +73,49 @@ public class Term implements Countable {
         return t;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof ErrorTerm) {
             return false;
         } else if (o instanceof Term) {
             Term other = (Term) o;
-            return (this.molecule.equals(other.molecule) && this.number.equals(other.number) && (this.state == other.state));
+            return (this.molecule.equals(other.molecule)
+                    && this.number.equals(other.number)
+                    && (this.state == other.state));
         }
         return false;
     }
 
+    @Override
     public int hashCode () {
-        return this.molecule.groups.size();
+        if (null != molecule) {
+            return this.molecule.hashCode();
+        } else {
+            return super.hashCode();
+        }
     }
 
     public HashMap<String, Integer> getAtomCount() {
         HashMap<String, Integer> h = new HashMap<String, Integer>();
-        for (String e: molecule.getAtomCount().keySet()) {
-            h.put(e, molecule.getAtomCount().get(e) * number);
+        for (String element: molecule.getAtomCount().keySet()) {
+            h.put(element, molecule.getAtomCount().get(element) * number);
         }
         return h;
     }
 
     public Integer getCharge() {
         return molecule.getCharge() * number;
+    }
+
+    public Molecule getMolecule() {
+        return this.molecule;
+    }
+
+    public Integer getNumber() {
+        return this.number;
+    }
+
+    public PhysicalState getState() {
+        return this.state;
     }
 }

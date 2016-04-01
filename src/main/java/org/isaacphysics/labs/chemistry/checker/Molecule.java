@@ -19,8 +19,8 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Molecule {
-    ArrayList<Group> groups;
+public class Molecule implements Countable {
+    private ArrayList<Group> groups;
 
     public Molecule(Group g) {
         groups = new ArrayList<Group>();
@@ -32,6 +32,7 @@ public class Molecule {
         groups.add(g);
     }
 
+    @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
         for (Group g : groups) {
@@ -40,6 +41,7 @@ public class Molecule {
         return b.toString();
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o instanceof Molecule) {
             Molecule other = (Molecule) o;
@@ -48,14 +50,19 @@ public class Molecule {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return groups.size();
+    }
+
     public HashMap<String, Integer> getAtomCount() {
         HashMap<String, Integer> h = new HashMap<String, Integer>();
         for (Group g : groups) {
-            for (String e : g.getAtomCount().keySet()) {
-                if (!h.containsKey(e)) {
-                    h.put(e,  g.getAtomCount().get(e));
+            for (String element : g.getAtomCount().keySet()) {
+                if (!h.containsKey(element)) {
+                    h.put(element,  g.getAtomCount().get(element));
                 } else {
-                    h.put(e, h.get(e) + g.getAtomCount().get(e));
+                    h.put(element, h.get(element) + g.getAtomCount().get(element));
                 }
             }
         }
