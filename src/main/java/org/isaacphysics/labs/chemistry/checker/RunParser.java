@@ -63,11 +63,11 @@ public class RunParser {
             }
         }
 
-        EquationStatement eqn = (EquationStatement) statements.get(0);
-        System.out.println();
-        System.out.println("Equation: " + eqn.toString());
-        ArrayList<Integer> coeffs = EquationBalancer.returnCoefficients(eqn);
-        System.out.println("Corefficients: " + coeffs.toString());
+//        EquationStatement eqn = (EquationStatement) statements.get(0);
+//        System.out.println();
+//        System.out.println("Equation: " + eqn.toString());
+//        ArrayList<Integer> coeffs = EquationBalancer.returnCoefficients(eqn);
+//        System.out.println("Corefficients: " + coeffs.toString());
     }
 
     public String toJSON(String input, String result) throws IOException {

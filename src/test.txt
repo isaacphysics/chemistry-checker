@@ -40,3 +40,8 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 
 Cu + HNO3 -> Cu(NO3)2 + NO + H2O;
 
+Cr(H2O)3(OH)3 + NaOH -> Cr^{3-}(OH)6 + Na^{+} + H2O;
+
+SrBr2 + (NH4)2CO3 -> SrCO3 + NH4Br;
+
+CO + CO2 + H2 -> CH4 + H2O;
