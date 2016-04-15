@@ -16,15 +16,14 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
+import org.jscience.mathematics.number.LargeInteger;
 import org.jscience.mathematics.number.Rational;
 import org.jscience.mathematics.structure.VectorSpace;
-import org.jscience.mathematics.vector.DenseMatrix;
-import org.jscience.mathematics.vector.Matrix;
-import org.jscience.mathematics.vector.SparseVector;
-import org.jscience.mathematics.vector.Vector;
+import org.jscience.mathematics.vector.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public class EquationBalancer {
@@ -33,27 +32,25 @@ public class EquationBalancer {
         System.out.println(m.toString());
     }
 
-    private static int gcd(int a, int b)
+    private static long gcd(long a, long b)
     {
         while (b > 0)
         {
-            int temp = b;
+            long temp = b;
             b = a % b; // % is remainder
             a = temp;
         }
         return a;
     }
 
-    private static int lcm(int a, int b)
+    private static long lcm(long a, long b)
     {
         return a * (b / gcd(a, b));
     }
 
-    private static int lcm(Vector<Rational> input) {
-        int result = input.get(0).getDivisor().intValue();
-        for (int i = 1; i < input.getDimension(); i++) {
-            result = lcm(result, input.get(i).getDivisor().intValue());
-        }
+    private static long lcm(Vector<Rational> input) {
+        long result = input.get(0).getDivisor().longValue();
+        for(int i = 1; i < input.getDimension(); i++) result = lcm(result, input.get(i).getDivisor().longValue());
         return result;
     }
 
@@ -63,7 +60,6 @@ public class EquationBalancer {
             throw new Exception("Error in equation!");
         }
         // TODO: make this better!
-        // TODO: deal with electrons and charges?
         ArrayList<Integer> coefficients = new ArrayList<Integer>();
 
         Set<String> keysLeft = eqn.getLeftExpression().getAtomCount().keySet();
@@ -140,13 +136,13 @@ public class EquationBalancer {
         printMatrix(z);
         System.out.println("Solution:");
         Vector<Rational> solution = M.solve(z);
-        int factor = lcm(solution);
+        long factor = lcm(solution);
         solution = solution.times(Rational.valueOf(factor, 1));
         printMatrix(solution);
 
         for (int i = 0; i < solution.getDimension(); i++) {
             // TODO: is there a better way to cast down to int?
-            coefficients.add(solution.get(i).intValue());
+            coefficients.add((int) solution.get(i).longValue());
         }
         return coefficients;
     }
