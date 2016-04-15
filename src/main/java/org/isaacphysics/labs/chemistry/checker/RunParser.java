@@ -49,8 +49,8 @@ public class RunParser {
         }
 
         System.out.println();
-        EquationStatement a = (EquationStatement) statements.get(6);
-        EquationStatement b = (EquationStatement) statements.get(7);
+        EquationStatement a = (EquationStatement) statements.get(5);
+        EquationStatement b = (EquationStatement) statements.get(6);
         if (a.equals(b)) {
             System.out.println("\"" + a.toString() + "\" == \"" + b.toString() + "\"");
             if (!b.equals(a)) {
@@ -62,12 +62,6 @@ public class RunParser {
                 System.err.println("Equality not symmetric!");
             }
         }
-
-        EquationStatement eqn = (EquationStatement) statements.get(0);
-        System.out.println();
-        System.out.println("Equation: " + eqn.toString());
-        ArrayList<Integer> coeffs = EquationBalancer.returnCoefficients(eqn);
-        System.out.println("Corefficients: " + coeffs.toString());
     }
 
     public String toJSON(String input, String result) throws IOException {
