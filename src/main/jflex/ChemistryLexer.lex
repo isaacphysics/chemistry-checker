@@ -20,7 +20,7 @@ import java_cup.runtime.Symbol;
 
 /**
  * The ChemistryLexer class is a scanner automatically generated
- * from the specification file 'src/main/jflex/lexer.lex'
+ * from the specification file 'src/main/jflex/ChemistryLexer.lex'
  */
 %%
 %class ChemistryLexer

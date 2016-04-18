@@ -21,9 +21,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java_cup.runtime.DefaultSymbolFactory;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RunParser {
 
@@ -62,13 +63,64 @@ public class RunParser {
                 System.err.println("Equality not symmetric!");
             }
         }
+
+        System.out.println();
+        System.out.println(parseFromString("CH3(CH2)5CH3"));
+        System.out.println();
+        System.out.println(parseFromString("C6H12O6 + 6O2 -> 6H(2O + 6CO2"));
     }
 
-    public String toJSON(String input, String result) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node1 = mapper.createObjectNode();
-        node1.put("result", result);
-        node1.put("input", input);
-        return mapper.writeValueAsString(node1);
+    public static String parseFromString(String statementString) {
+        try {
+            ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(statementString)), new DefaultSymbolFactory()).parse().value;
+            Statement statement = statements.get(0);
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            if (statement instanceof ExpressionStatement) {
+                ExpressionStatement exprStatement = (ExpressionStatement) statement;
+                node.put("type", "expression");
+                node.put("input", statementString);
+                node.put("result", exprStatement.toString());
+                node.put("error", exprStatement.containsError());
+                node.put("charge", exprStatement.getCharge());
+                HashMap<String, Integer> atomCount = exprStatement.getAtomCount();
+                ObjectNode atomCountNode = node.putObject("atom_count");
+                for (String element : atomCount.keySet()) {
+                    atomCountNode.put(element, atomCount.get(element));
+                }
+            } else if (statement instanceof EquationStatement) {
+                EquationStatement eqnStatement = (EquationStatement) statement;
+                node.put("type", "equation");
+                node.put("input", statementString);
+                node.put("result", eqnStatement.toString());
+                node.put("error", eqnStatement.containsError());
+                node.put("balanced", eqnStatement.isBalanced());
+                node.put("balancedAtoms", eqnStatement.isBalancedAtoms());
+                node.put("balancedCharge", eqnStatement.isBalancedCharge());
+
+                ObjectNode leftHandSide = node.putObject("left");
+                Expression left = eqnStatement.getLeftExpression();
+                leftHandSide.put("error", left.containsError());
+                leftHandSide.put("charge", left.getCharge());
+                HashMap<String, Integer> atomCountLeft = left.getAtomCount();
+                ObjectNode atomCountLeftNode = leftHandSide.putObject("atom_count");
+                for (String element : atomCountLeft.keySet()) {
+                    atomCountLeftNode.put(element, atomCountLeft.get(element));
+                }
+
+                ObjectNode rightHandSide = node.putObject("right");
+                Expression right = eqnStatement.getRightExpression();
+                rightHandSide.put("error", right.containsError());
+                rightHandSide.put("charge", right.getCharge());
+                HashMap<String, Integer> atomCountRight = right.getAtomCount();
+                ObjectNode atomCountRightNode = rightHandSide.putObject("atom_count");
+                for (String element : atomCountRight.keySet()) {
+                    atomCountRightNode.put(element, atomCountRight.get(element));
+                }
+            }
+            return mapper.writeValueAsString(node);
+        } catch (Exception e) {
+            return "";
+        }
     }
 }
