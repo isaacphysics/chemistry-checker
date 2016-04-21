@@ -64,4 +64,21 @@ public class EquationStatement extends Statement {
         return this.right;
     }
 
+    public boolean sameMoleculesLeft(EquationStatement eqnStatement) {
+        return left.containsAll(eqnStatement.left) && eqnStatement.left.containsAll(left);
+    }
+
+    public boolean sameMoleculesRight(EquationStatement eqnStatement) {
+        return right.containsAll(eqnStatement.right) && eqnStatement.right.containsAll(right);
+    }
+
+    public boolean sameMolecules(Statement statement) {
+        if (statement instanceof EquationStatement) {
+            EquationStatement eqnStatement = (EquationStatement) statement;
+            return sameMoleculesLeft(eqnStatement) && sameMoleculesRight(eqnStatement);
+        } else {
+            return false;
+        }
+    }
+
 }

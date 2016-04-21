@@ -42,4 +42,8 @@ public class ErrorTerm extends AbstractTerm {
     public Integer getCharge() {
         return 0;
     }
+
+    public boolean contains(Molecule m) {
+        return false;
+    }
 }

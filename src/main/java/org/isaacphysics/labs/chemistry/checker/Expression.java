@@ -90,4 +90,27 @@ public class Expression implements Countable {
     public ArrayList<AbstractTerm> getTerms() {
         return this.terms;
     }
+
+    public boolean contains(Molecule m) {
+        for (AbstractTerm t : terms) {
+            if (t.contains(m)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean containsAll(Expression e) {
+        for (AbstractTerm t : e.terms) {
+            if (t instanceof ErrorTerm) {
+                return false;
+            } else {
+                Term term = (Term) t;
+                if (!this.contains(term.getMolecule())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

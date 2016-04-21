@@ -118,4 +118,8 @@ public class Term extends AbstractTerm {
     public PhysicalState getState() {
         return this.state;
     }
+
+    public boolean contains(Molecule m) {
+        return this.molecule.equals(m);
+    }
 }

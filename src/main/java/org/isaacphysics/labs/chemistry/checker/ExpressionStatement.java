@@ -52,7 +52,17 @@ public class ExpressionStatement extends Statement implements Countable {
         return expr.getCharge();
     }
 
+    public boolean sameMolecules(Statement statement) {
+        if (statement instanceof ExpressionStatement) {
+            ExpressionStatement exprStatement = (ExpressionStatement) statement;
+            return expr.containsAll(exprStatement.expr) && exprStatement.expr.containsAll(expr);
+        } else {
+            return false;
+        }
+    }
+
     public Expression getExpression() {
         return this.expr;
     }
+
 }

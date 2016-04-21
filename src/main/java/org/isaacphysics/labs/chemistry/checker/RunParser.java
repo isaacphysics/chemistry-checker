@@ -65,9 +65,18 @@ public class RunParser {
         }
 
         System.out.println();
+        System.out.println();
+        Expression expr = ((ExpressionStatement) statements.get(17)).getExpression();
+        System.out.println("Are all molecules in \"" + expr.toString() + "\" in \"" + ((EquationStatement) statements.get(3)).getLeftExpression().toString() + "\" ?");
+        System.out.println(((EquationStatement) statements.get(3)).getLeftExpression().containsAll(expr));
+
+        System.out.println();
         System.out.println(parseFromString("CH3(CH2)5CH3"));
         System.out.println();
-        System.out.println(parseFromString("C6H12O6 + 6O2 -> 6H(2O + 6CO2"));
+        System.out.println(parseFromString("C6H12O6 + 6O2 -> 6H2O + 6CO2"));
+
+        System.out.println();
+        System.out.println(check("13O2 + CH3(CH2)5CH3 -> 16H2O + 7CO2", "CH3(CH2)5CH3 + 13O2 -> 7CO2 + 16H2O"));
     }
 
     public static String parseFromString(String statementString) {
@@ -118,6 +127,37 @@ public class RunParser {
                     atomCountRightNode.put(element, atomCountRight.get(element));
                 }
             }
+            return mapper.writeValueAsString(node);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public static String check(String testString, String targetString) {
+        try {
+            ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString)), new DefaultSymbolFactory()).parse().value;
+            ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(targetString)), new DefaultSymbolFactory()).parse().value;
+            Statement testStatement = testStatements.get(0);
+            Statement targetStatement = targetStatements.get(0);
+
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("testString", testString);
+            node.put("targetString", targetString);
+            node.put("test", testStatement.toString());
+            node.put("target", targetStatement.toString());
+            if (targetStatement.containsError()) {
+                System.err.println("Trusted string contains error!");
+                System.err.println("\t\"" + targetString + "\"");
+                System.err.println("\t\"" + targetStatement.toString() + "\"");
+            }
+            node.put("error", testStatement.containsError());
+            node.put("equal", targetStatement.equals(testStatement));
+            node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
+            node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
+            node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
+            node.put("sameMolecules", targetStatement.sameMolecules(testStatement));
+
             return mapper.writeValueAsString(node);
         } catch (Exception e) {
             return "";

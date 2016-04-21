@@ -20,4 +20,6 @@ public abstract class Statement {
 
     abstract boolean containsError();
 
+    abstract boolean sameMolecules(Statement s);
+
 }
