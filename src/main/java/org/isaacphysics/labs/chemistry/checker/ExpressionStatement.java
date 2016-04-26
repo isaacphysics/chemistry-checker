@@ -65,4 +65,13 @@ public class ExpressionStatement extends Statement implements Countable {
         return this.expr;
     }
 
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("digraph chemical_syntax_tree {\n");
+        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
+        result.append(expr.getDotCode());
+        result.append("}\n");
+        return result.toString();
+    }
+
 }

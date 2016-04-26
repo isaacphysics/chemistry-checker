@@ -24,17 +24,23 @@ public class Group implements Countable {
     private String element;
     private Integer number;
     private Integer charge;
+    private static int dotIdTracker = 0;
+    private int dotId;
 
     public Group(String e, Integer n) {
         element = e;
         number = n;
         charge = 0;
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     public Group(Molecule m, Integer n) {
         molecule = m;
         number = n;
         charge = molecule.getCharge() * n;
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     public Group(Molecule m, Integer n, String c) {
@@ -115,5 +121,62 @@ public class Group implements Countable {
 
     public Integer getCharge() {
         return charge;
+    }
+
+    public String getDotId() {
+        return "group_" + dotId;
+    }
+
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("\t");
+        result.append(getDotId());
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Group&zwnj;|\\n");
+        result.append(getDotString());
+        result.append("\\n\\n|&zwj;&zwj;&zwj;number&zwnj;: ");
+        result.append(number);
+        result.append("|&zwj;&zwj;&zwj;element&zwnj;");
+        if (element != null) {
+            result.append(": ");
+            result.append(element);
+        } else {
+            result.append(": none");
+        }
+        result.append("|&zwj;&zwj;&zwj;charge&zwnj;: ");
+        result.append(charge);
+        result.append("|&zwj;&zwj;&zwj;molecule&zwnj;");
+        if (molecule == null) {
+            result.append(": none");
+        }
+        result.append("}\",color=\"#4c7fbe\"];\n");
+        if (molecule != null) {
+            result.append("\t");
+            result.append(getDotId());
+            result.append(":s -> ");
+            result.append(molecule.getDotId());
+            result.append(":n;\n");
+            result.append(molecule.getDotCode());
+        }
+        return result.toString();
+    }
+
+    public String getDotString() {
+        String c;
+        if (null == charge || 0 == charge) {
+            c = "";
+        } else if (1 == charge) {
+            c = "&zwj;&zwj;+&zwnj;";
+        } else if (-1 == charge) {
+            c = "&zwj;&zwj;-&zwnj;";
+        } else if (charge > 1) {
+            c = "&zwj;&zwj;" + charge.toString() + "+&zwnj;";
+        } else {
+            c = "&zwj;&zwj;" + Math.abs(charge) + "-&zwnj;";
+        }
+        if (null != molecule) {
+            return "(" + molecule.getDotString() + ")&zwj;" + number.toString() + "&zwnj;" + c;
+        } else {
+            return element + (number > 1 ? "&zwj;"+number.toString()+"&zwnj;" : "") + c;
+        }
     }
 }

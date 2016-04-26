@@ -20,8 +20,13 @@ import java.util.HashMap;
 
 public class ErrorTerm extends AbstractTerm {
 
+    private static int dotIdTracker = 0;
+    private int dotId;
+
     public ErrorTerm() {
         super();
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     @Override
@@ -45,5 +50,23 @@ public class ErrorTerm extends AbstractTerm {
 
     public boolean contains(Molecule m) {
         return false;
+    }
+
+    public String getDotId() {
+        return "error_term_" + dotId;
+    }
+
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("\t");
+        result.append(getDotId());
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n");
+        result.append("Syntax Error");
+        result.append("\\n\\n}\",color=\"#49902a\"];\n");
+        return result.toString();
+    }
+
+    public String getDotString() {
+        return toString();
     }
 }

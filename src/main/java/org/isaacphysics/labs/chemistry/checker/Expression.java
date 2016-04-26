@@ -22,15 +22,21 @@ import java.util.HashSet;
 
 public class Expression implements Countable {
     private ArrayList<AbstractTerm> terms;
+    private static int dotIdTracker = 0;
+    private int dotId;
 
     public Expression(AbstractTerm t) {
         terms = new ArrayList<AbstractTerm>();
         terms.add(t);
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     public Expression(Expression e, AbstractTerm t) {
         terms = new ArrayList<AbstractTerm>(e.terms);
         terms.add(t);
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     @Override
@@ -112,5 +118,38 @@ public class Expression implements Countable {
             }
         }
         return true;
+    }
+
+    public String getDotId() {
+        return "expression_" + dotId;
+    }
+
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("\t");
+        result.append(getDotId());
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Expression&zwnj;|\\n");
+        result.append(getDotString());
+        result.append("\\n\\n|<terms>&zwj;&zwj;&zwj;terms&zwnj;}\",color=\"#fea100\"];\n");
+        for (AbstractTerm t : terms) {
+            result.append("\t");
+            result.append(getDotId());
+            result.append(":terms -> ");
+            result.append(t.getDotId());
+            result.append(":n;\n");
+            result.append(t.getDotCode());
+        }
+        return result.toString();
+    }
+
+    public String getDotString() {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < terms.size(); i++) {
+            if (i > 0) {
+                b.append(" + ");
+            }
+            b.append(terms.get(i).getDotString());
+        }
+        return b.toString();
     }
 }

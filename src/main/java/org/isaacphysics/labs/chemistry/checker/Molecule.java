@@ -21,15 +21,21 @@ import java.util.HashMap;
 
 public class Molecule implements Countable {
     private ArrayList<Group> groups;
+    private static int dotIdTracker = 0;
+    private int dotId;
 
     public Molecule(Group g) {
         groups = new ArrayList<Group>();
         groups.add(g);
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     public Molecule(Molecule m, Group g) {
         groups = new ArrayList<Group>(m.groups);
         groups.add(g);
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     @Override
@@ -75,5 +81,35 @@ public class Molecule implements Countable {
             c += g.getCharge();
         }
         return c;
+    }
+
+    public String getDotId() {
+        return "molecule_" + dotId;
+    }
+
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("\t");
+        result.append(getDotId());
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Molecule&zwnj;|\\n");
+        result.append(getDotString());
+        result.append("\\n\\n|&zwj;&zwj;&zwj;groups&zwnj;}\",color=\"#944cbe\"];\n");
+        for (Group g : groups) {
+            result.append("\t");
+            result.append(getDotId());
+            result.append(":s -> ");
+            result.append(g.getDotId());
+            result.append(":n;\n");
+            result.append(g.getDotCode());
+        }
+        return result.toString();
+    }
+
+    public String getDotString() {
+        StringBuilder b = new StringBuilder();
+        for (Group g : groups) {
+            b.append(g.getDotString());
+        }
+        return b.toString();
     }
 }

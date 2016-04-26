@@ -22,4 +22,6 @@ public abstract class Statement {
 
     abstract boolean sameMolecules(Statement s);
 
+    abstract String getDotCode();
+
 }

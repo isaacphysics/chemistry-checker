@@ -31,6 +31,8 @@ public class Term extends AbstractTerm {
     private Molecule molecule;
     private Integer number;
     private PhysicalState state;
+    private static int dotIdTracker = 0;
+    private int dotId;
 
     public Term(int n, Molecule m, String s) {
         this.number = n;
@@ -46,6 +48,8 @@ public class Term extends AbstractTerm {
         } else if (s.equals("aq")) {
             this.state = PhysicalState.aq;
         }
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
     }
 
     public Term(int n, Molecule m) {
@@ -121,5 +125,48 @@ public class Term extends AbstractTerm {
 
     public boolean contains(Molecule m) {
         return this.molecule.equals(m);
+    }
+
+    public String getDotId() {
+        return "term_" + dotId;
+    }
+
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("\t");
+        result.append(getDotId());
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n");
+        result.append(getDotString());
+        result.append("\\n\\n|&zwj;&zwj;&zwj;number&zwnj;: ");
+        result.append(number);
+        result.append("|&zwj;&zwj;&zwj;state&zwnj;: ");
+        if (state != null) {
+            result.append(state.toString());
+        } else {
+            result.append("none");
+        }
+        result.append("|&zwj;&zwj;&zwj;molecule&zwnj;}\",color=\"#49902a\"];\n");
+
+        result.append("\t");
+        result.append(getDotId());
+        result.append(":s -> ");
+        result.append(molecule.getDotId());
+        result.append(":n;\n");
+
+        result.append(molecule.getDotCode());
+        result.append("\n");
+        return result.toString();
+    }
+
+    public String getDotString() {
+        String t = "";
+        if (number > 1) {
+            t += number.toString();
+        }
+        t += molecule.getDotString();
+        if (state != null) {
+            t += "(" + state.toString() + ")";
+        }
+        return t;
     }
 }

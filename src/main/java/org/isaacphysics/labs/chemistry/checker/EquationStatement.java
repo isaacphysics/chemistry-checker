@@ -81,4 +81,28 @@ public class EquationStatement extends Statement {
         }
     }
 
+    public String getDotCode() {
+        StringBuilder result = new StringBuilder();
+        result.append("digraph chemical_syntax_tree {\n");
+        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
+
+        result.append("\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Equation&zwnj;|\\n");
+        result.append(left.getDotString());
+        result.append(" &#8594; ");
+        result.append(right.getDotString());
+        result.append("\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n");
+
+        result.append("\tequation:left:w -> ");
+        result.append(left.getDotId());
+        result.append(";\n");
+        result.append("\tequation:right:e -> ");
+        result.append(right.getDotId());
+        result.append(";\n");
+
+        result.append(left.getDotCode());
+        result.append(right.getDotCode());
+        result.append("}\n");
+        return result.toString();
+    }
+
 }

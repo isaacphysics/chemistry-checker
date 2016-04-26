@@ -19,4 +19,10 @@ package org.isaacphysics.labs.chemistry.checker;
 public abstract class AbstractTerm implements Countable {
 
     abstract boolean contains(Molecule m);
+
+    abstract String getDotId();
+
+    abstract String getDotCode();
+
+    abstract String getDotString();
 }

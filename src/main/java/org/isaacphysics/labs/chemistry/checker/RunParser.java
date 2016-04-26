@@ -18,6 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import java_cup.runtime.DefaultSymbolFactory;
 
 import java.io.FileInputStream;
@@ -34,49 +35,53 @@ public class RunParser {
         System.err.flush();
         System.out.flush();
         System.out.println();
-        for (Statement statement : statements) {
-            System.out.println(statement);
-            if (statement instanceof ExpressionStatement) {
-                System.out.println("Total atoms: " + ((ExpressionStatement) statement).getAtomCount());
-                System.out.println("Total charge: " + ((ExpressionStatement) statement).getCharge());
-            } else if (statement instanceof EquationStatement) {
-                System.out.println("Is balanced? " + ((EquationStatement) statement).isBalanced());
-                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).getLeftExpression().getAtomCount());
-                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).getRightExpression().getAtomCount());
-                System.out.println("Total charge LHS: " + ((EquationStatement) statement).getLeftExpression().getCharge());
-                System.out.println("Total charge RHS: " + ((EquationStatement) statement).getRightExpression().getCharge());
-            }
-            System.out.println("\n");
-        }
+//        for (Statement statement : statements) {
+//            System.out.println(statement);
+//            if (statement instanceof ExpressionStatement) {
+//                System.out.println("Total atoms: " + ((ExpressionStatement) statement).getAtomCount());
+//                System.out.println("Total charge: " + ((ExpressionStatement) statement).getCharge());
+//            } else if (statement instanceof EquationStatement) {
+//                System.out.println("Is balanced? " + ((EquationStatement) statement).isBalanced());
+//                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).getLeftExpression().getAtomCount());
+//                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).getRightExpression().getAtomCount());
+//                System.out.println("Total charge LHS: " + ((EquationStatement) statement).getLeftExpression().getCharge());
+//                System.out.println("Total charge RHS: " + ((EquationStatement) statement).getRightExpression().getCharge());
+//            }
+//            System.out.println("\n");
+//        }
+//
+//        System.out.println();
+//        EquationStatement a = (EquationStatement) statements.get(5);
+//        EquationStatement b = (EquationStatement) statements.get(6);
+//        if (a.equals(b)) {
+//            System.out.println("\"" + a.toString() + "\" == \"" + b.toString() + "\"");
+//            if (!b.equals(a)) {
+//                System.err.println("Equality not symmetric!");
+//            }
+//        } else {
+//            System.out.println("\"" + a.toString() + "\" != \"" + b.toString() + "\"");
+//            if (b.equals(a)) {
+//                System.err.println("Equality not symmetric!");
+//            }
+//        }
+//
+//        System.out.println();
+//        System.out.println();
+//        Expression expr = ((ExpressionStatement) statements.get(17)).getExpression();
+//        System.out.println("Are all molecules in \"" + expr.toString() + "\" in \"" + ((EquationStatement) statements.get(3)).getLeftExpression().toString() + "\" ?");
+//        System.out.println(((EquationStatement) statements.get(3)).getLeftExpression().containsAll(expr));
 
-        System.out.println();
-        EquationStatement a = (EquationStatement) statements.get(5);
-        EquationStatement b = (EquationStatement) statements.get(6);
-        if (a.equals(b)) {
-            System.out.println("\"" + a.toString() + "\" == \"" + b.toString() + "\"");
-            if (!b.equals(a)) {
-                System.err.println("Equality not symmetric!");
-            }
-        } else {
-            System.out.println("\"" + a.toString() + "\" != \"" + b.toString() + "\"");
-            if (b.equals(a)) {
-                System.err.println("Equality not symmetric!");
-            }
-        }
+        System.out.println();System.out.println();System.out.println();
+        System.out.println(statements.get(4).getDotCode());
+        System.out.println();System.out.println();System.out.println();
 
-        System.out.println();
-        System.out.println();
-        Expression expr = ((ExpressionStatement) statements.get(17)).getExpression();
-        System.out.println("Are all molecules in \"" + expr.toString() + "\" in \"" + ((EquationStatement) statements.get(3)).getLeftExpression().toString() + "\" ?");
-        System.out.println(((EquationStatement) statements.get(3)).getLeftExpression().containsAll(expr));
-
-        System.out.println();
-        System.out.println(parseFromString("CH3(CH2)5CH3"));
-        System.out.println();
-        System.out.println(parseFromString("C6H12O6 + 6O2 -> 6H2O + 6CO2"));
-
-        System.out.println();
-        System.out.println(check("13O2 + CH3(CH2)5CH3 -> 16H2O + 7CO2", "CH3(CH2)5CH3 + 13O2 -> 7CO2 + 16H2O"));
+//        System.out.println();
+//        System.out.println(parseFromString("CH3(CH2)5CH3"));
+//        System.out.println();
+//        System.out.println(parseFromString("C6H12O6 + 6O2 -> 6H2O + 6CO2"));
+//
+//        System.out.println();
+//        System.out.println(check("13O2 + CH3(CH2)5CH3 -> 16H2O + 7CO2", "CH3(CH2)5CH3 + 13O2 -> 7CO2 + 16H2O"));
     }
 
     public static String parseFromString(String statementString) {
