@@ -17,6 +17,7 @@
 package org.isaacphysics.labs.chemistry.checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import java_cup.runtime.DefaultSymbolFactory;
@@ -89,6 +90,7 @@ public class RunParser {
             ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(statementString)), new DefaultSymbolFactory()).parse().value;
             Statement statement = statements.get(0);
             ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             ObjectNode node = mapper.createObjectNode();
             if (statement instanceof ExpressionStatement) {
                 ExpressionStatement exprStatement = (ExpressionStatement) statement;
@@ -146,6 +148,7 @@ public class RunParser {
             Statement targetStatement = targetStatements.get(0);
 
             ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             ObjectNode node = mapper.createObjectNode();
             node.put("testString", testString);
             node.put("targetString", targetString);
