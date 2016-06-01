@@ -6,10 +6,12 @@
 
 (defroutes routes
   (POST "/check" [test target]
+    (println "Checking" test "against" target)
     {:status 200
      :body (RunParser/check test target)
      :headers {"Content-Type" "application/json"}})
   (POST "/parse" [test]
+    (println "Parsing" test)
     {:status 200
      :body (RunParser/parseFromString test)
      :headers {"Content-Type" "application/json"}}))
