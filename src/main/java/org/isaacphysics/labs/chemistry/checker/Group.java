@@ -43,19 +43,19 @@ public class Group implements Countable {
         dotIdTracker += 1;
     }
 
-    public Group(Molecule m, Integer n, String c) {
+    public Group(Molecule m, Integer n, Integer c) {
         this(m, n);
         // TODO: Check that molecule not charged!
-        charge = chargeToInt(c);
+        charge = c;
     }
 
-    public Group(String e, Integer n, String c, boolean multiplyCharge) {
+    public Group(String e, Integer n, Integer c, boolean multiplyCharge) {
         this(e, n);
         // TODO: Learn Chemistry - how do we deal with charge here?
         if (multiplyCharge) {
-            charge = chargeToInt(c) * number;
+            charge = c * number;
         } else {
-            charge = chargeToInt(c);
+            charge = c;
         }
     }
 
@@ -89,7 +89,7 @@ public class Group implements Countable {
         return false;
     }
 
-    private static Integer chargeToInt(String c) {
+/*    private static Integer chargeToInt(String c) {
         if (c.equals("^{+}")) {
             return 1;
         } else if (c.equals("^{-}")) {
@@ -103,7 +103,7 @@ public class Group implements Countable {
         } else {
             return 0;
         }
-    }
+    }*/
 
     public HashMap<String, Integer> getAtomCount() {
         HashMap<String, Integer> h = new HashMap<String, Integer>();

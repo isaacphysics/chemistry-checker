@@ -20,8 +20,8 @@ import java.util.ArrayList;
 
 
 terminal END, PLUS, TO, LPAREN, RPAREN;
-terminal String STATE, CHARGE;
-terminal Integer NUMBER;
+terminal String STATE;
+terminal Integer NUMBER, CHARGE;
 terminal String ELEMENT;
 
 non terminal ArrayList<Statement> result;
