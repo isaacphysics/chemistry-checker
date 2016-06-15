@@ -29,10 +29,17 @@ import java_cup.runtime.Symbol;
 
     ";"                             { return new Symbol(sym.END); }
     "->"                            { return new Symbol(sym.TO); }
-    \^\{([1-9][0-9]*[+-]|[+-])\}    { return new Symbol(sym.CHARGE, new String(yytext())); }
+    \^\{([1-9][0-9]*[+-]|[+-])\}    { return new Symbol(sym.CHARGE, yytext()); }
     [1-9][0-9]*                     { return new Symbol(sym.NUMBER, new Integer(yytext())); }
-    \((s|l|g|aq)\)                  { return new Symbol(sym.STATE, new String(yytext().replace("(", "").replace(")", ""))); }
-    [BCFHIKNOPSUVWY]|[ISZ][nr]|[ACELP][ru]|A[cglmst]|B[aehikr]|C[adefl-os]|D[bsy]|Es|F[elmr]|G[ade]|H[efgos]|Kr|L[aiv]|M[dgnot]|N[abdeiop]|Os|P[abdmot]|R[abe-hnu]|S[bcegim]|T[abcehilm]|Uu[opst]|Xe|Yb|e        { return new Symbol(sym.ELEMENT, new String(yytext())); }
+    \((s|l|g|aq)\)                  { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }
+    [BCFHIKNOPSUVWY]|[ISZ][nr]|
+    [ACELP][ru]|A[cglmst]|
+    B[aehikr]|C[adefl-os]|
+    D[bsy]|Es|F[elmr]|G[ade]|
+    H[efgos]|Kr|L[aiv]|M[dgnot]|
+    N[abdeiop]|Os|P[abdmot]|
+    R[abe-hnu]|S[bcegim]|
+    T[abcehilm]|Uu[opst]|Xe|Yb|e    { return new Symbol(sym.ELEMENT, yytext()); }
     "+"                             { return new Symbol(sym.PLUS); }
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }
