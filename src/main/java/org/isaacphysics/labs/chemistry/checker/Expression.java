@@ -20,75 +20,84 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Expression implements Countable {
+public class Expression implements Countable
+{
     private ArrayList<AbstractTerm> terms;
     private static int dotIdTracker = 0;
     private int dotId;
 
-    public Expression(AbstractTerm t) {
-        terms = new ArrayList<AbstractTerm>();
+    public Expression(AbstractTerm t)
+    {
+        terms = new ArrayList<>();
         terms.add(t);
         dotId = dotIdTracker;
         dotIdTracker += 1;
     }
 
-    public Expression(Expression e, AbstractTerm t) {
-        terms = new ArrayList<AbstractTerm>(e.terms);
+    public Expression(Expression e, AbstractTerm t)
+    {
+        terms = new ArrayList<>(e.terms);
         terms.add(t);
         dotId = dotIdTracker;
         dotIdTracker += 1;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < terms.size(); i++) {
-            if (i > 0) {
+        for (int i = 0; i < terms.size(); i++)
+        {
+            if (i > 0)
                 b.append(" + ");
-            }
             b.append(terms.get(i).toString());
         }
         return b.toString();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof Expression) {
+    public boolean equals(Object o)
+    {
+        if (o instanceof Expression)
+        {
             Expression other = (Expression) o;
-            HashSet<AbstractTerm> termSet = new HashSet<AbstractTerm>(terms);
-            HashSet<AbstractTerm> otherTermSet = new HashSet<AbstractTerm>(other.terms);
+            HashSet<AbstractTerm> termSet = new HashSet<>(terms);
+            HashSet<AbstractTerm> otherTermSet = new HashSet<>(other.terms);
             return termSet.equals(otherTermSet);
         }
         return false;
     }
 
-    public HashMap<String, Integer> getAtomCount() {
-        HashMap<String, Integer> h = new HashMap<String, Integer>();
-        for (AbstractTerm t : terms) {
-            for (String e : t.getAtomCount().keySet()) {
-                if (!h.containsKey(e)) {
+    public HashMap<String, Integer> getAtomCount()
+    {
+        HashMap<String, Integer> h = new HashMap<>();
+        for (AbstractTerm t : terms)
+        {
+            for (String e : t.getAtomCount().keySet())
+            {
+                if (!h.containsKey(e))
                     h.put(e,  t.getAtomCount().get(e));
-                } else {
+                else
                     h.put(e, h.get(e) + t.getAtomCount().get(e));
-                }
             }
         }
         return h;
     }
 
-    public Integer getCharge() {
+    public Integer getCharge()
+    {
         Integer c = 0;
-        for (AbstractTerm t : terms) {
+        for (AbstractTerm t : terms)
             c += t.getCharge();
-        }
         return c;
     }
 
-    public boolean containsError() {
-        for (AbstractTerm t : terms) {
-            if (t instanceof ErrorTerm) {
+    public boolean containsError()
+    {
+        for (AbstractTerm t : terms)
+        {
+            if (t instanceof ErrorTerm)
                 return true;
-            }
         }
         return false;
     }
@@ -97,24 +106,26 @@ public class Expression implements Countable {
         return this.terms;
     }
 
-    public boolean contains(Molecule m) {
-        for (AbstractTerm t : terms) {
-            if (t.contains(m)) {
+    public boolean contains(Formula m)
+    {
+        for (AbstractTerm t : terms)
+            if (t.contains(m))
                 return true;
-            }
-        }
+
         return false;
     }
 
-    public boolean containsAll(Expression e) {
-        for (AbstractTerm t : e.terms) {
-            if (t instanceof ErrorTerm) {
+    public boolean containsAll(Expression e)
+    {
+        for (AbstractTerm t : e.terms)
+        {
+            if (t instanceof ErrorTerm)
                 return false;
-            } else {
+            else
+            {
                 Term term = (Term) t;
-                if (!this.contains(term.getMolecule())) {
+                if (!this.contains(term.getFormula()))
                     return false;
-                }
             }
         }
         return true;
@@ -124,14 +135,16 @@ public class Expression implements Countable {
         return "expression_" + dotId;
     }
 
-    public String getDotCode() {
+    public String getDotCode()
+    {
         StringBuilder result = new StringBuilder();
         result.append("\t");
         result.append(getDotId());
         result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Expression&zwnj;|\\n");
         result.append(getDotString());
         result.append("\\n\\n|<terms>&zwj;&zwj;&zwj;terms&zwnj;}\",color=\"#fea100\"];\n");
-        for (AbstractTerm t : terms) {
+        for (AbstractTerm t : terms)
+        {
             result.append("\t");
             result.append(getDotId());
             result.append(":terms -> ");
@@ -142,12 +155,14 @@ public class Expression implements Countable {
         return result.toString();
     }
 
-    public String getDotString() {
+    public String getDotString()
+    {
         StringBuilder b = new StringBuilder();
-        for (int i = 0; i < terms.size(); i++) {
-            if (i > 0) {
+        for (int i = 0; i < terms.size(); i++)
+        {
+            if (i > 0)
                 b.append(" + ");
-            }
+
             b.append(terms.get(i).getDotString());
         }
         return b.toString();

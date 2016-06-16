@@ -23,7 +23,8 @@ public class ErrorTerm extends AbstractTerm {
     private static int dotIdTracker = 0;
     private int dotId;
 
-    public ErrorTerm() {
+    public ErrorTerm()
+    {
         super();
         dotId = dotIdTracker;
         dotIdTracker += 1;
@@ -48,7 +49,7 @@ public class ErrorTerm extends AbstractTerm {
         return 0;
     }
 
-    public boolean contains(Molecule m) {
+    public boolean contains(Formula m) {
         return false;
     }
 

@@ -18,9 +18,15 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public interface Countable {
+public interface Countable
+{
+    Integer getCharge();
 
-    public Integer getCharge();
+    HashMap<String, Integer> getAtomCount();
 
-    public HashMap<String, Integer> getAtomCount();
+    @Override
+    boolean equals(Object o);
+
+    @Override
+    String toString();
 }

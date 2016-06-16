@@ -29,41 +29,57 @@ non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
 non terminal Expression expr;
 non terminal Term term;
+non terminal Formula formula;
+non terminal Ion ion;
 non terminal Molecule molecule;
-non terminal Group group;
+non terminal Element element;
+non terminal Compound compound, some_eb, b;
 
 precedence left PLUS;
 precedence left TO;
 
+start with result;
 
-result      ::= statement_list:l                        {: RESULT=new ArrayList<Statement>(l); :}
-                | expr:e                                {: RESULT=new ArrayList<Statement>(); RESULT.add(new ExpressionStatement(e)); :}
-                | expr:l TO expr:r                      {: RESULT=new ArrayList<Statement>(); RESULT.add(new EquationStatement(l, r)); :}
-                ;
-statement_list  ::= statement_list:l statement:s        {: RESULT=new ArrayList<Statement>(l); RESULT.add(s); :}
-                | statement: s                          {: RESULT=new ArrayList<Statement>(); RESULT.add(s); :}
-                ;
-statement   ::= expr:e END                              {: RESULT=new ExpressionStatement(e); :}
-                | expr:l TO expr:r END                  {: RESULT=new EquationStatement(l, r); :}
-                ;
-expr        ::=  expr:l PLUS term:r                     {: RESULT=new Expression(l, r); :}
-                | term:t                                {: RESULT=new Expression(t); :}
-                | expr:e PLUS error                     {: RESULT=new Expression(e, new ErrorTerm()); :}
-                | error                                 {: RESULT=new Expression(new ErrorTerm()); :}
-                ;
-term        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new Term(n, m, s); :}
-                | NUMBER:n molecule:m                   {: RESULT=new Term(n, m); :}
-                | molecule:m STATE:s                    {: RESULT=new Term(m, s); :}
-                | molecule:m                            {: RESULT=new Term(m); :}
-                ;
-molecule    ::= group:g                                 {: RESULT=new Molecule(g); :}
-                | molecule:m group:g                    {: RESULT=new Molecule(m, g); :}
-                ;
-group       ::= ELEMENT:e                               {: RESULT=new Group(e, 1); :}
-                | ELEMENT:e NUMBER:n                    {: RESULT=new Group(e, n); :}
-                | ELEMENT:e CHARGE:c NUMBER:n           {: RESULT=new Group(e, n, c, true); :}
-                | ELEMENT:e NUMBER:n CHARGE:c           {: RESULT=new Group(e, n, c, false); :}
-                | ELEMENT:e CHARGE:c                    {: RESULT=new Group(e, 1, c, false); :}
-                | LPAREN molecule:m RPAREN NUMBER:n     {: RESULT=new Group(m, n); :}
-                ;
 
+result          ::=   statement_list:l                      {: RESULT = new ArrayList<Statement>(l); :}
+                    | statement_list:l END                  {: RESULT = new ArrayList<Statement>(l); :}
+                    ;
+statement_list  ::=   statement_list:l END statement:s      {: RESULT = new ArrayList<Statement>(l); RESULT.add(s); :}
+                    | statement: s                          {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
+                    ;
+statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
+                    | expr:l TO expr:r                      {: RESULT = new EquationStatement(l, r); :}
+                    ;
+expr            ::=   expr:l PLUS term:r                    {: RESULT = new Expression(l, r); :}
+                    | term:t                                {: RESULT = new Expression(t); :}
+                    | expr:e PLUS error                     {: RESULT = new Expression(e, new ErrorTerm()); :}
+                    | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
+                    ;
+term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term(n, f, s); :}
+                    | NUMBER:n formula:f                    {: RESULT = new Term(n, f); :}
+                    | formula:f STATE:s                     {: RESULT = new Term(f, s); :}
+                    | formula:f                             {: RESULT = new Term(f); :}
+                    ;
+formula         ::=   ion:i                                 {: RESULT = i; :}
+                    | molecule:m                            {: RESULT = m; :}
+                    ;
+ion             ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
+                    ;
+molecule        ::=   element:e                             {: RESULT = e; :}
+                    | compound:c                            {: RESULT = c; :}
+                    ;
+element         ::=   ELEMENT:e NUMBER:n                    {: RESULT = new Element(e, n); :}
+                    | ELEMENT:e                             {: RESULT = new Element(e, 1); :}
+                    ;
+compound        ::=   b:b some_eb:eb                        {: RESULT = b; RESULT.addCompound(eb); :}
+                    | element:e1 element:e2 some_eb:eb      {: RESULT = new Compound(e1); RESULT.add(e2);
+                                                               RESULT.addCompound(eb); :}
+                    | element:e b:b some_eb:eb              {: RESULT = new Compound(e); RESULT.add(b);
+                                                               RESULT.addCompound(eb); :}
+                    ;
+some_eb         ::=                                         {: RESULT = new Compound(null); :}
+                    | some_eb:e element:elem                {: RESULT = e; RESULT.add(elem); :}
+                    | some_eb:e b:b                         {: RESULT = e; RESULT.add(b); :}
+                    ;
+b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n); :}
+                    ;

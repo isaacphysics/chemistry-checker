@@ -30,24 +30,33 @@ import java.util.HashMap;
 
 public class RunParser {
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws Exception
+    {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt"))), new DefaultSymbolFactory()).parse().value;
         System.err.flush();
         System.out.flush();
         System.out.println();
-        for (Statement statement : statements) {
+        for (Statement statement : statements)
+        {
             System.out.println(statement);
-            if (statement instanceof ExpressionStatement) {
-                System.out.println("Total atoms: " + ((ExpressionStatement) statement).getAtomCount());
-                System.out.println("Total charge: " + ((ExpressionStatement) statement).getCharge());
-            } else if (statement instanceof EquationStatement) {
-                System.out.println("Is balanced? " + ((EquationStatement) statement).isBalanced());
-                System.out.println("Total atoms LHS: " + ((EquationStatement) statement).getLeftExpression().getAtomCount());
-                System.out.println("Total atoms RHS: " + ((EquationStatement) statement).getRightExpression().getAtomCount());
-                System.out.println("Total charge LHS: " + ((EquationStatement) statement).getLeftExpression().getCharge());
-                System.out.println("Total charge RHS: " + ((EquationStatement) statement).getRightExpression().getCharge());
+            if (statement instanceof ExpressionStatement)
+            {
+                ExpressionStatement s = (ExpressionStatement) statement;
+
+                System.out.println("Total atoms: " + s.getAtomCount());
+                System.out.println("Total charge: " + s.getCharge());
+            } else if (statement instanceof EquationStatement)
+            {
+                EquationStatement s = (EquationStatement) statement;
+                
+                System.out.println("Is balanced? " + s.isBalanced());
+                System.out.println("Total atoms LHS: " + s.getLeftExpression().getAtomCount());
+                System.out.println("Total atoms RHS: " + s.getRightExpression().getAtomCount());
+                System.out.println("Total charge LHS: " + s.getLeftExpression().getCharge());
+                System.out.println("Total charge RHS: " + s.getRightExpression().getCharge());
             }
+            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
         }
 
