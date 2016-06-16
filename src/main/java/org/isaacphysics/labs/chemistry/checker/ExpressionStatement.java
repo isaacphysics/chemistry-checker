@@ -18,10 +18,17 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class ExpressionStatement extends Statement implements Countable {
-
+public class ExpressionStatement extends Statement implements Countable
+{
+    /**
+     * Expression involved in statement
+     */
     private Expression expr;
 
+    /**
+     * Constructor method of ExpressionStatement.
+     * @param e Expression involved in the statement.
+     */
     public ExpressionStatement(Expression e) {
         expr = e;
     }
@@ -32,46 +39,65 @@ public class ExpressionStatement extends Statement implements Countable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof ExpressionStatement) {
+    public String getDotId() { return null; }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof ExpressionStatement)
+        {
             ExpressionStatement other = (ExpressionStatement) o;
             return this.expr.equals(other.expr);
         }
         return false;
     }
 
+    @Override
     public boolean containsError() {
         return expr.containsError();
     }
 
+    @Override
     public HashMap<String, Integer> getAtomCount() {
         return expr.getAtomCount();
     }
 
+    @Override
     public Integer getCharge() {
         return expr.getCharge();
     }
 
-    public boolean sameMolecules(Statement statement) {
-        if (statement instanceof ExpressionStatement) {
+    @Override
+    public boolean sameMolecules(Statement statement)
+    {
+        if (statement instanceof ExpressionStatement)
+        {
             ExpressionStatement exprStatement = (ExpressionStatement) statement;
             return expr.containsAll(exprStatement.expr) && exprStatement.expr.containsAll(expr);
-        } else {
+        } else
             return false;
-        }
     }
 
-    public Expression getExpression() {
+
+    Expression getExpression() {
         return this.expr;
     }
 
-    public String getDotCode() {
+    @Override
+    public String getDotCode()
+    {
         StringBuilder result = new StringBuilder();
         result.append("digraph chemical_syntax_tree {\n");
         result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
         result.append(expr.getDotCode());
         result.append("}\n");
         return result.toString();
+    }
+
+    @Override
+    public String getDotString()
+    {
+        return null;
     }
 
 }

@@ -16,13 +16,32 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public abstract class AbstractTerm implements Countable
+abstract class AbstractTerm implements Countable
 {
+    /**
+     * Helper static variable for issuing unique IDs
+     */
+    private static int dotIdTracker = 0;
+
+    /**
+     * Stores unique ID for every Term
+     */
+    int dotId;
+
+    /**
+     * Constructor function.
+     * Initializes dotId, so that every term has an unique ID number.
+     */
+    AbstractTerm()
+    {
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
+    }
+
+    /**
+     * Checks if term contains all atoms in a given formula.
+     * We do not take account of subparticles, such as electrons, during calculation.
+     * @param m Chemical formula to be compared against
+     */
     abstract boolean contains(Formula m);
-
-    abstract String getDotId();
-
-    abstract String getDotCode();
-
-    abstract String getDotString();
 }

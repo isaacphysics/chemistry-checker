@@ -16,12 +16,25 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public class EquationStatement extends Statement {
-
+public class EquationStatement extends Statement
+{
+    /**
+     * The left expression of a equation
+     */
     private Expression left;
+
+    /**
+     * The right expression of a equation
+     */
     private Expression right;
 
-    public EquationStatement(Expression l, Expression r) {
+    /**
+     * Constructor method of EquationStatement.
+     * @param l Left expression of equation.
+     * @param r Right expression of equation.
+     */
+    public EquationStatement(Expression l, Expression r)
+    {
         left = l;
         right = r;
     }
@@ -32,56 +45,90 @@ public class EquationStatement extends Statement {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof EquationStatement) {
+    public boolean equals(Object o)
+    {
+        if (o instanceof EquationStatement)
+        {
             EquationStatement other = (EquationStatement) o;
             return this.left.equals(other.left) && this.right.equals(other.right);
         }
         return false;
     }
 
+    @Override
     public boolean containsError() {
         return left.containsError() || right.containsError();
     }
 
-    public boolean isBalancedAtoms() {
+    /**
+     * Checks if numbers of atoms on both sides of equation are balanced.
+     * Subparticles like electrons are not considered.
+     */
+    boolean isBalancedAtoms() {
         return !containsError() && left.getAtomCount().equals(right.getAtomCount());
     }
 
-    public boolean isBalancedCharge() {
+    /**
+     * Checks if charges on both sides of equation are balanced.
+     */
+    boolean isBalancedCharge() {
         return !containsError() && (left.getCharge().equals(right.getCharge()));
     }
 
-    public boolean isBalanced() {
+    /**
+     * Checks if both numbers and charges on both sides of equation are balanced.
+     */
+    boolean isBalanced() {
         return isBalancedAtoms() && isBalancedCharge();
     }
 
-    public Expression getLeftExpression() {
+    /**
+     * Getter function. Returns left expression.
+     */
+    Expression getLeftExpression() {
         return this.left;
     }
 
-    public Expression getRightExpression() {
+    /**
+     * Getter function. Returns right expression.
+     */
+    Expression getRightExpression() {
         return this.right;
     }
 
-    public boolean sameMoleculesLeft(EquationStatement eqnStatement) {
+    /**
+     * Given an EquationStatement, check if its left expression is equivalent to our left expression.
+     * @param eqnStatement EquationStatement to be compared against.
+     */
+    private boolean sameMoleculesLeft(EquationStatement eqnStatement)
+    {
         return left.containsAll(eqnStatement.left) && eqnStatement.left.containsAll(left);
     }
 
-    public boolean sameMoleculesRight(EquationStatement eqnStatement) {
+    /**
+     * Given an EquationStatement, check if its right expression is equivalent to our right expression.
+     * @param eqnStatement EquationStatement to be compared against.
+     */
+    private boolean sameMoleculesRight(EquationStatement eqnStatement)
+    {
         return right.containsAll(eqnStatement.right) && eqnStatement.right.containsAll(right);
     }
 
-    public boolean sameMolecules(Statement statement) {
-        if (statement instanceof EquationStatement) {
+    @Override
+    public boolean sameMolecules(Statement statement)
+    {
+        if (statement instanceof EquationStatement)
+        {
             EquationStatement eqnStatement = (EquationStatement) statement;
             return sameMoleculesLeft(eqnStatement) && sameMoleculesRight(eqnStatement);
-        } else {
-            return false;
         }
+        else
+            return false;
     }
 
-    public String getDotCode() {
+    @Override
+    public String getDotCode()
+    {
         StringBuilder result = new StringBuilder();
         result.append("digraph chemical_syntax_tree {\n");
         result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");

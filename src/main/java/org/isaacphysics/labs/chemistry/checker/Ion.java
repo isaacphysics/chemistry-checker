@@ -9,9 +9,21 @@ import java.util.HashMap;
  */
 public class Ion extends Formula
 {
+    /**
+     * Molecule involved for this particular ion.
+     */
     private Molecule molecule;
+
+    /**
+     * Charge of the ion.
+     */
     private Integer charge;
 
+    /**
+     * Constructor function of Ion
+     * @param m Molecule involved for this ion.
+     * @param c Charge of ion.
+     */
     public Ion(Molecule m, Integer c)
     {
         super();

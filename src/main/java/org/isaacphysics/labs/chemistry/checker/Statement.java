@@ -16,12 +16,21 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public abstract class Statement {
-
+abstract class Statement
+{
+    /**
+     * Checks if statement contains any error terms.
+     */
     abstract boolean containsError();
 
+    /**
+     * Given one statement s, checks if s contains same molecules as this statement.
+     * @param s Statement to be compared against.
+     */
     abstract boolean sameMolecules(Statement s);
 
+    /**
+     * Returns abstract syntax tree of statement.
+     */
     abstract String getDotCode();
-
 }

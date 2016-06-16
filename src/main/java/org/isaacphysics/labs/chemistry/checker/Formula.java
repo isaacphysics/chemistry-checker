@@ -1,34 +1,37 @@
 package org.isaacphysics.labs.chemistry.checker;
 
-import java.util.HashMap;
-
 /**
  * Created by Ryan on 15/06/2016.
  * An abstract class that forms the basis of a molecule/ion/isotope.
  */
 public abstract class Formula implements Countable
 {
+    /**
+     * Helper static variable for issuing unique IDs
+     */
     private static int dotIdTracker = 0;
+
+    /**
+     * Stores unique ID for every Formula
+     */
     int dotId;
 
+    /**
+     * Constructor function.
+     * Initializes dotId, so that every formula has an unique ID number.
+     */
     public Formula()
     {
         dotId = dotIdTracker;
         dotIdTracker++;
     }
 
-    @Override
+    /*@Override
     public abstract Integer getCharge();
 
     @Override
     public abstract HashMap<String, Integer> getAtomCount();
 
-    public abstract String getDotCode();
-
-    public abstract String getDotId();
-
-    public abstract String getDotString();
-
     @Override
-    public abstract String toString();
+    public abstract String toString();*/
 }

@@ -9,9 +9,21 @@ import java.util.HashMap;
  */
 public class Compound extends Molecule
 {
+    /**
+     * The groups of molecules involved in the term.
+     */
     private ArrayList<Molecule> groups;
+
+    /**
+     * The number of compounds involved in this term.
+     * For instance number of (HCO)3 is 3, and number of NaOH is 1.
+     */
     private Integer number;
 
+    /**
+     * Constructor function of Compound.
+     * @param m A molecule that is involved in the compound
+     */
     public Compound(Molecule m)
     {
         super();
@@ -23,12 +35,20 @@ public class Compound extends Molecule
         number = 1;
     }
 
-    public void add(Molecule m)
+    /**
+     * Adds a molecule to the Compound instance.
+     * @param m Molecule to be added
+     */
+    void add(Molecule m)
     {
         groups.add(m);
     }
 
-    public void addCompound(Compound c)
+    /**
+     * Appends the group of molecules in another compound to this instance of Compound.
+     * @param c Compound to be appended
+     */
+    void addCompound(Compound c)
     {
         for (Molecule m: c.groups)
         {
@@ -36,6 +56,10 @@ public class Compound extends Molecule
         }
     }
 
+    /**
+     * Setter function. Changes number of this instance.
+     * @param n New number of this instance
+     */
     public void setNumber(Integer n)
     {
         number = n;
@@ -77,6 +101,7 @@ public class Compound extends Molecule
     //@Override
     //public int hashCode() {return groups.size();}
 
+    @Override
     public HashMap<String, Integer> getAtomCount()
     {
         HashMap<String, Integer> h = new HashMap<>();
@@ -101,8 +126,10 @@ public class Compound extends Molecule
         return c;
     }*/
 
+    @Override
     public String getDotId() {return "compound" + dotId;}
 
+    @Override
     public String getDotCode()
     {
         StringBuilder result = new StringBuilder();
@@ -125,6 +152,7 @@ public class Compound extends Molecule
         return result.toString();
     }
 
+    @Override
     public String getDotString()
     {
         StringBuilder b = new StringBuilder();

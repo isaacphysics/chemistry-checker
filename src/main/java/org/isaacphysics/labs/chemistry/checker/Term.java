@@ -20,23 +20,58 @@ import java.util.HashMap;
 
 public class Term extends AbstractTerm
 {
-    // Solid, Liquid, Gas, Aqueous in standard chemical notation
-    public enum PhysicalState
+    /**
+     *  States that can be used in a chemical term.
+     *  If state is not provided, physical state is set to null.
+     */
+    enum PhysicalState
     {
+        /**
+         * Solid state
+         */
         s,
+
+        /**
+         * Liquid state
+         */
         l,
+
+        /**
+         * Gas state
+         */
         g,
+
+        /**
+         * Aqueous state
+         */
         aq
     }
 
+    /**
+     * Chemical formula associated to this term
+     */
     private Formula formula;
-    private Integer coefficient;
-    private PhysicalState state;
-    private static int dotIdTracker = 0;
-    private int dotId;
 
+    /**
+     * Coefficient of this term
+     */
+    private Integer coefficient;
+
+    /**
+     * Physical state of this term
+     */
+    private PhysicalState state;
+
+    /**
+     * Constructor function of Term.
+     * @param n Coefficient of term
+     * @param m Chemical formula involved in the term
+     * @param s State of the formula
+     */
     public Term(int n, Formula m, String s)
     {
+        super();
+
         this.coefficient = n;
         this.formula = m;
 
@@ -44,21 +79,6 @@ public class Term extends AbstractTerm
             this.state = null;
         else
             this.state = PhysicalState.valueOf(s);
-
-        dotId = dotIdTracker;
-        dotIdTracker += 1;
-    }
-
-    public Term(int n, Formula m) {
-        this(n, m, null);
-    }
-
-    public Term(Formula m, String state) {
-        this(1, m, state);
-    }
-
-    public Term(Formula m) {
-        this(1, m);
     }
 
     @Override
@@ -99,6 +119,7 @@ public class Term extends AbstractTerm
             return super.hashCode();
     }
 
+    @Override
     public HashMap<String, Integer> getAtomCount()
     {
         HashMap<String, Integer> h = new HashMap<>();
@@ -109,30 +130,46 @@ public class Term extends AbstractTerm
         return h;
     }
 
+    @Override
     public Integer getCharge() {
         return formula.getCharge() * coefficient;
     }
 
+    /**
+     * Getter function. Returns chemical formula related to this term.
+     * @return Formula of this term
+     */
     public Formula getFormula() {
         return this.formula;
     }
 
+    /**
+     * Getter function. Returns coefficient.
+     * @return Coefficient of this term
+     */
     public Integer getNumber() {
         return this.coefficient;
     }
 
+    /**
+     * Getter function. Returns physical state of this term.
+     * @return State of this term
+     */
     public PhysicalState getState() {
         return this.state;
     }
 
+    @Override
     public boolean contains(Formula m) {
         return this.formula.equals(m);
     }
 
+    @Override
     public String getDotId() {
         return "term_" + dotId;
     }
 
+    @Override
     public String getDotCode()
     {
         StringBuilder result = new StringBuilder();
@@ -162,6 +199,7 @@ public class Term extends AbstractTerm
         return result.toString();
     }
 
+    @Override
     public String getDotString()
     {
         String t = "";

@@ -49,7 +49,7 @@ public class RunParser {
             } else if (statement instanceof EquationStatement)
             {
                 EquationStatement s = (EquationStatement) statement;
-                
+
                 System.out.println("Is balanced? " + s.isBalanced());
                 System.out.println("Total atoms LHS: " + s.getLeftExpression().getAtomCount());
                 System.out.println("Total atoms RHS: " + s.getRightExpression().getAtomCount());

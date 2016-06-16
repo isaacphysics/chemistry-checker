@@ -18,16 +18,11 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class ErrorTerm extends AbstractTerm {
-
-    private static int dotIdTracker = 0;
-    private int dotId;
-
+public class ErrorTerm extends AbstractTerm
+{
     public ErrorTerm()
     {
         super();
-        dotId = dotIdTracker;
-        dotIdTracker += 1;
     }
 
     @Override
@@ -42,7 +37,7 @@ public class ErrorTerm extends AbstractTerm {
     }
 
     public HashMap<String, Integer> getAtomCount() {
-        return new HashMap<String, Integer>();
+        return new HashMap<>();
     }
 
     public Integer getCharge() {
@@ -57,7 +52,8 @@ public class ErrorTerm extends AbstractTerm {
         return "error_term_" + dotId;
     }
 
-    public String getDotCode() {
+    public String getDotCode()
+    {
         StringBuilder result = new StringBuilder();
         result.append("\t");
         result.append(getDotId());

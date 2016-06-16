@@ -18,11 +18,28 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
+/**
+ * Created by Ryan on 15/06/2016.
+ * Element: Special class of molecule that consists of only one type of atom.
+ */
 public class Element extends Molecule
 {
+    /**
+     * The name of atom involved in this element.
+     */
     private String element;
+
+    /**
+     * Subscript of element.
+     * For example number of H2 is 2.
+     */
     private Integer number;
 
+    /**
+     * Constructor function of Element.
+     * @param e Element
+     * @param n Subscript of element
+     */
     public Element(String e, Integer n)
     {
         super();

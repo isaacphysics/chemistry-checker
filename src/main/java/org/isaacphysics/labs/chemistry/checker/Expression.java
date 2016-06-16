@@ -22,10 +22,25 @@ import java.util.HashSet;
 
 public class Expression implements Countable
 {
+    /**
+     * Array of all terms involved in expression
+     */
     private ArrayList<AbstractTerm> terms;
+
+    /**
+     * Helper static variable for issuing unique IDs
+     */
     private static int dotIdTracker = 0;
+
+    /**
+     * Stores unique ID for every Expression
+     */
     private int dotId;
 
+    /**
+     * Construction method for Expression
+     * @param t Term involved in expression.
+     */
     public Expression(AbstractTerm t)
     {
         terms = new ArrayList<>();
@@ -40,6 +55,15 @@ public class Expression implements Countable
         terms.add(t);
         dotId = dotIdTracker;
         dotIdTracker += 1;
+    }
+
+    /**
+     * Adds a term to this expression.
+     * @param t Term to be added
+     */
+    public void add(AbstractTerm t)
+    {
+        terms.add(t);
     }
 
     @Override
@@ -68,6 +92,7 @@ public class Expression implements Countable
         return false;
     }
 
+    @Override
     public HashMap<String, Integer> getAtomCount()
     {
         HashMap<String, Integer> h = new HashMap<>();
@@ -84,6 +109,7 @@ public class Expression implements Countable
         return h;
     }
 
+    @Override
     public Integer getCharge()
     {
         Integer c = 0;
@@ -92,7 +118,10 @@ public class Expression implements Countable
         return c;
     }
 
-    public boolean containsError()
+    /**
+     * Checks if error term exists in this expression.
+     */
+    boolean containsError()
     {
         for (AbstractTerm t : terms)
         {
@@ -102,7 +131,10 @@ public class Expression implements Countable
         return false;
     }
 
-    public ArrayList<AbstractTerm> getTerms() {
+    /**
+     * Getter method. Returns all terms in this expression.
+     */
+    ArrayList<AbstractTerm> getTerms() {
         return this.terms;
     }
 
@@ -115,6 +147,10 @@ public class Expression implements Countable
         return false;
     }
 
+    /**
+     * Checks if this class instance contains all terms in the expression provided in argument.
+     * @param e Expression to be compared against
+     */
     public boolean containsAll(Expression e)
     {
         for (AbstractTerm t : e.terms)
@@ -131,10 +167,12 @@ public class Expression implements Countable
         return true;
     }
 
+    @Override
     public String getDotId() {
         return "expression_" + dotId;
     }
 
+    @Override
     public String getDotCode()
     {
         StringBuilder result = new StringBuilder();
@@ -155,6 +193,7 @@ public class Expression implements Countable
         return result.toString();
     }
 
+    @Override
     public String getDotString()
     {
         StringBuilder b = new StringBuilder();

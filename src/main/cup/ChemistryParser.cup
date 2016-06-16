@@ -41,24 +41,24 @@ precedence left TO;
 start with result;
 
 
-result          ::=   statement_list:l                      {: RESULT = new ArrayList<Statement>(l); :}
-                    | statement_list:l END                  {: RESULT = new ArrayList<Statement>(l); :}
+result          ::=   statement_list:l                      {: RESULT = l; :}
+                    | statement_list:l END                  {: RESULT = l; :}
                     ;
-statement_list  ::=   statement_list:l END statement:s      {: RESULT = new ArrayList<Statement>(l); RESULT.add(s); :}
+statement_list  ::=   statement_list:l END statement:s      {: RESULT = l; RESULT.add(s); :}
                     | statement: s                          {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
                     ;
 statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
                     | expr:l TO expr:r                      {: RESULT = new EquationStatement(l, r); :}
                     ;
-expr            ::=   expr:l PLUS term:r                    {: RESULT = new Expression(l, r); :}
+expr            ::=   expr:l PLUS term:r                    {: RESULT = l; RESULT.add(r); :}
                     | term:t                                {: RESULT = new Expression(t); :}
-                    | expr:e PLUS error                     {: RESULT = new Expression(e, new ErrorTerm()); :}
+                    | expr:e PLUS error                     {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
 term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term(n, f, s); :}
-                    | NUMBER:n formula:f                    {: RESULT = new Term(n, f); :}
-                    | formula:f STATE:s                     {: RESULT = new Term(f, s); :}
-                    | formula:f                             {: RESULT = new Term(f); :}
+                    | NUMBER:n formula:f                    {: RESULT = new Term(n, f, null); :}
+                    | formula:f STATE:s                     {: RESULT = new Term(1, f, s); :}
+                    | formula:f                             {: RESULT = new Term(1, f, null); :}
                     ;
 formula         ::=   ion:i                                 {: RESULT = i; :}
                     | molecule:m                            {: RESULT = m; :}
