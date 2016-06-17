@@ -17,6 +17,12 @@ public class ChemicalElectron extends Formula
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        return (o instanceof ChemicalElectron);
+    }
+
+    @Override
     public String toString() {
         return "e^{-}";
     }

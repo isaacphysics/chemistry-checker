@@ -37,4 +37,7 @@ public abstract class Molecule extends Formula
      * Returns number of molecules involved.
      */
     public abstract Integer getNumber();
+
+    @Override
+    public abstract boolean equals(Object o);
 }

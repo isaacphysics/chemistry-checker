@@ -95,6 +95,18 @@ public class Ion extends Formula
     }
 
     @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof Ion)
+        {
+            Ion other = (Ion) o;
+            return (this.charge.equals(other.charge) && this.molecule.equals(other.molecule));
+        }
+
+        return false;
+    }
+
+    @Override
     public String toString()
     {
         String c;

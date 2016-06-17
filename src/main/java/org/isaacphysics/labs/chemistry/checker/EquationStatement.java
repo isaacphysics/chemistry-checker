@@ -56,6 +56,10 @@ public class EquationStatement extends Statement
         if (o instanceof EquationStatement)
         {
             EquationStatement other = (EquationStatement) o;
+            //System.out.println("Checking equality: ");
+            //System.out.println(this.left.equals(other.left));
+            //System.out.println(this.arrow.equals(other.arrow));
+            //System.out.println(this.right.equals(other.right));
             return this.left.equals(other.left) &&
                     this.arrow.equals(other.arrow) &&
                     this.right.equals(other.right);

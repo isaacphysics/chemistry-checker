@@ -98,26 +98,36 @@ public class Term extends AbstractTerm
     @Override
     public boolean equals(Object o)
     {
+        //System.out.printf("Checking if %s and %s are equal...\n", toString(), o.toString());
+
         if (o instanceof ErrorTerm)
+        {
+            //System.out.println("One is ErrorTerm, no.");
             return false;
+        }
         else if (o instanceof Term)
         {
             Term other = (Term) o;
+            /*System.out.printf("Formula: %b, Coefficient: %b, State: %b\n",
+                    this.formula.equals(other.formula),
+                    this.coefficient.equals(other.coefficient),
+                    this.state == other.state);*/
             return (this.formula.equals(other.formula)
                     && this.coefficient.equals(other.coefficient)
                     && (this.state == other.state));
         }
+        //System.out.println("One is not even a term, no.");
         return false;
     }
 
-    @Override
+    /*@Override
     public int hashCode ()
     {
         if (null != formula)
             return this.formula.hashCode();
         else
             return super.hashCode();
-    }
+    }*/
 
     @Override
     public HashMap<String, Integer> getAtomCount()

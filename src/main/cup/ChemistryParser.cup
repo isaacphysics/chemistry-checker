@@ -77,7 +77,7 @@ molecule        ::=   element:e                             {: RESULT = e; :}
 element         ::=   ELEMENT:e NUMBER:n                    {: RESULT = new Element(e, n); :}
                     | ELEMENT:e                             {: RESULT = new Element(e, 1); :}
                     ;
-compound        ::=   b:b some_eb:eb                        {: RESULT = b; RESULT.addCompound(eb); :}
+compound        ::=   b:b some_eb:eb                        {: RESULT = new Compound(b); RESULT.addCompound(eb); :}
                     | element:e1 element:e2 some_eb:eb      {: RESULT = new Compound(e1); RESULT.add(e2);
                                                                RESULT.addCompound(eb); :}
                     | element:e b:b some_eb:eb              {: RESULT = new Compound(e); RESULT.add(b);

@@ -44,4 +44,15 @@ abstract class AbstractTerm implements Countable
      * @param m Chemical formula to be compared against
      */
     abstract boolean contains(Formula m);
+
+    @Override
+    abstract public boolean equals(Object o);
+
+    @Override
+    public int hashCode()
+    {
+        //System.out.printf("HashCode of %s: %d\n", toString(), toString().hashCode());
+        return toString().hashCode();
+    }
+
 }

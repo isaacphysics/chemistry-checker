@@ -34,5 +34,8 @@ public abstract class Formula implements Countable
     */
 
     @Override
+    public abstract boolean equals(Object o);
+
+    @Override
     public abstract String toString();
 }
