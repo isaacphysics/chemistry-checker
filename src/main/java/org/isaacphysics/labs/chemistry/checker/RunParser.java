@@ -56,7 +56,7 @@ public class RunParser {
                 System.out.println("Total charge LHS: " + s.getLeftExpression().getCharge());
                 System.out.println("Total charge RHS: " + s.getRightExpression().getCharge());
             }
-            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
+            System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
         }
 

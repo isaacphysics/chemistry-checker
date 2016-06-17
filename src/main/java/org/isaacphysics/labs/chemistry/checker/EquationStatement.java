@@ -29,19 +29,25 @@ public class EquationStatement extends Statement
     private Expression right;
 
     /**
+     * The arrow used in equation
+     */
+    private AbstractArrow arrow;
+
+    /**
      * Constructor method of EquationStatement.
      * @param l Left expression of equation.
      * @param r Right expression of equation.
      */
-    public EquationStatement(Expression l, Expression r)
+    public EquationStatement(Expression l, AbstractArrow a, Expression r)
     {
         left = l;
         right = r;
+        arrow = a;
     }
 
     @Override
     public String toString() {
-        return left.toString() + " -> " + right.toString();
+        return left.toString() + arrow.toString() + right.toString();
     }
 
     @Override
@@ -50,7 +56,9 @@ public class EquationStatement extends Statement
         if (o instanceof EquationStatement)
         {
             EquationStatement other = (EquationStatement) o;
-            return this.left.equals(other.left) && this.right.equals(other.right);
+            return this.left.equals(other.left) &&
+                    this.arrow.equals(other.arrow) &&
+                    this.right.equals(other.right);
         }
         return false;
     }
@@ -135,18 +143,23 @@ public class EquationStatement extends Statement
 
         result.append("\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Equation&zwnj;|\\n");
         result.append(left.getDotString());
-        result.append(" &#8594; ");
+        result.append(arrow.getDotString());
         result.append(right.getDotString());
-        result.append("\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n");
+        result.append("\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<arrow>&zwj;&zwj;&zwj;arrow&zwnj;|" +
+                "<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n");
 
         result.append("\tequation:left:w -> ");
         result.append(left.getDotId());
+        result.append(";\n");
+        result.append("\tequation:arrow -> ");
+        result.append("arrow:w");
         result.append(";\n");
         result.append("\tequation:right:e -> ");
         result.append(right.getDotId());
         result.append(";\n");
 
         result.append(left.getDotCode());
+        result.append(arrow.getDotCode());
         result.append(right.getDotCode());
         result.append("}\n");
         return result.toString();

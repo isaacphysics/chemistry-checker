@@ -19,7 +19,9 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 
 
-terminal END, PLUS, TO, LPAREN, RPAREN;
+terminal END, PLUS, LPAREN, RPAREN;
+terminal SingleArrow TO;
+terminal DoubleArrow DTO;
 terminal String STATE;
 terminal Integer NUMBER, CHARGE;
 terminal String ELEMENT;
@@ -48,7 +50,8 @@ statement_list  ::=   statement_list:l END statement:s      {: RESULT = l; RESUL
                     | statement: s                          {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
                     ;
 statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
-                    | expr:l TO expr:r                      {: RESULT = new EquationStatement(l, r); :}
+                    | expr:l TO:a expr:r                    {: RESULT = new EquationStatement(l, a, r); :}
+                    | expr:l DTO:a expr:r                   {: RESULT = new EquationStatement(l, a, r); :}
                     ;
 expr            ::=   expr:l PLUS term:r                    {: RESULT = l; RESULT.add(r); :}
                     | term:t                                {: RESULT = new Expression(t); :}

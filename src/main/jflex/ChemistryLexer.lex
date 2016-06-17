@@ -28,7 +28,8 @@ import java_cup.runtime.Symbol;
 %%
 
     ";"                             { return new Symbol(sym.END); }
-    "->"                            { return new Symbol(sym.TO); }
+    "<-->"                          { return new Symbol(sym.DTO, DoubleArrow.getDoubleArrow()); }
+    "->"                            { return new Symbol(sym.TO, SingleArrow.getSingleArrow()); }
     \^\{[1-9][0-9]*[+-]\}           { String s = yytext();
                                         s = s.charAt(s.length() - 2) + s.substring(2, s.length() - 2);
                                         // System.out.println(s); // s = correctly formatted integer

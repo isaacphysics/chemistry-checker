@@ -91,7 +91,7 @@ public class Ion extends Formula
         else
             c = "&zwj;&zwj;" + Math.abs(charge) + "-&zwnj;";
 
-        return molecule.getDotString() + "&zwnj;^\\{" + c + "\\}";
+        return molecule.getDotString() + "&zwnj;" + c;
     }
 
     @Override

@@ -18,15 +18,23 @@ package org.isaacphysics.labs.chemistry.checker;
 
 public abstract class Molecule extends Formula
 {
+    /**
+     * Constructor method of Molecule.
+     * Does nothing, except from invoking constructor of parent.
+     */
     public Molecule()
     {
         super();
     }
 
+    @Override
     public Integer getCharge()
     {
         return 0;
     }
 
+    /**
+     * Returns number of molecules involved.
+     */
     public abstract Integer getNumber();
 }

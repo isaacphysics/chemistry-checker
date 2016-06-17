@@ -1,9 +1,13 @@
 
+Na++Cl-;
+
 NH3;
 
 HNO3;
 
 Ca(NO3)2;
+
+CH3CO2H + H2O <--> CH3CO2^{-} + H3O^{+};
 
 C2O4H2 + H2O2 -> 2CO2 + 2H2O;
 
