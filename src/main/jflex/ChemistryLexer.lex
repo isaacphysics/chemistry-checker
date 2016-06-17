@@ -45,7 +45,8 @@ import java_cup.runtime.Symbol;
     H[efgos]|Kr|L[aiv]|M[dgnot]|
     N[abdeiop]|Os|P[abdmot]|
     R[abe-hnu]|S[bcegim]|
-    T[abcehilm]|Uu[opst]|Xe|Yb|e    { return new Symbol(sym.ELEMENT, yytext()); }
+    T[abcehilm]|Uu[opst]|Xe|Yb      { return new Symbol(sym.ELEMENT, yytext()); }
+    e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
     "+"                             { return new Symbol(sym.PLUS); }
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }

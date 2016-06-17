@@ -31,7 +31,8 @@ public abstract class Formula implements Countable
 
     @Override
     public abstract HashMap<String, Integer> getAtomCount();
+    */
 
     @Override
-    public abstract String toString();*/
+    public abstract String toString();
 }

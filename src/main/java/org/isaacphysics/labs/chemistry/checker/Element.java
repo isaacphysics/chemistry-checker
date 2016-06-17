@@ -85,7 +85,7 @@ public class Element extends Molecule
     {
         HashMap<String, Integer> h = new HashMap<>();
 
-        if (element != null && !element.equals("e"))
+        if (element != null)
             h.put(element, number);
 
         return h;

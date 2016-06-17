@@ -25,6 +25,7 @@ terminal DoubleArrow DTO;
 terminal String STATE;
 terminal Integer NUMBER, CHARGE;
 terminal String ELEMENT;
+terminal ChemicalElectron C_ELECTRON;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -62,6 +63,8 @@ term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term
                     | NUMBER:n formula:f                    {: RESULT = new Term(n, f, null); :}
                     | formula:f STATE:s                     {: RESULT = new Term(1, f, s); :}
                     | formula:f                             {: RESULT = new Term(1, f, null); :}
+                    | NUMBER:n C_ELECTRON:e                 {: RESULT = new Term(n, e, null); :}
+                    | C_ELECTRON:e                          {: RESULT = new Term(1, e, null); :}
                     ;
 formula         ::=   ion:i                                 {: RESULT = i; :}
                     | molecule:m                            {: RESULT = m; :}
