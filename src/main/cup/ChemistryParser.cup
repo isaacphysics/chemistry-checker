@@ -26,6 +26,7 @@ terminal String STATE;
 terminal Integer NUMBER, CHARGE, SUP, SUB;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
+terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -38,6 +39,7 @@ non terminal Isotope isotope;
 non terminal Molecule molecule;
 non terminal Element element;
 non terminal Compound compound, some_eb, b;
+non terminal Nuclear nuclear;
 
 precedence left PLUS;
 precedence left TO;
@@ -67,6 +69,7 @@ term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term
                     | NUMBER:n C_ELECTRON:e                 {: RESULT = new Term(n, e, null); :}
                     | C_ELECTRON:e                          {: RESULT = new Term(1, e, null); :}
                     | isotope:i                             {: RESULT = new Term(1, i, null); :}
+                    | nuclear:n                             {: RESULT = new Term(1, n, null); :}
                     ;
 formula         ::=   ion:i                                 {: RESULT = i; :}
                     | molecule:m                            {: RESULT = m; :}
@@ -76,6 +79,13 @@ ion             ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(
 isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
                     | SUP:sup SUB:sub ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
+                    ;
+nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
+                    | BETA:e                                {: RESULT = e; :}
+                    | GAMMA:e                               {: RESULT = e; :}
+                    | NEUTRINO:e                            {: RESULT = e; :}
+                    | P_ELECTRON:e                          {: RESULT = e; :}
+                    | POSITRON:e                            {: RESULT = e; :}
                     ;
 molecule        ::=   element:e                             {: RESULT = e; :}
                     | compound:c                            {: RESULT = c; :}

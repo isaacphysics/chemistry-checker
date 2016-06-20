@@ -49,6 +49,7 @@ import java_cup.runtime.Symbol;
                                         return new Symbol(sym.SUB, new Integer(s)); }
 
     [1-9][0-9]*                     { return new Symbol(sym.NUMBER, new Integer(yytext())); }
+
     \((s|l|g|aq)\)                  { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }
     [BCFHIKNOPSUVWY]|[ISZ][nr]|
     [ACELP][ru]|A[cglmst]|
@@ -59,9 +60,17 @@ import java_cup.runtime.Symbol;
     R[abe-hnu]|S[bcegim]|
     T[abcehilm]|Uu[opst]|Xe|Yb      { return new Symbol(sym.ELEMENT, yytext()); }
     e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
+
     "+"                             { return new Symbol(sym.PLUS); }
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }
+    "/alpha_particle"               { return new Symbol(sym.ALPHA, new AlphaParticle()); }
+    "/beta_particle"                { return new Symbol(sym.BETA, new BetaParticle()); }
+    "/gamma_ray"                    { return new Symbol(sym.GAMMA, new GammaRay()); }
+    "/neutrino"                     { return new Symbol(sym.NEUTRINO, new Neutrino()); }
+    "/electron"                     { return new Symbol(sym.P_ELECTRON, new PhysicalElectron()); }
+    "/positron"                     { return new Symbol(sym.POSITRON, new Positron()); }
+
     [\s]+                           { /* Ignore all whitespace */ }
     [a-z]+                          { /* System.err.println("Illegal character or element part: "+yytext()); */ }
     .                               { /* System.err.println("Illegal character or element part: "+yytext()); */ }

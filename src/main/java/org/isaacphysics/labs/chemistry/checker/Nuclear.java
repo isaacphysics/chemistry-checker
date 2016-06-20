@@ -8,7 +8,31 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public abstract class Nuclear extends Formula
 {
+    /**
+     * Helper static variable for issuing unique IDs
+     */
+    private static int dotIdTracker = 0;
+
+    /**
+     * Stores unique ID for every Expression
+     */
+    protected int dotId;
+
+    public Nuclear()
+    {
+        dotId = dotIdTracker;
+        dotIdTracker++;
+    }
+
+    /**
+     * Getter method. Returns mass number of given particle.
+     * @return Mass number of nuclear particle.
+     */
     public abstract Integer getMassNumber();
 
+    /**
+     * Getter method. Returns atomic number of given particle.
+     * @return Atomic number of nuclear particle.
+     */
     public abstract Integer getAtomicNumber();
 }

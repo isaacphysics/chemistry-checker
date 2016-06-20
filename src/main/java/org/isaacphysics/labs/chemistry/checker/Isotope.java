@@ -24,16 +24,6 @@ public final class Isotope extends Nuclear
     private Formula formula;
 
     /**
-     * Helper static variable for issuing unique IDs
-     */
-    private static int dotIdTracker = 0;
-
-    /**
-     * Stores unique ID for every Expression
-     */
-    private int dotId;
-
-    /**
      * Constructor method of Isotope.
      * @param mass Mass number of isotope.
      * @param atom Atomic number of isotope.
@@ -41,12 +31,11 @@ public final class Isotope extends Nuclear
      */
     public Isotope(Integer mass, Integer atom, Formula f)
     {
+        super();
+
         this.mass = mass;
         this.atom = atom;
         this.formula = f;
-
-        dotId = dotIdTracker;
-        dotIdTracker++;
     }
 
     @Override

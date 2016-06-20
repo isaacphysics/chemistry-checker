@@ -53,7 +53,7 @@ public final class ChemicalElectron extends Formula
         result.append("\t");
         result.append(getDotId());
 
-        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Electron&zwnj;|\\n");
+        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;PhysicalElectron&zwnj;|\\n");
         result.append(getDotString());
 
         result.append("\n\n}\",color=\"#4c7fbe\"];\n");
