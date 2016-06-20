@@ -18,7 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class ErrorTerm extends AbstractTerm
+public final class ErrorTerm extends AbstractTerm
 {
     public ErrorTerm()
     {

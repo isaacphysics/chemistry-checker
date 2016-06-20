@@ -23,7 +23,7 @@ terminal END, PLUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE;
-terminal Integer NUMBER, CHARGE;
+terminal Integer NUMBER, CHARGE, SUP, SUB;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
 
@@ -34,6 +34,7 @@ non terminal Expression expr;
 non terminal Term term;
 non terminal Formula formula;
 non terminal Ion ion;
+non terminal Isotope isotope;
 non terminal Molecule molecule;
 non terminal Element element;
 non terminal Compound compound, some_eb, b;
@@ -65,16 +66,22 @@ term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term
                     | formula:f                             {: RESULT = new Term(1, f, null); :}
                     | NUMBER:n C_ELECTRON:e                 {: RESULT = new Term(n, e, null); :}
                     | C_ELECTRON:e                          {: RESULT = new Term(1, e, null); :}
+                    | isotope:i                             {: RESULT = new Term(1, i, null); :}
                     ;
 formula         ::=   ion:i                                 {: RESULT = i; :}
                     | molecule:m                            {: RESULT = m; :}
                     ;
 ion             ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
                     ;
+isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUP:sup SUB:sub ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
+                                                                                    new Ion(new Element(e, 1), c)); :}
+                    ;
 molecule        ::=   element:e                             {: RESULT = e; :}
                     | compound:c                            {: RESULT = c; :}
                     ;
 element         ::=   ELEMENT:e NUMBER:n                    {: RESULT = new Element(e, n); :}
+                    | ELEMENT:e SUB:n                       {: RESULT = new Element(e, n); :}
                     | ELEMENT:e                             {: RESULT = new Element(e, 1); :}
                     ;
 compound        ::=   b:b some_eb:eb                        {: RESULT = new Compound(b); RESULT.addCompound(eb); :}

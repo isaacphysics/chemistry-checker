@@ -7,7 +7,7 @@ import java.util.HashMap;
  * Class for charged particles.
  * Stores the charge, and offload other jobs to Molecule.
  */
-public class Ion extends Formula
+public final class Ion extends Formula
 {
     /**
      * Molecule involved for this particular ion.

@@ -22,7 +22,7 @@ import java.util.HashMap;
  * Created by Ryan on 15/06/2016.
  * Element: Special class of molecule that consists of only one type of atom.
  */
-public class Element extends Molecule
+public final class Element extends Molecule
 {
     /**
      * The name of atom involved in this element.

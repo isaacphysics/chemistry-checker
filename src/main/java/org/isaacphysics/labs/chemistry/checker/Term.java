@@ -18,7 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class Term extends AbstractTerm
+public final class Term extends AbstractTerm
 {
     /**
      *  States that can be used in a chemical term.

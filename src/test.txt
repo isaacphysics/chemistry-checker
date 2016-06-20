@@ -39,3 +39,5 @@ H(33 -> (He;
 This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letters!;
 
 3H2O2 + 5C2O4H2;
+
+^{222}_{88}Ra ->  ^{4}_{2}He + ^{218}_{86}Rn

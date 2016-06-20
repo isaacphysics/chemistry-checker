@@ -241,7 +241,7 @@ public class TestParser
     public void testSyntaxErrorEquality() throws Exception
     {
         ArrayList<Statement> statements = stringParser(syntaxError + syntaxError);
-        
+
         Statement result1 = statements.get(0);
         Statement result2 = statements.get(1);
 

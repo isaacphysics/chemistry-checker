@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class Expression implements Countable
+public final class Expression implements Countable
 {
     /**
      * Array of all terms involved in expression

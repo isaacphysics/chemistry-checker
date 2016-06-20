@@ -7,7 +7,7 @@ import java.util.HashMap;
  * Created by Ryan on 15/06/2016.
  * Compound: A chemical item with more than one kind of elements.
  */
-public class Compound extends Molecule
+public final class Compound extends Molecule
 {
     /**
      * The groups of molecules involved in the term.

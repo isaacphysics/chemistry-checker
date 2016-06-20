@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Special class of Formula that only cares about electrons in chemical equations.
  * Created by Ryan on 17/06/2016.
  */
-public class ChemicalElectron extends Formula
+public final class ChemicalElectron extends Formula
 {
     /**
      * Constructor function of ChemicalElectron.

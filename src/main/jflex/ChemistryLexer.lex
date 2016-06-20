@@ -28,14 +28,26 @@ import java_cup.runtime.Symbol;
 %%
 
     ";"                             { return new Symbol(sym.END); }
+
     "<-->"                          { return new Symbol(sym.DTO, DoubleArrow.getDoubleArrow()); }
     "->"                            { return new Symbol(sym.TO, SingleArrow.getSingleArrow()); }
+
     \^\{[1-9][0-9]*[+-]\}           { String s = yytext();
                                         s = s.charAt(s.length() - 2) + s.substring(2, s.length() - 2);
                                         // System.out.println(s); // s = correctly formatted integer
                                         return new Symbol(sym.CHARGE, new Integer(s)); }
     \^\{"+"\}                       { return new Symbol(sym.CHARGE, 1); }
     \^\{"-"\}                       { return new Symbol(sym.CHARGE, -1); }
+
+    \^\{[1-9][0-9]*\}               { String s = yytext();
+                                        s = s.substring(2, s.length() - 1);
+                                        // System.out.println(s); // s = correctly formatted integer
+                                        return new Symbol(sym.SUP, new Integer(s)); }
+    "_{"[1-9][0-9]*\}               { String s = yytext();
+                                        s = s.substring(2, s.length() - 1);
+                                        // System.out.println(s); // s = correctly formatted integer
+                                        return new Symbol(sym.SUB, new Integer(s)); }
+
     [1-9][0-9]*                     { return new Symbol(sym.NUMBER, new Integer(yytext())); }
     \((s|l|g|aq)\)                  { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }
     [BCFHIKNOPSUVWY]|[ISZ][nr]|
