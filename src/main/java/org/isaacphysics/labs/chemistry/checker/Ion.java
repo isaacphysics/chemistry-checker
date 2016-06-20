@@ -123,4 +123,24 @@ public final class Ion extends Formula
 
         return molecule.toString() + c;
     }
+
+    @Override
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        throw new NuclearException("Atomic number not defined for Ion.");
+    }
+
+    @Override
+    public Integer getMassNumber() throws NuclearException
+    {
+        throw new NuclearException("Mass number not defined for Ion.");
+    }
+
+    /**
+     * @return Molecule associated with the ion.
+     */
+    public Molecule getMolecule()
+    {
+        return molecule;
+    }
 }

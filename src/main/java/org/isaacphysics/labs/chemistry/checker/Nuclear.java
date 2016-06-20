@@ -28,11 +28,21 @@ public abstract class Nuclear extends Formula
      * Getter method. Returns mass number of given particle.
      * @return Mass number of nuclear particle.
      */
+    @Override
     public abstract Integer getMassNumber();
 
     /**
      * Getter method. Returns atomic number of given particle.
      * @return Atomic number of nuclear particle.
      */
+    @Override
     public abstract Integer getAtomicNumber();
+
+    /**
+     * Checks if corresponding atomic number of atom is valid.
+     */
+    public boolean isValidAtomicNumber() throws NuclearException
+    {
+        return true;
+    }
 }

@@ -28,6 +28,18 @@ public final class ChemicalElectron extends Formula
     }
 
     @Override
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        throw new NuclearException("Atomic number undefined for ChemicalElectron.");
+    }
+
+    @Override
+    public Integer getMassNumber() throws NuclearException
+    {
+        throw new NuclearException("Mass number undefined for ChemicalElectron.");
+    }
+
+    @Override
     public Integer getCharge()
     {
         return -1;

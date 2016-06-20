@@ -206,4 +206,38 @@ public final class Expression implements Countable
         }
         return b.toString();
     }
+
+    /**
+     * Only defined for nuclear expressions.
+     * Returns the total mass number of AbstractTerms.
+     * @return Total mass number of AbstractTerms.
+     */
+    public Integer getMassCount() throws NuclearException
+    {
+        Integer mass = 0;
+
+        for (AbstractTerm t: terms)
+        {
+            mass += t.getMassNumber();
+        }
+
+        return mass;
+    }
+
+    /**
+     * Only defined for nuclear expressions.
+     * Returns the total atomic number of AbstractTerms.
+     * @return Total atomic number of AbstractTerms.
+     */
+    public Integer getAtomicCount() throws NuclearException
+    {
+        Integer atomic = 0;
+
+        for (AbstractTerm t: terms)
+        {
+            atomic += t.getAtomicNumber();
+        }
+
+        return atomic;
+    }
 }

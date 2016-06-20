@@ -38,4 +38,18 @@ public abstract class Formula implements Countable
 
     @Override
     public abstract String toString();
+
+    /**
+     * Method only applicable to nuclear formula.
+     * @return Atomic number of formula.
+     * @throws NuclearException
+     */
+    public abstract Integer getAtomicNumber() throws NuclearException;
+
+    /**
+     * Method only applicable to nuclear formula.
+     * @return Mass number of formula.
+     * @throws NuclearException
+     */
+    public abstract Integer getMassNumber() throws NuclearException;
 }

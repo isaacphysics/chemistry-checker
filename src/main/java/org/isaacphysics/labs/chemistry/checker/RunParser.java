@@ -56,6 +56,16 @@ public class RunParser {
                 System.out.println("Total charge LHS: " + s.getLeftExpression().getCharge());
                 System.out.println("Total charge RHS: " + s.getRightExpression().getCharge());
             }
+            else
+            {
+                NuclearEquationStatement s = (NuclearEquationStatement) statement;
+
+                System.out.println("Is balanced? " + s.isBalanced());
+                System.out.println("Total atomic# LHS: " + s.getLeftExpression().getAtomicCount());
+                System.out.println("Total atomic# RHS: " + s.getRightExpression().getAtomicCount());
+                System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());
+                System.out.println("Total mass# RHS: " + s.getRightExpression().getMassCount());
+            }
             System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
         }

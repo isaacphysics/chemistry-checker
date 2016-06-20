@@ -39,7 +39,7 @@ abstract class AbstractTerm implements Countable
     }
 
     /**
-     * Checks if term contains all atoms in a given formula.
+     * Checks if term's formula is equivalent to that provided as argument.
      * We do not take account of subparticles, such as electrons, during calculation.
      * @param m Chemical formula to be compared against
      */
@@ -55,4 +55,15 @@ abstract class AbstractTerm implements Countable
         return toString().hashCode();
     }
 
+    /**
+     * Defined for nuclear terms only.
+     * @return Mass number of term.
+     */
+    abstract public Integer getMassNumber() throws NuclearException;
+
+    /**
+     * Defined for nuclear terms only.
+     * @return Atomic number of term.
+     */
+    abstract public Integer getAtomicNumber() throws NuclearException;
 }

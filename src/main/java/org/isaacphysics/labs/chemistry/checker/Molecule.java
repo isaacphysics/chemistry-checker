@@ -40,4 +40,16 @@ public abstract class Molecule extends Formula
 
     @Override
     public abstract boolean equals(Object o);
+
+    @Override
+    public Integer getMassNumber() throws NuclearException
+    {
+        throw new NuclearException("Mass number undefined for Molecule.");
+    }
+
+    @Override
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        throw new NuclearException("Atomic number undefined for Molecule.");
+    }
 }

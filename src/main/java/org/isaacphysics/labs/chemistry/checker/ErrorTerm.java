@@ -36,6 +36,18 @@ public final class ErrorTerm extends AbstractTerm
         return false;
     }
 
+    @Override
+    public Integer getMassNumber() throws NuclearException
+    {
+        throw new NuclearException("Mass number not defined for ErrorTerm.");
+    }
+
+    @Override
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        throw new NuclearException("Atomic number not defined for ErrorTerm.");
+    }
+
     public HashMap<String, Integer> getAtomCount() {
         return new HashMap<>();
     }

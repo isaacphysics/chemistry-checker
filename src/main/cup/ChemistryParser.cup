@@ -31,8 +31,8 @@ terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON;
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
-non terminal Expression expr;
-non terminal Term term;
+non terminal Expression expr, n_expr;
+non terminal Term term, n_term;
 non terminal Formula formula;
 non terminal Ion ion;
 non terminal Isotope isotope;
@@ -51,16 +51,22 @@ result          ::=   statement_list:l                      {: RESULT = l; :}
                     | statement_list:l END                  {: RESULT = l; :}
                     ;
 statement_list  ::=   statement_list:l END statement:s      {: RESULT = l; RESULT.add(s); :}
-                    | statement: s                          {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
+                    | statement:s                           {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
                     ;
 statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
+                    | n_expr:e                              {: RESULT = new ExpressionStatement(e); :}
                     | expr:l TO:a expr:r                    {: RESULT = new EquationStatement(l, a, r); :}
                     | expr:l DTO:a expr:r                   {: RESULT = new EquationStatement(l, a, r); :}
+                    | n_expr:l TO:a n_expr:r                {: RESULT = new NuclearEquationStatement(l, r); :}
                     ;
 expr            ::=   expr:l PLUS term:r                    {: RESULT = l; RESULT.add(r); :}
                     | term:t                                {: RESULT = new Expression(t); :}
                     | expr:e PLUS error                     {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
+                    ;
+n_expr          ::=   n_expr:l PLUS n_term:r                {: RESULT = l; RESULT.add(r); :}
+                    | n_term:t                              {: RESULT = new Expression(t); :}
+                    | n_expr:e PLUS error                   {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     ;
 term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term(n, f, s); :}
                     | NUMBER:n formula:f                    {: RESULT = new Term(n, f, null); :}
@@ -68,8 +74,10 @@ term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term
                     | formula:f                             {: RESULT = new Term(1, f, null); :}
                     | NUMBER:n C_ELECTRON:e                 {: RESULT = new Term(n, e, null); :}
                     | C_ELECTRON:e                          {: RESULT = new Term(1, e, null); :}
-                    | isotope:i                             {: RESULT = new Term(1, i, null); :}
-                    | nuclear:n                             {: RESULT = new Term(1, n, null); :}
+                    ;
+n_term          ::=   isotope:i                             {: RESULT = new Term(1, i, null); :}
+                    | NUMBER:n nuclear:e                    {: RESULT = new Term(n, e, null); :}
+                    | nuclear:e                             {: RESULT = new Term(1, e, null); :}
                     ;
 formula         ::=   ion:i                                 {: RESULT = i; :}
                     | molecule:m                            {: RESULT = m; :}

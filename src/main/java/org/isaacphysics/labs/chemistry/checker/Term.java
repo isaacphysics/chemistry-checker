@@ -120,6 +120,18 @@ public final class Term extends AbstractTerm
         return false;
     }
 
+    @Override
+    public Integer getMassNumber() throws NuclearException
+    {
+        return formula.getMassNumber();
+    }
+
+    @Override
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        return formula.getAtomicNumber();
+    }
+
     /*@Override
     public int hashCode ()
     {

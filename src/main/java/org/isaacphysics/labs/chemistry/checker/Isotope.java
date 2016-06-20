@@ -9,6 +9,31 @@ import java.util.HashMap;
 public final class Isotope extends Nuclear
 {
     /**
+     * Maps elements to their corresponding atomic number.
+     */
+    private static HashMap<String, Integer> periodicTable;
+
+    static
+    {
+        periodicTable = new HashMap<>();
+
+        String[] elemList =
+                {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
+                "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As",
+                "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In",
+                "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb",
+                "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl",
+                "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk",
+                "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Uut",
+                "Fl", "Uup", "Lv", "Uus", "Uuo"};
+
+        for (int i = 0; i < elemList.length; i++)
+        {
+            periodicTable.put(elemList[i], i+1);
+        }
+    }
+
+    /**
      * Mass number of isotope.
      */
     private Integer mass,
@@ -123,5 +148,25 @@ public final class Isotope extends Nuclear
         return "&zwj;&zwj;" + mass + "&zwnj;" +
                 "&zwj;" + atom + "&zwnj;" +
                 formula.getDotString();
+    }
+
+    @Override
+    public boolean isValidAtomicNumber() throws NuclearException
+    {
+        Molecule at;
+
+        if (formula instanceof Ion)
+        {
+            at = ((Ion) formula).getMolecule();
+        }
+        else
+        {
+            at = (Element) formula;
+        }
+
+        if (periodicTable.containsKey(at.toString()))
+            return periodicTable.get(at.toString()).equals(atom);
+        else
+            throw new NuclearException("Invalid atom " + at.toString() + " found in an isotope.");
     }
 }
