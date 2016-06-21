@@ -162,7 +162,7 @@ public class RunParser {
             node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
             node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
             node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
-            node.put("sameMolecules", targetStatement.sameMolecules(testStatement));
+            node.put("sameMolecules", targetStatement.equals(testStatement));
 
             return mapper.writeValueAsString(node);
         } catch (Exception e) {

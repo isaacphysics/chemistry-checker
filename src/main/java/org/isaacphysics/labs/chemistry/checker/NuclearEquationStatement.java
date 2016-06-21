@@ -106,36 +106,6 @@ public class NuclearEquationStatement extends Statement
      */
     boolean isValid() { return left.isValidAtomicNumber() && right.isValidAtomicNumber(); }
 
-    /**
-     * Given an NuclearEquationStatement, check if its left expression is equivalent to our left expression.
-     * @param eqnStatement NuclearEquationStatement to be compared against.
-     */
-    private boolean sameMoleculesLeft(NuclearEquationStatement eqnStatement)
-    {
-        return left.containsAll(eqnStatement.left) && eqnStatement.left.containsAll(left);
-    }
-
-    /**
-     * Given an NuclearEquationStatement, check if its right expression is equivalent to our right expression.
-     * @param eqnStatement NuclearEquationStatement to be compared against.
-     */
-    private boolean sameMoleculesRight(NuclearEquationStatement eqnStatement)
-    {
-        return right.containsAll(eqnStatement.right) && eqnStatement.right.containsAll(right);
-    }
-
-    @Override
-    boolean sameMolecules(Statement statement)
-    {
-        if (statement instanceof NuclearEquationStatement)
-        {
-            NuclearEquationStatement eqnStatement = (NuclearEquationStatement) statement;
-            return sameMoleculesLeft(eqnStatement) && sameMoleculesRight(eqnStatement);
-        }
-        else
-            return false;
-    }
-
     @Override
     String getDotCode()
     {

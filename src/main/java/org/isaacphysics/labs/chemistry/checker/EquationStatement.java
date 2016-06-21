@@ -108,36 +108,6 @@ public class EquationStatement extends Statement
         return this.right;
     }
 
-    /**
-     * Given an EquationStatement, check if its left expression is equivalent to our left expression.
-     * @param eqnStatement EquationStatement to be compared against.
-     */
-    private boolean sameMoleculesLeft(EquationStatement eqnStatement)
-    {
-        return left.containsAll(eqnStatement.left) && eqnStatement.left.containsAll(left);
-    }
-
-    /**
-     * Given an EquationStatement, check if its right expression is equivalent to our right expression.
-     * @param eqnStatement EquationStatement to be compared against.
-     */
-    private boolean sameMoleculesRight(EquationStatement eqnStatement)
-    {
-        return right.containsAll(eqnStatement.right) && eqnStatement.right.containsAll(right);
-    }
-
-    @Override
-    public boolean sameMolecules(Statement statement)
-    {
-        if (statement instanceof EquationStatement)
-        {
-            EquationStatement eqnStatement = (EquationStatement) statement;
-            return sameMoleculesLeft(eqnStatement) && sameMoleculesRight(eqnStatement);
-        }
-        else
-            return false;
-    }
-
     @Override
     public String getDotCode()
     {

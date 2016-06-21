@@ -55,18 +55,6 @@ public class NuclearExpressionStatement extends Statement implements Countable
         return expr.getCharge();
     }
 
-    @Override
-    public boolean sameMolecules(Statement statement)
-    {
-        if (statement instanceof NuclearExpressionStatement)
-        {
-            NuclearExpressionStatement exprStatement = (NuclearExpressionStatement) statement;
-            return expr.containsAll(exprStatement.expr) && exprStatement.expr.containsAll(expr);
-        } else
-            return false;
-    }
-
-
     Expression getExpression() {
         return this.expr;
     }

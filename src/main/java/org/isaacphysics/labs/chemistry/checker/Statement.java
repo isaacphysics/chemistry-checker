@@ -23,11 +23,8 @@ abstract class Statement
      */
     abstract boolean containsError();
 
-    /**
-     * Given one statement s, checks if s contains same molecules as this statement.
-     * @param s Statement to be compared against.
-     */
-    abstract boolean sameMolecules(Statement s);
+    @Override
+    public abstract boolean equals(Object o);
 
     /**
      * Returns abstract syntax tree of statement.
