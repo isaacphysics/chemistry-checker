@@ -19,7 +19,6 @@ package org.isaacphysics.labs.chemistry.checker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import java_cup.runtime.DefaultSymbolFactory;
 
 import java.io.FileInputStream;
@@ -33,6 +32,7 @@ public class RunParser {
     public static void main(String args[]) throws Exception
     {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
+        @SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt"))), new DefaultSymbolFactory()).parse().value;
         System.err.flush();
         System.out.flush();

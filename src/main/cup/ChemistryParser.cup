@@ -19,7 +19,7 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 
 
-terminal END, PLUS, MINUS, LPAREN, RPAREN;
+terminal END, PLUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE;
