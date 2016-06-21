@@ -33,7 +33,7 @@ public class RunParser {
     {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
         @SuppressWarnings("unchecked")
-        ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt"))), new DefaultSymbolFactory()).parse().value;
+        ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
         System.out.println();
@@ -85,7 +85,7 @@ public class RunParser {
 
     public static String parseFromString(String statementString) {
         try {
-            ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(statementString)), new DefaultSymbolFactory()).parse().value;
+            ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(statementString))).parse().value;
             Statement statement = statements.get(0);
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -140,8 +140,8 @@ public class RunParser {
 
     public static String check(String testString, String targetString) {
         try {
-            ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString)), new DefaultSymbolFactory()).parse().value;
-            ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(targetString)), new DefaultSymbolFactory()).parse().value;
+            ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString))).parse().value;
+            ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(targetString))).parse().value;
             Statement testStatement = testStatements.get(0);
             Statement targetStatement = targetStatements.get(0);
 

@@ -49,14 +49,6 @@ public final class Expression implements Countable
         dotIdTracker += 1;
     }
 
-    public Expression(Expression e, AbstractTerm t)
-    {
-        terms = new ArrayList<>(e.terms);
-        terms.add(t);
-        dotId = dotIdTracker;
-        dotIdTracker += 1;
-    }
-
     /**
      * Adds a term to this expression.
      * @param t Term to be added

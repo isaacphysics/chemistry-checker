@@ -253,4 +253,149 @@ public class TestParser
         assertFalse("Two expression statements containing errors recognised as equal!",
                     exprStatement1.equals(exprStatement2));
     }
+
+    @Test
+    public void testArrowDifference() throws Exception
+    {
+        String boudouard_reaction = "2CO <--> CO2 + C";
+        String fake = "2CO -> CO2 + C";
+        ArrayList<Statement> statements = stringParser(boudouard_reaction + ";" + fake);
+
+        assertTrue("Expected two statements, got " + statements.size(), statements.size() == 2);
+
+        Statement first = statements.get(0);
+        Statement second = statements.get(1);
+
+        assertTrue("2CO <--> CO2 + C should be of type EquationStatement.", first instanceof EquationStatement);
+        assertTrue("2CO -> CO2 + C should be of type EquationStatement.", second instanceof EquationStatement);
+
+        assertFalse(boudouard_reaction + ";" + fake + " are considered the same.", first.equals(second));
+    }
+
+    @Test
+    public void testInvalidExpressions() throws Exception
+    {
+        String invalidExpression = "Mg + ^{2}_{1}Al";
+        String invalidEquation = "^{14}_{7}N + 3e^{-} -> ^{14}_{6}Na";
+
+        ArrayList<Statement> statements = stringParser(invalidExpression + ";" + invalidEquation);
+
+        assertTrue("Expected two statements, got " + statements.size(), statements.size() == 2);
+
+        Statement first = statements.get(0);
+        Statement second = statements.get(1);
+
+        assertTrue(invalidExpression + " not recognised as containing an error!", first.containsError());
+        assertTrue(invalidEquation + " not recognised as containing an error!", second.containsError());
+    }
+
+    @Test
+    public void testInvalidNuclear() throws Exception
+    {
+        String stateSymbol = "^{226}_{88}Ra (s) -> /alpha_particle + ^{222}_{86}Rn (aq)";
+        String coefficient = "^{14}_{6}C -> 20^{14}_{7}N + /electron";
+        String equilibrium = "^{131}_{53}I <--> ^{131}_{54}Xe + /electron";
+
+        ArrayList<Statement> statements = stringParser(stateSymbol + ";" +
+                coefficient + ";" + equilibrium);
+
+        assertTrue("Expected three statements, got " + statements.size(), statements.size() == 3);
+
+        Statement first = statements.get(0);
+        Statement second = statements.get(1);
+        Statement third = statements.get(2);
+
+        assertTrue(stateSymbol + " not recognised as containing an error!", first.containsError());
+        assertTrue(coefficient + " not recognised as containing an error!", second.containsError());
+        assertTrue(equilibrium + " not recognised as containing an error!", third.containsError());
+    }
+
+    @Test
+    public void checkAtomicNumber() throws Exception
+    {
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3/neutrino";
+        String invalidAtomicNumber = "^{283}_{112}Uut + 3/alpha ";
+
+        ArrayList<Statement> statements = stringParser(alphaDecay + ";" + invalidAtomicNumber);
+
+        assertTrue("Expected two statements, got " + statements.size(), statements.size() == 2);
+
+        Statement first = statements.get(0);
+        Statement second = statements.get(1);
+
+        assertTrue(first + " should be of type NuclearEquationStatement.",
+                first instanceof NuclearEquationStatement);
+        assertTrue(second + " should be of type NuclearExpressionStatement.",
+                second instanceof NuclearExpressionStatement);
+
+        NuclearEquationStatement eq = (NuclearEquationStatement) first;
+        NuclearExpressionStatement ex = (NuclearExpressionStatement) second;
+
+        assertTrue(alphaDecay + " should have correct atomic numbers.", eq.isValid());
+        assertFalse(invalidAtomicNumber + " should have incorrect atomic numbers.", ex.isValid());
+    }
+
+    @Test
+    public void checkNuclearBalance() throws Exception
+    {
+        String c14_decay = "^{14}_{6}C -> ^{14}_{7}N + /electron";
+        String bad_decay = "^{12}_{6}C -> ^{14}_{7}N + /electron";
+
+        ArrayList<Statement> statements = stringParser(c14_decay + ";" + bad_decay);
+
+        assertTrue("Expected two statements, got " + statements.size(), statements.size() == 2);
+
+        Statement first = statements.get(0);
+        Statement second = statements.get(1);
+
+        assertTrue(first + " should be of type NuclearEquationStatement.",
+                first instanceof NuclearEquationStatement);
+        assertTrue(second + " should be of type NuclearEquationStatement.",
+                second instanceof NuclearEquationStatement);
+
+        NuclearEquationStatement eq = (NuclearEquationStatement) first;
+        NuclearEquationStatement eq2 = (NuclearEquationStatement) second;
+
+        assertTrue(c14_decay + " should have balanced atomic and mass numbers.", eq.isBalanced());
+        assertTrue(c14_decay + " should have valid atomic numbers.", eq.isValid());
+        assertFalse(bad_decay + "should not have balanced atomic and mass numbers.", eq2.isBalanced());
+        assertTrue(bad_decay + " should have valid atomic numbers.", eq2.isValid());
+
+        assertFalse(c14_decay + " unexpectedly recognised as containing an error!", eq.containsError());
+        assertFalse(bad_decay + " unexpectedly recognised as containing an error!", eq2.containsError());
+    }
+
+    @Test
+    public void testNuclearExpressionEquivalence() throws Exception
+    {
+        String eStream = "/electron + /electron";
+        String eStream2 = "2/electron";
+        String eStream3 = "/electron";
+
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3/neutrino";
+        String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3/neutrino + ^{288}_{115}Uup";
+        String alphaDecay3 = "^{48}_{20}Ca + ^{243}_{95}Am -> ^{288}_{115}Uup";
+
+
+        ArrayList<Statement> statements = stringParser(eStream + ";" +
+                                                        eStream2 + ";" +
+                                                        eStream3 + ";" +
+                                                        alphaDecay + ";" +
+                                                        alphaDecay2 + ";" +
+                                                        alphaDecay3);
+
+        assertTrue("Expected six statements, got " + statements.size(), statements.size() == 6);
+
+        Statement first  = statements.get(0);
+        Statement second = statements.get(1);
+        Statement third  = statements.get(2);
+        Statement fourth = statements.get(3);
+        Statement fifth  = statements.get(4);
+        Statement sixth  = statements.get(5);
+
+        assertFalse("Expected eStream != eStream2.", first.equals(second));
+        assertFalse("Expected eStream != eStream3.", first.equals(third));
+        assertTrue("Expected alphaDecay == alphaDecay2.", fourth.equals(fifth));
+        assertFalse("Expected alphaDecay2 != alphaDecay3.", fifth.equals(sixth));
+    }
 }

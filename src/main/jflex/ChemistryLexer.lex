@@ -72,6 +72,4 @@ import java_cup.runtime.Symbol;
     "/positron"                     { return new Symbol(sym.POSITRON, new Positron()); }
 
     [\s]+                           { /* Ignore all whitespace */ }
-    [a-z]+                          { /* System.err.println("Illegal character or element part: "+yytext()); */ }
-    [A-Z][a-z]*                     {}
     [^]                             { /* System.err.println("Illegal character or element part: "+yytext()); */ }
