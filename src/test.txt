@@ -42,4 +42,6 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 
 ^{222}_{88}Ra ->  ^{4}_{2}He + ^{218}_{86}Rn;
 
-^{14}_{6}Na -> ^{14}_{7}N + /electron;
+^{14}_{6}Na -> ^{14}_{7}N + /electron + /gamma_ray;
+
+^{14}_{7}N + /electron + /gamma_ray;

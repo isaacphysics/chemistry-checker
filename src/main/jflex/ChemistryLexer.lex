@@ -62,6 +62,7 @@ import java_cup.runtime.Symbol;
     e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
 
     "+"                             { return new Symbol(sym.PLUS); }
+    "-"                             { return new Symbol(sym.MINUS); }
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }
     "/alpha_particle"               { return new Symbol(sym.ALPHA, new AlphaParticle()); }

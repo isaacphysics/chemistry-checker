@@ -40,13 +40,23 @@ public class RunParser {
         for (Statement statement : statements)
         {
             System.out.println(statement);
-            if (statement instanceof ExpressionStatement)
+
+            if (statement instanceof NuclearExpressionStatement)
+            {
+                NuclearExpressionStatement s = (NuclearExpressionStatement) statement;
+
+                System.out.println("Are atomic numbers valid? " + s.isValid());
+                System.out.println("Total atomic#: " + s.getAtomicCount());
+                System.out.println("Total mass#: " + s.getMassCount());
+            }
+            else if (statement instanceof ExpressionStatement)
             {
                 ExpressionStatement s = (ExpressionStatement) statement;
 
                 System.out.println("Total atoms: " + s.getAtomCount());
                 System.out.println("Total charge: " + s.getCharge());
-            } else if (statement instanceof EquationStatement)
+            }
+            else if (statement instanceof EquationStatement)
             {
                 EquationStatement s = (EquationStatement) statement;
 
@@ -67,7 +77,7 @@ public class RunParser {
                 System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());
                 System.out.println("Total mass# RHS: " + s.getRightExpression().getMassCount());
             }
-            System.out.printf("Dot code:\n%s\n", statement.getDotCode());
+            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
         }
 

@@ -19,7 +19,7 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 
 
-terminal END, PLUS, LPAREN, RPAREN;
+terminal END, PLUS, MINUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE;
@@ -41,9 +41,6 @@ non terminal Element element;
 non terminal Compound compound, some_eb, b;
 non terminal Nuclear nuclear;
 
-precedence left PLUS;
-precedence left TO;
-
 start with result;
 
 
@@ -54,7 +51,7 @@ statement_list  ::=   statement_list:l END statement:s      {: RESULT = l; RESUL
                     | statement:s                           {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
                     ;
 statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
-                    | n_expr:e                              {: RESULT = new ExpressionStatement(e); :}
+                    | n_expr:e                              {: RESULT = new NuclearExpressionStatement(e); :}
                     | expr:l TO:a expr:r                    {: RESULT = new EquationStatement(l, a, r); :}
                     | expr:l DTO:a expr:r                   {: RESULT = new EquationStatement(l, a, r); :}
                     | n_expr:l TO:a n_expr:r                {: RESULT = new NuclearEquationStatement(l, r); :}
