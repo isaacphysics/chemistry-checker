@@ -61,6 +61,7 @@ public class RunParser {
                 NuclearEquationStatement s = (NuclearEquationStatement) statement;
 
                 System.out.println("Is balanced? " + s.isBalanced());
+                System.out.println("Are atomic numbers valid? " + s.isValid());
                 System.out.println("Total atomic# LHS: " + s.getLeftExpression().getAtomicCount());
                 System.out.println("Total atomic# RHS: " + s.getRightExpression().getAtomicCount());
                 System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());

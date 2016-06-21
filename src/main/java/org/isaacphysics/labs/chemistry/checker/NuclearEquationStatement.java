@@ -102,6 +102,11 @@ public class NuclearEquationStatement extends Statement
     boolean isBalanced() { return isBalancedAtom() && isBalancedMass(); }
 
     /**
+     * Checks if the atomic number of all isotopes matches element name.
+     */
+    boolean isValid() { return left.isValidAtomicNumber() && right.isValidAtomicNumber(); }
+
+    /**
      * Given an NuclearEquationStatement, check if its left expression is equivalent to our left expression.
      * @param eqnStatement NuclearEquationStatement to be compared against.
      */

@@ -66,4 +66,14 @@ abstract class AbstractTerm implements Countable
      * @return Atomic number of term.
      */
     abstract public Integer getAtomicNumber() throws NuclearException;
+
+    /**
+     * Method only applicable to nuclear formula.
+     * Checks if atomic number of isotope is valid.
+     * @throws NuclearException
+     */
+    public boolean isValidAtomicNumber()
+    {
+        return false;
+    }
 }

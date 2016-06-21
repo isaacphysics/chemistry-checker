@@ -38,10 +38,8 @@ public abstract class Nuclear extends Formula
     @Override
     public abstract Integer getAtomicNumber();
 
-    /**
-     * Checks if corresponding atomic number of atom is valid.
-     */
-    public boolean isValidAtomicNumber() throws NuclearException
+    @Override
+    public boolean isValidAtomicNumber()
     {
         return true;
     }

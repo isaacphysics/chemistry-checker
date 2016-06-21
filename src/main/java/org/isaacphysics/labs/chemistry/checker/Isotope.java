@@ -151,7 +151,7 @@ public final class Isotope extends Nuclear
     }
 
     @Override
-    public boolean isValidAtomicNumber() throws NuclearException
+    public boolean isValidAtomicNumber()
     {
         Molecule at;
 
@@ -167,6 +167,6 @@ public final class Isotope extends Nuclear
         if (periodicTable.containsKey(at.toString()))
             return periodicTable.get(at.toString()).equals(atom);
         else
-            throw new NuclearException("Invalid atom " + at.toString() + " found in an isotope.");
+            return false;
     }
 }

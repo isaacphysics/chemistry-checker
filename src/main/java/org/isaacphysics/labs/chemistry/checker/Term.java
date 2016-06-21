@@ -236,4 +236,10 @@ public final class Term extends AbstractTerm
         
         return t;
     }
+
+    @Override
+    public boolean isValidAtomicNumber()
+    {
+        return formula.isValidAtomicNumber();
+    }
 }

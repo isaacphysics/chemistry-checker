@@ -240,4 +240,20 @@ public final class Expression implements Countable
 
         return atomic;
     }
+
+    /**
+     * Method only applicable to nuclear formula.
+     * Checks if all atomic numbers in nuclear equation is valid.
+     * @throws NuclearException
+     */
+    public boolean isValidAtomicNumber()
+    {
+        for (AbstractTerm t: terms)
+        {
+            if (!t.isValidAtomicNumber())
+                return false;
+        }
+
+        return true;
+    }
 }
