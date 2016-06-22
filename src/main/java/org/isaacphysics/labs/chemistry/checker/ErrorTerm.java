@@ -56,10 +56,6 @@ public final class ErrorTerm extends AbstractTerm
         return 0;
     }
 
-    public boolean contains(Formula m) {
-        return false;
-    }
-
     public String getDotId() {
         return "error_term_" + dotId;
     }

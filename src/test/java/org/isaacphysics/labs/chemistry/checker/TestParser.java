@@ -398,4 +398,31 @@ public class TestParser
         assertTrue("Expected alphaDecay == alphaDecay2.", fourth.equals(fifth));
         assertFalse("Expected alphaDecay2 != alphaDecay3.", fifth.equals(sixth));
     }
+
+    @Test
+    public void testWeakEquivalence() throws Exception
+    {
+        String acid_base     = "HCl(aq) + NaOH(aq) -> H2O(l) + NaCl(aq)";
+        String missing_state = "HCl + NaOH -> NaCl + H2O";
+        String much_wrong    = "20HCl(aq) + 300NaOH(l) <--> 40NaCl + 205H2O(g)";
+        String error_term    = "HCl + NaOH -> 22 + NaCl(aq)";
+
+        ArrayList<Statement> statements = stringParser(acid_base + ";" +
+                                                        missing_state + ";" +
+                                                        much_wrong + ";" +
+                                                        error_term);
+
+        assertTrue("Expected 4 statements, got " + statements.size(), statements.size() == 4);
+
+        Statement first  = statements.get(0);
+        Statement second = statements.get(1);
+        Statement third  = statements.get(2);
+        Statement fourth = statements.get(3);
+
+        assertTrue("Expected acid_base ~= acid_base.", first.weaklyEquivalent(first));
+        assertTrue("Expected acid_base ~= missing_state.", first.weaklyEquivalent(second));
+        assertTrue("Expected acid_base ~= much_wrong.", first.weaklyEquivalent(third));
+        assertTrue("Expected missing_state ~= much_wrong.", second.weaklyEquivalent(third));
+        assertFalse("Expected acid_base !~= error_term.", first.weaklyEquivalent(fourth));
+    }
 }

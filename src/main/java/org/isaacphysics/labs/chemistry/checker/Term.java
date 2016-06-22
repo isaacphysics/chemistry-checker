@@ -173,11 +173,6 @@ public final class Term extends AbstractTerm
     }
 
     @Override
-    public boolean contains(Formula m) {
-        return this.formula.equals(m);
-    }
-
-    @Override
     public String getDotId() {
         return "term_" + dotId;
     }

@@ -30,4 +30,13 @@ abstract class Statement
      * Returns abstract syntax tree of statement.
      */
     abstract String getDotCode();
+
+    /**
+     * Checks if two statements are weakly equivalent, i.e.
+     * equivalent when ignoring coefficients, arrows (if they have one) and state symbols.
+     * <p>
+     *     For instance, NaOH (aq) -> 3 H^{+} is weakly equivalent to NaOH <--> H^{+} (aq).
+     * @param s Statement to be compared against
+     */
+    public abstract boolean weaklyEquivalent(Statement s);
 }

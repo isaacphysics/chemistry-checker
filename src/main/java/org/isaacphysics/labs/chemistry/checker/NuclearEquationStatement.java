@@ -133,4 +133,15 @@ public class NuclearEquationStatement extends Statement
         result.append("}\n");
         return result.toString();
     }
+
+    @Override
+    public boolean weaklyEquivalent(Statement s)
+    {
+        if (!(s instanceof NuclearEquationStatement))
+            return false;
+
+        NuclearEquationStatement other = (NuclearEquationStatement) s;
+
+        return left.weaklyEquivalent(other.left) && right.weaklyEquivalent(other.right);
+    }
 }

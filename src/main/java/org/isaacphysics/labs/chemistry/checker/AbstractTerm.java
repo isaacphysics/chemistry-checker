@@ -38,14 +38,6 @@ abstract class AbstractTerm implements Countable
         dotIdTracker += 1;
     }
 
-    /**
-     * Checks if term's formula is equivalent to that provided as argument.
-     * We do not care about coefficients or state symbols during calculation.
-     * We do not take account of subparticles, such as electrons, during calculation.
-     * @param m Chemical formula to be compared against
-     */
-    abstract boolean contains(Formula m);
-
     @Override
     abstract public boolean equals(Object o);
 

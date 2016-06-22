@@ -139,4 +139,14 @@ public class EquationStatement extends Statement
         return result.toString();
     }
 
+    @Override
+    public boolean weaklyEquivalent(Statement s)
+    {
+        if (!(s instanceof EquationStatement))
+            return false;
+
+        EquationStatement other = (EquationStatement) s;
+
+        return left.weaklyEquivalent(other.left) && right.weaklyEquivalent(other.right);
+    }
 }

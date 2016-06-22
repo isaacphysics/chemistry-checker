@@ -71,6 +71,17 @@ public class NuclearExpressionStatement extends Statement implements Countable
     }
 
     @Override
+    public boolean weaklyEquivalent(Statement s)
+    {
+        if (!(s instanceof NuclearExpressionStatement))
+            return false;
+
+        NuclearExpressionStatement other = (NuclearExpressionStatement) s;
+
+        return expr.weaklyEquivalent(other.expr);
+    }
+
+    @Override
     public String getDotString()
     {
         return null;

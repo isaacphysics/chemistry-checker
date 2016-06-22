@@ -18,7 +18,6 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 public final class Expression implements Countable
 {
@@ -157,6 +156,68 @@ public final class Expression implements Countable
      */
     ArrayList<AbstractTerm> getTerms() {
         return this.terms;
+    }
+
+    /**
+     * Checks if two expressions are weakly equivalent, i.e.
+     * equivalent when ignoring both coefficients and state symbols.
+     * <p>
+     *     For instance, NaOH (aq) + 3 H^{+} is weakly equivalent to NaOH + H^{+} (aq).
+     * @param expr Expression to be compared against
+     */
+    public boolean weaklyEquivalent(Expression expr)
+    {
+        if (terms.size() != expr.terms.size())
+            return false;
+
+        HashMap<Formula, Integer> htable1 = new HashMap<>();
+        HashMap<Formula, Integer> htable2 = new HashMap<>();
+
+        for (AbstractTerm t: terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+
+                if (htable1.containsKey(f))
+                {
+                    htable1.put(f, htable1.get(f) + 1);
+                }
+                else
+                {
+                    htable1.put(f, 1);
+                }
+            }
+        }
+
+        for (AbstractTerm t: expr.terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+
+                if (htable2.containsKey(f))
+                {
+                    htable2.put(f, htable1.get(f) + 1);
+                }
+                else
+                {
+                    htable2.put(f, 1);
+                }
+            }
+        }
+
+        return htable1.equals(htable2);
     }
 
     @Override

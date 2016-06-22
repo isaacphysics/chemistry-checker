@@ -83,6 +83,17 @@ public class ExpressionStatement extends Statement implements Countable
     }
 
     @Override
+    public boolean weaklyEquivalent(Statement s)
+    {
+        if (!(s instanceof ExpressionStatement))
+            return false;
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.weaklyEquivalent(other.expr);
+    }
+
+    @Override
     public String getDotString()
     {
         return null;

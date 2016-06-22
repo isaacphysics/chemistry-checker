@@ -61,4 +61,10 @@ public abstract class Formula implements Countable
     {
         return false;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return toString().hashCode();
+    }
 }
