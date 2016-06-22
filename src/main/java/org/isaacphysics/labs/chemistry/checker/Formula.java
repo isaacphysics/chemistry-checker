@@ -44,14 +44,20 @@ public abstract class Formula implements Countable
      * @return Atomic number of formula.
      * @throws NuclearException
      */
-    public abstract Integer getAtomicNumber() throws NuclearException;
+    public Integer getAtomicNumber() throws NuclearException
+    {
+        throw new NuclearException("Formula does not have atomic number.");
+    }
 
     /**
      * Method only applicable to nuclear formula.
      * @return Mass number of formula.
      * @throws NuclearException
      */
-    public abstract Integer getMassNumber() throws NuclearException;
+    public Integer getMassNumber() throws NuclearException
+    {
+        throw new NuclearException("Formula does not have mass number.");
+    }
 
     /**
      * Method only applicable to nuclear formula.

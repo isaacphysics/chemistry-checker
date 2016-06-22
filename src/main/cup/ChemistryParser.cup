@@ -23,7 +23,7 @@ terminal END, PLUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE;
-terminal Integer NUMBER, CHARGE, SUP, SUB;
+terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
 terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON;
@@ -34,7 +34,6 @@ non terminal Statement statement;
 non terminal Expression expr, n_expr;
 non terminal Term term, n_term;
 non terminal Formula formula;
-non terminal Ion ion;
 non terminal Isotope isotope;
 non terminal Molecule molecule;
 non terminal Element element;
@@ -76,10 +75,9 @@ n_term          ::=   isotope:i                             {: RESULT = new Term
                     | NUMBER:n nuclear:e                    {: RESULT = new Term(n, e, null); :}
                     | nuclear:e                             {: RESULT = new Term(1, e, null); :}
                     ;
-formula         ::=   ion:i                                 {: RESULT = i; :}
+formula         ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
                     | molecule:m                            {: RESULT = m; :}
-                    ;
-ion             ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
+                    | compound:m WATER:n                    {: RESULT = new Hydrate(m, n); :}
                     ;
 isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
                     | SUP:sup SUB:sub ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
