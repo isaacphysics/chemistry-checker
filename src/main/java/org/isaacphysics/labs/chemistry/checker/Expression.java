@@ -18,6 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 public final class Expression implements Countable
 {
@@ -80,31 +81,34 @@ public final class Expression implements Countable
             if (terms.size() != other.terms.size())
                 return false;
 
-            /**
-             * Keeps track of which terms in other.terms have been matched.
-             */
-            boolean[] usedTerm = new boolean[terms.size()];
-
-            for (int i = 0; i < usedTerm.length; i++)
-                usedTerm[i] = false;
+            HashMap<AbstractTerm, Integer> htable1 = new HashMap<>();
+            HashMap<AbstractTerm, Integer> htable2 = new HashMap<>();
 
             for (AbstractTerm t: terms)
             {
-                boolean flag = false;
-
-                for (int i = 0; i < other.terms.size() && !flag; i++)
+                if (htable1.containsKey(t))
                 {
-                    if (!usedTerm[i] && other.terms.get(i).equals(t))
-                    {
-                        flag = true;
-                        usedTerm[i] = true;
-                    }
+                    htable1.put(t, htable1.get(t) + 1);
                 }
-
-                if (!flag) return false;
+                else
+                {
+                    htable1.put(t, 1);
+                }
             }
 
-            return true;
+            for (AbstractTerm t: other.terms)
+            {
+                if (htable2.containsKey(t))
+                {
+                    htable2.put(t, htable2.get(t) + 1);
+                }
+                else
+                {
+                    htable2.put(t, 1);
+                }
+            }
+
+            return htable1.equals(htable2);
         }
         return false;
     }
