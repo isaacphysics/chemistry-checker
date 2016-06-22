@@ -132,15 +132,6 @@ public final class Term extends AbstractTerm
         return formula.getAtomicNumber();
     }
 
-    /*@Override
-    public int hashCode ()
-    {
-        if (null != formula)
-            return this.formula.hashCode();
-        else
-            return super.hashCode();
-    }*/
-
     @Override
     public HashMap<String, Integer> getAtomCount()
     {

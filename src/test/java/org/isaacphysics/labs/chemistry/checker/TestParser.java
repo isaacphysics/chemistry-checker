@@ -368,9 +368,9 @@ public class TestParser
     @Test
     public void testNuclearExpressionEquivalence() throws Exception
     {
-        String eStream = "/electron + /electron";
-        String eStream2 = "2/electron";
-        String eStream3 = "/electron";
+        String eStream = "/electron + /electron + /neutrino";
+        String eStream2 = "2/electron + /neutrino";
+        String eStream3 = "/electron + /neutrino + /neutrino";
 
         String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3/neutrino";
         String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3/neutrino + ^{288}_{115}Uup";

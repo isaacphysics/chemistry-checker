@@ -18,7 +18,6 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public final class Expression implements Countable
 {
@@ -53,7 +52,7 @@ public final class Expression implements Countable
      * Adds a term to this expression.
      * @param t Term to be added
      */
-    public void add(AbstractTerm t)
+    void add(AbstractTerm t)
     {
         terms.add(t);
     }
@@ -77,9 +76,35 @@ public final class Expression implements Countable
         if (o instanceof Expression)
         {
             Expression other = (Expression) o;
-            HashSet<AbstractTerm> termSet = new HashSet<>(terms);
-            HashSet<AbstractTerm> otherTermSet = new HashSet<>(other.terms);
-            return termSet.equals(otherTermSet);
+
+            if (terms.size() != other.terms.size())
+                return false;
+
+            /**
+             * Keeps track of which terms in other.terms have been matched.
+             */
+            boolean[] usedTerm = new boolean[terms.size()];
+
+            for (int i = 0; i < usedTerm.length; i++)
+                usedTerm[i] = false;
+
+            for (AbstractTerm t: terms)
+            {
+                boolean flag = false;
+
+                for (int i = 0; i < other.terms.size() && !flag; i++)
+                {
+                    if (!usedTerm[i] && other.terms.get(i).equals(t))
+                    {
+                        flag = true;
+                        usedTerm[i] = true;
+                    }
+                }
+
+                if (!flag) return false;
+            }
+
+            return true;
         }
         return false;
     }
@@ -130,35 +155,6 @@ public final class Expression implements Countable
         return this.terms;
     }
 
-    public boolean contains(Formula m)
-    {
-        for (AbstractTerm t : terms)
-            if (t.contains(m))
-                return true;
-
-        return false;
-    }
-
-    /**
-     * Checks if this class instance contains all terms in the expression provided in argument.
-     * @param e Expression to be compared against
-     */
-    public boolean containsAll(Expression e)
-    {
-        for (AbstractTerm t : e.terms)
-        {
-            if (t instanceof ErrorTerm)
-                return false;
-            else
-            {
-                Term term = (Term) t;
-                if (!this.contains(term.getFormula()))
-                    return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public String getDotId() {
         return "expression_" + dotId;
@@ -204,7 +200,7 @@ public final class Expression implements Countable
      * Returns the total mass number of AbstractTerms.
      * @return Total mass number of AbstractTerms.
      */
-    public Integer getMassCount() throws NuclearException
+    Integer getMassCount() throws NuclearException
     {
         Integer mass = 0;
 
@@ -221,7 +217,7 @@ public final class Expression implements Countable
      * Returns the total atomic number of AbstractTerms.
      * @return Total atomic number of AbstractTerms.
      */
-    public Integer getAtomicCount() throws NuclearException
+    Integer getAtomicCount() throws NuclearException
     {
         Integer atomic = 0;
 
@@ -236,9 +232,8 @@ public final class Expression implements Countable
     /**
      * Method only applicable to nuclear formula.
      * Checks if all atomic numbers in nuclear equation is valid.
-     * @throws NuclearException
      */
-    public boolean isValidAtomicNumber()
+    boolean isValidAtomicNumber()
     {
         for (AbstractTerm t: terms)
         {

@@ -56,7 +56,6 @@ public abstract class Formula implements Countable
     /**
      * Method only applicable to nuclear formula.
      * Checks if atomic number of isotope is valid.
-     * @throws NuclearException
      */
     public boolean isValidAtomicNumber()
     {

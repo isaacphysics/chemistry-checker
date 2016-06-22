@@ -40,6 +40,7 @@ abstract class AbstractTerm implements Countable
 
     /**
      * Checks if term's formula is equivalent to that provided as argument.
+     * We do not care about coefficients or state symbols during calculation.
      * We do not take account of subparticles, such as electrons, during calculation.
      * @param m Chemical formula to be compared against
      */
