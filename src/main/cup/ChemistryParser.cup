@@ -80,7 +80,10 @@ formula         ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(
                     | compound:m WATER:n                    {: RESULT = new Hydrate(m, n); :}
                     ;
 isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUB:sub SUP:sup ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
                     | SUP:sup SUB:sub ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
+                                                                                    new Ion(new Element(e, 1), c)); :}
+                    | SUB:sub SUP:sup ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
                     ;
 nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
