@@ -123,13 +123,13 @@ public final class Term extends AbstractTerm
     @Override
     public Integer getMassNumber() throws NuclearException
     {
-        return formula.getMassNumber();
+        return coefficient * formula.getMassNumber();
     }
 
     @Override
     public Integer getAtomicNumber() throws NuclearException
     {
-        return formula.getAtomicNumber();
+        return coefficient * formula.getAtomicNumber();
     }
 
     @Override

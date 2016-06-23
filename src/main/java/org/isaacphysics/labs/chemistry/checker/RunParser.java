@@ -77,7 +77,7 @@ public class RunParser {
                 System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());
                 System.out.println("Total mass# RHS: " + s.getRightExpression().getMassCount());
             }
-            System.out.printf("Dot code:\n%s\n", statement.getDotCode());
+            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
         }
 

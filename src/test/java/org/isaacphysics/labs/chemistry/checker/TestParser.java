@@ -425,4 +425,48 @@ public class TestParser
         assertTrue("Expected missing_state ~= much_wrong.", second.weaklyEquivalent(third));
         assertFalse("Expected acid_base !~= error_term.", first.weaklyEquivalent(fourth));
     }
+
+    @Test
+    public void testHydrates() throws Exception
+    {
+        String hydrate = "CaCl2.2H2O -> CaCl2 + 2H2O";
+
+        ArrayList<Statement> statements = stringParser(hydrate);
+        assertTrue("Expected 1 statement, got " + statements.size(), statements.size() == 1);
+
+        Statement first = statements.get(0);
+
+        assertTrue("Expected hydrate to have type EquationStatement.", first instanceof EquationStatement);
+
+        EquationStatement equation = (EquationStatement) first;
+
+        assertTrue("Expected hydrate to be balanced.", equation.isBalanced());
+    }
+
+    @Test
+    public void testIsotopes() throws Exception
+    {
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3/neutrino";
+        String sameDecay  = "_{20}^{48}Ca + _{95}^{243}Am -> 3/neutrino + ^{288}_{115}Uup";
+
+        ArrayList<Statement> statements = stringParser(alphaDecay + ";" + sameDecay);
+        assertTrue("Expected 2 statements, got " + statements.size(), statements.size() == 2);
+
+        Statement first  = statements.get(0);
+        Statement second = statements.get(1);
+
+        assertTrue("Expected alphaDecay to have type NuclearEquationStatement.",
+                                                        first instanceof NuclearEquationStatement);
+        assertTrue("Expected sameDecay to have type NuclearEquationStatement.",
+                                                        second instanceof NuclearEquationStatement);
+
+        assertTrue("Expected alphaDecay to be balanced.", ((NuclearEquationStatement) first).isBalanced());
+        assertTrue("Expected alphaDecay to have valid atomic numbers.", ((NuclearEquationStatement) first).isValid());
+
+        assertTrue("Expected sameDecay to be balanced.", ((NuclearEquationStatement) second).isBalanced());
+        assertTrue("Expected sameDecay to have valid atomic numbers.", ((NuclearEquationStatement) second).isValid());
+
+        assertTrue("Expected alphaDecay == sameDecay.", first.equals(second));
+    }
+
 }

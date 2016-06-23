@@ -44,6 +44,6 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 
 ^{14}_{6}Na -> ^{14}_{7}N + /electron + /gamma_ray;
 
-^{14}_{7}N + /electron + /gamma_ray;
+^{14}_{7}N + 3/electron + /gamma_ray;
 
 CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
