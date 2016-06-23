@@ -16,6 +16,8 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
+
 public class EquationStatement extends Statement
 {
     /**
@@ -188,5 +190,103 @@ public class EquationStatement extends Statement
         EquationStatement other = (EquationStatement) s;
 
         return left.sameCoefficients(other.left) && right.sameCoefficients(other.right);
+    }
+
+    /**
+     * Find terms in argument statement that do not exist in this one.
+     *
+     * @param e The supposedly wrong equation statement.
+     * @return ArrayList of wrong terms in e.
+     */
+    public ArrayList<Term> getWrongTerms(EquationStatement e)
+    {
+        ArrayList<Term> toReturn = left.getWrongTerms(e.left);
+
+        toReturn.addAll(right.getWrongTerms(e.right));
+
+        return toReturn;
+    }
+
+    /**
+     * Check if argument expression equals to this expression.
+     * Prints helpful message if expression is wrong.
+     */
+    public boolean check(Statement input)
+    {
+        if (!(input instanceof EquationStatement))
+        {
+            // Not even EquationStatement
+            System.out.println("Not an EquationStatement!");
+            return false;
+        }
+
+        if (input.containsError())
+        {
+            // Error term exists in argument
+            System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
+            return false;
+        }
+
+        EquationStatement e_input = (EquationStatement) input;
+
+        if (!e_input.isBalanced())
+        {
+            if (!e_input.isBalancedAtoms())
+            {
+                // Atom count is unbalanced
+                System.out.printf("Total atoms LHS: %s\nTotal atoms RHS: %s\n",
+                                    e_input.left.getAtomCount(), e_input.right.getAtomCount());
+
+                System.out.println("Atom counts are unbalanced.");
+            }
+            else
+            {
+                // Charge is unbalanced
+                System.out.printf("Total charge LHS: %s\nTotal charge LHS: %s\n",
+                                    e_input.left.getCharge(), e_input.right.getCharge());
+
+                System.out.println("Charges are unbalanced.");
+            }
+
+            return false;
+        }
+
+        if (equals(input))
+            return true;
+
+        if (!weaklyEquivalent(input))
+        {
+            System.out.println("Unrelated molecules exist in equation.");
+            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+
+            return false;
+        }
+
+        if (!this.arrow.equals(e_input.arrow))
+        {
+            System.out.println("Wrong arrow used.");
+
+            return false;
+        }
+
+        if (!sameCoefficients(input))
+        {
+            System.out.println("Some terms have incorrect coefficients.");
+            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+
+            return false;
+        }
+
+        if (!sameStateSymbols(input))
+        {
+            System.out.println("Some terms have incorrect state symbols.");
+            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+
+            return false;
+        }
+
+        System.out.println("Coefficient/state symbols are misplaced.");
+        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        return false;
     }
 }

@@ -208,7 +208,7 @@ public final class Expression implements Countable
 
                 if (htable2.containsKey(f))
                 {
-                    htable2.put(f, htable1.get(f) + 1);
+                    htable2.put(f, htable2.get(f) + 1);
                 }
                 else
                 {
@@ -217,6 +217,7 @@ public final class Expression implements Countable
             }
         }
 
+        //System.out.println(htable1 + "\n" + htable2);
         return htable1.equals(htable2);
     }
 
@@ -280,7 +281,7 @@ public final class Expression implements Countable
 
                 if (htable2.containsKey(temp))
                 {
-                    htable2.put(temp, htable1.get(temp) + 1);
+                    htable2.put(temp, htable2.get(temp) + 1);
                 }
                 else
                 {
@@ -358,7 +359,7 @@ public final class Expression implements Countable
 
                 if (htable2.containsKey(temp))
                 {
-                    htable2.put(temp, htable1.get(temp) + 1);
+                    htable2.put(temp, htable2.get(temp) + 1);
                 }
                 else
                 {
@@ -368,6 +369,59 @@ public final class Expression implements Countable
         }
 
         return htable1.equals(htable2);
+    }
+
+    /**
+     * Find terms in argument expression that do not exist in this one.
+     *
+     * @param expr The supposedly wrong chemical expression.
+     * @return ArrayList of wrong terms in chemical expression.
+     */
+    public ArrayList<Term> getWrongTerms(Expression expr)
+    {
+        HashMap<Term, Integer> htable1 = new HashMap<>();
+
+        for (AbstractTerm t: expr.terms)
+        {
+            if (t instanceof Term)
+            {
+                Term term = (Term) t;
+
+                if (htable1.containsKey(term))
+                {
+                    htable1.put(term, htable1.get(term) + 1);
+                }
+                else
+                {
+                    htable1.put(term, 1);
+                }
+            }
+        }
+
+        for (AbstractTerm t: terms)
+        {
+            if (t instanceof Term)
+            {
+                Term term = (Term) t;
+
+                if (htable1.containsKey(term))
+                {
+                    htable1.put(term, htable1.get(term) - 1);
+                }
+            }
+        }
+
+        ArrayList<Term> toReturn = new ArrayList<>();
+
+        for (Term t: htable1.keySet())
+        {
+            for (int i = 0; i < htable1.get(t); i++)
+            {
+                toReturn.add(t);
+            }
+        }
+
+        return toReturn;
     }
 
     @Override

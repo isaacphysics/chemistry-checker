@@ -16,6 +16,7 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ExpressionStatement extends Statement implements Countable
@@ -139,4 +140,8 @@ public class ExpressionStatement extends Statement implements Countable
         return null;
     }
 
+    public ArrayList<Term> getWrongTerms(ExpressionStatement e)
+    {
+        return expr.getWrongTerms(e.expr);
+    }
 }

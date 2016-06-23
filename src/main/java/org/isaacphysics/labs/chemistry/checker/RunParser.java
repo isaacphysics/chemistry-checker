@@ -29,9 +29,18 @@ import java.util.HashMap;
 
 public class RunParser {
 
+    @SuppressWarnings({"deprecation", "unchecked"})
+    private static ArrayList<Statement> stringParser(String s) throws Exception
+    {
+        Object output = new ChemistryParser(new ChemistryLexer(new StringReader(s)),
+                new DefaultSymbolFactory()).parse().value;
+
+        return (ArrayList<Statement>) output;
+    }
+
     public static void main(String args[]) throws Exception
     {
-        //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
+        /*//noinspection deprecation (We know DefaultSymbolFactory is depracated!)
         @SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
@@ -79,8 +88,20 @@ public class RunParser {
             }
             //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }
+        }*/
 
+        /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
+        String wrong_eq  = "NaOH(l) + HCl(aq) -> NaCl + H2O(l)";
+        ArrayList<Statement> stmt_list = stringParser(acid_base + ";" + wrong_eq);
+
+        EquationStatement foo = (EquationStatement) stmt_list.get(0);
+        EquationStatement bar = (EquationStatement) stmt_list.get(1);
+
+        System.out.printf("Correct    : %s\nInput      : %s\n", foo.toString(), bar.toString());
+
+        System.out.println("Wrong terms: " + foo.getWrongTerms(bar));*/
+
+        checkTest();
     }
 
     public static String parseFromString(String statementString) {
@@ -168,5 +189,52 @@ public class RunParser {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    private static void checkTest() throws Exception
+    {
+        String solution = "NaOH (aq) + HCl (aq) -> NaCl (aq) + H2O (l);";
+
+        String non_eq   = "NaOH(aq)+HCl(aq);"; // Non-equation
+
+        String error    = "NaOH -> Na++Cl-;";  // Error term Na++Cl-
+
+        String unbalanced_atom = "NaOH + HCl -> 2NaCl + H2O;";   // Atom count unbalanced
+
+        String unbalanced_charge = "OH^{-} + H^{+} -> H2O^{2+};"; // Charge unbalanced
+
+        String correct_ans = "NaOH (aq) + HCl (aq) -> H2O(l)+NaCl(aq);"; // Correct answer
+
+        String wrong_term  = "NaOH (aq) + HCl(aq) -> HOH(l) + ClNa(aq);"; // Poorly-written terms
+
+        String wrong_arrow = "NaOH (aq) + HCl (aq) <--> NaCl (aq) + H2O (l);"; // Wrong arrow
+
+        String wrong_coeff = "10NaOH(aq) + 10HCl(aq) -> 10NaCl(aq) + 10H2O(l);"; // Wrong coefficients
+
+        String wrong_state = "HCl(g) + NaOH(l) -> NaCl + H2O(l);"; // Wrong state symbols
+
+        String sp_1 = "8H(g) + H(l) -> 9H(l);"; // Made-up test cases
+
+        String sp_2 = "8H(l) + H(g) -> 9H(l)"; // Switched state symbols
+
+        ArrayList<Statement> stmt_list = stringParser(solution + non_eq + error + unbalanced_atom + unbalanced_charge
+                + correct_ans + wrong_term + wrong_arrow + wrong_coeff + wrong_state + sp_1 + sp_2);
+
+        EquationStatement ans = (EquationStatement) stmt_list.get(0);
+
+        System.out.println("Solution: " + solution);
+        System.out.println("---------------");
+
+        for (int i = 1; i < 10; i++)
+        {
+            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
+            ans.check(stmt_list.get(i));
+            System.out.println("----------");
+        }
+
+        System.out.println("Solution: " + sp_1);
+        System.out.println("---------------");
+        System.out.println("Statement to be checked: " + stmt_list.get(11).toString());
+        ((EquationStatement) stmt_list.get(10)).check(stmt_list.get(11));
     }
 }
