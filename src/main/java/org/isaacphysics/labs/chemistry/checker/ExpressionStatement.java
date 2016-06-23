@@ -144,4 +144,59 @@ public class ExpressionStatement extends Statement implements Countable
     {
         return expr.getWrongTerms(e.expr);
     }
+
+    @Override
+    public boolean check(Statement input)
+    {
+        if (!(input instanceof ExpressionStatement))
+        {
+            // Not even ExpressionStatement
+            System.out.println("Not an ExpressionStatement!");
+            return false;
+        }
+
+        if (input.containsError())
+        {
+            // Error term exists in argument
+            System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
+            return false;
+        }
+
+        if (equals(input))
+            return true;
+
+        ExpressionStatement e_input = (ExpressionStatement) input;
+
+        if (!weaklyEquivalent(input))
+        {
+            // not even weakly equivalent: some molecules are unrelated to solution
+            System.out.println("Unrelated terms exist in equation.");
+            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+
+            return false;
+        }
+
+        if (!sameCoefficients(input))
+        {
+            // wrong coefficients
+            System.out.println("Some terms have incorrect coefficients.");
+            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+
+            return false;
+        }
+
+        if (sameStateSymbols(input))
+        {
+            // wrong state symbols
+            System.out.println("Some terms have incorrect state symbols.");
+        }
+        else
+        {
+            // correct coefficients, state symbols, but misplaced.
+            System.out.println("Coefficient/state symbols are misplaced.");
+        }
+
+        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        return false;
+    }
 }

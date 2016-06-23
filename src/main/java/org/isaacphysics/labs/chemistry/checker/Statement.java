@@ -39,4 +39,10 @@ abstract class Statement
      * @param s Statement to be compared against
      */
     public abstract boolean weaklyEquivalent(Statement s);
+
+    /**
+     * Check if argument expression equals to this expression.
+     * Prints helpful message if expression is wrong.
+     */
+    public abstract boolean check(Statement input);
 }

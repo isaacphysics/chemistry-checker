@@ -1,5 +1,6 @@
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -110,23 +111,52 @@ public class NuclearExpressionStatement extends Statement implements Countable
         return expr.getMassCount();
     }
 
-    /**
-     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
-     *
-     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
-     *
-     * Should assert that both expressions are weakly equivalent before executing this code,
-     * as it is quite time consuming.
-     *
-     * @param s Statement to be compared against.
-     */
-    public boolean sameCoefficients(Statement s)
+    public ArrayList<Term> getWrongTerms(NuclearExpressionStatement e)
     {
-        if (!(s instanceof NuclearExpressionStatement))
+        return expr.getWrongTerms(e.expr);
+    }
+
+    @Override
+    public boolean check(Statement input)
+    {
+        if (!(input instanceof NuclearExpressionStatement))
+        {
+            // not even NuclearExpressionStatement
+            System.out.println("Not a NuclearExpressionStatement!");
             return false;
+        }
 
-        NuclearExpressionStatement other = (NuclearExpressionStatement) s;
+        if (input.containsError())
+        {
+            // error exists in argument
+            System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
+            return false;
+        }
 
-        return expr.sameCoefficients(other.expr);
+        if (equals(input))
+            return true;
+
+        NuclearExpressionStatement e_input = (NuclearExpressionStatement) input;
+
+        if (!e_input.isValid())
+        {
+            // invalid atomic numbers
+            System.out.println("There are elements with invalid atomic numbers.");
+            return false;
+        }
+
+        if (!weaklyEquivalent(e_input))
+        {
+            // not weakly equivalent: exists irrelevant terms in equation
+            System.out.println("Unrelated terms exist in equation.");
+        }
+        else
+        {
+            // wrong coefficients in some terms
+            System.out.println("Some terms have incorrect coefficients.");
+        }
+
+        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        return false;
     }
 }

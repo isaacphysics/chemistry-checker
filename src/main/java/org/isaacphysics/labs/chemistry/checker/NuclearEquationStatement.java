@@ -1,5 +1,7 @@
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
+
 /**
  * Special class for nuclear equations.
  * Very similar to EquationStatement, it holds two expressions, and checks if the mass and atomic numbers of both sides
@@ -146,22 +148,89 @@ public class NuclearEquationStatement extends Statement
     }
 
     /**
-     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     * Find terms in argument statement that do not exist in this one.
      *
-     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
-     *
-     * Should assert that both expressions are weakly equivalent before executing this code,
-     * as it is quite time consuming.
-     *
-     * @param s Statement to be compared against.
+     * @param e The supposedly wrong equation statement.
+     * @return ArrayList of wrong terms in e.
      */
-    public boolean sameCoefficients(Statement s)
+    public ArrayList<Term> getWrongTerms(NuclearEquationStatement e)
     {
-        if (!(s instanceof NuclearEquationStatement))
+        ArrayList<Term> toReturn = left.getWrongTerms(e.left);
+
+        toReturn.addAll(right.getWrongTerms(e.right));
+
+        return toReturn;
+    }
+
+    @Override
+    public boolean check(Statement input)
+    {
+        if (!(input instanceof NuclearEquationStatement))
+        {
+            // Not even nuclear equation statement
+            System.out.println("Not a NuclearEquationStatement!");
             return false;
+        }
 
-        NuclearEquationStatement other = (NuclearEquationStatement) s;
+        if (input.containsError())
+        {
+            // Error term exists in argument
+            System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
+            return false;
+        }
 
-        return left.sameCoefficients(other.left) && right.sameCoefficients(other.right);
+        NuclearEquationStatement e_input = (NuclearEquationStatement) input;
+
+        if (!e_input.isBalanced())
+        {
+            if (!e_input.isBalancedMass())
+            {
+                // Mass number not balanced.
+                try
+                {
+                    System.out.printf("Total mass# LHS: %d\nTotal mass# RHS: %d\n",
+                            e_input.left.getMassCount(), e_input.right.getMassCount());
+                }
+                catch (Exception e) {}
+
+                System.out.println("Mass numbers are unbalanced.");
+            }
+            else
+            {
+                // Atomic number not balanced.
+                try
+                {
+                    System.out.printf("Total atomic# LHS: %d\nTotal atomic# RHS: %d\n",
+                            e_input.left.getAtomicCount(), e_input.right.getAtomicCount());
+                }
+                catch (Exception e) {}
+            }
+
+            return false;
+        }
+
+        if (!e_input.isValid())
+        {
+            // invalid atomic numbers
+            System.out.println("There are elements with invalid atomic numbers.");
+            return false;
+        }
+
+        if (equals(e_input))
+            return true;
+
+        if (!weaklyEquivalent(e_input))
+        {
+            // not weakly equivalent: exists irrelevant terms in equation
+            System.out.println("Unrelated terms exist in equation.");
+        }
+        else
+        {
+            // wrong coefficients in some terms
+            System.out.println("Some terms have incorrect coefficients.");
+        }
+
+        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        return false;
     }
 }

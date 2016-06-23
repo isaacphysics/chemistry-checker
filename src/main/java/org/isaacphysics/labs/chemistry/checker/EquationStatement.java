@@ -207,10 +207,7 @@ public class EquationStatement extends Statement
         return toReturn;
     }
 
-    /**
-     * Check if argument expression equals to this expression.
-     * Prints helpful message if expression is wrong.
-     */
+    @Override
     public boolean check(Statement input)
     {
         if (!(input instanceof EquationStatement))
@@ -256,7 +253,7 @@ public class EquationStatement extends Statement
 
         if (!weaklyEquivalent(input))
         {
-            System.out.println("Unrelated molecules exist in equation.");
+            System.out.println("Unrelated terms exist in equation.");
             System.out.println("Wrong terms: " + getWrongTerms(e_input));
 
             return false;
