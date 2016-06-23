@@ -419,11 +419,26 @@ public class TestParser
         Statement third  = statements.get(2);
         Statement fourth = statements.get(3);
 
+        assertTrue("All four statements should be EquationStatement.", first instanceof EquationStatement &&
+                                                                        second instanceof EquationStatement &&
+                                                                        third instanceof EquationStatement &&
+                                                                        fourth instanceof EquationStatement);
+
         assertTrue("Expected acid_base ~= acid_base.", first.weaklyEquivalent(first));
         assertTrue("Expected acid_base ~= missing_state.", first.weaklyEquivalent(second));
         assertTrue("Expected acid_base ~= much_wrong.", first.weaklyEquivalent(third));
         assertTrue("Expected missing_state ~= much_wrong.", second.weaklyEquivalent(third));
         assertFalse("Expected acid_base !~= error_term.", first.weaklyEquivalent(fourth));
+
+        EquationStatement one = (EquationStatement) first;
+        EquationStatement two = (EquationStatement) second;
+        EquationStatement three = (EquationStatement) third;
+
+        assertTrue("Expected acid_base == missing_state on coefficient.", one.sameCoefficients(two));
+        assertFalse("Expected acid_base != missing_state on state.", one.sameStateSymbols(two));
+        assertFalse("Expected acid_base != much_wrong on coefficient.", one.sameCoefficients(three));
+        assertFalse("Expected acid_base != much_wrong on state.", one.sameStateSymbols(three));
+
     }
 
     @Test

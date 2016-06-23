@@ -160,7 +160,7 @@ public final class Expression implements Countable
 
     /**
      * Checks if two expressions are weakly equivalent, i.e.
-     * equivalent when ignoring both coefficients and state symbols.
+     * they have same molecules when ignoring both coefficients and state symbols.
      * <p>
      *     For instance, NaOH (aq) + 3 H^{+} is weakly equivalent to NaOH + H^{+} (aq).
      * @param expr Expression to be compared against
@@ -213,6 +213,156 @@ public final class Expression implements Countable
                 else
                 {
                     htable2.put(f, 1);
+                }
+            }
+        }
+
+        return htable1.equals(htable2);
+    }
+
+    /**
+     * Checks if both expressions are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param expr Expression to be compared against.
+     */
+    public boolean sameCoefficients(Expression expr)
+    {
+        if (terms.size() != expr.terms.size())
+            return false;
+
+        // Key = (Formula, Coefficient).
+        HashMap<Pair<Formula, Integer>, Integer> htable1 = new HashMap<>();
+        HashMap<Pair<Formula, Integer>, Integer> htable2 = new HashMap<>();
+
+        for (AbstractTerm t: terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+                Integer coeff = foo.getNumber();
+
+                Pair<Formula, Integer> temp = new Pair<>(f, coeff);
+
+                if (htable1.containsKey(temp))
+                {
+                    htable1.put(temp, htable1.get(temp) + 1);
+                }
+                else
+                {
+                    htable1.put(temp, 1);
+                }
+            }
+        }
+
+        for (AbstractTerm t: expr.terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+                Integer coeff = foo.getNumber();
+
+                Pair<Formula, Integer> temp = new Pair<>(f, coeff);
+
+                if (htable2.containsKey(temp))
+                {
+                    htable2.put(temp, htable1.get(temp) + 1);
+                }
+                else
+                {
+                    htable2.put(temp, 1);
+                }
+            }
+        }
+
+        return htable1.equals(htable2);
+    }
+
+    /**
+     * Checks if both expressions are weakly equivalent, AND contains same state symbols in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 20NaOH (aq) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param expr Expression to be compared against.
+     */
+    public boolean sameStateSymbols(Expression expr)
+    {
+        if (terms.size() != expr.terms.size())
+            return false;
+
+        // Key = (Formula, State symbol).
+        HashMap<Pair<Formula, String>, Integer> htable1 = new HashMap<>();
+        HashMap<Pair<Formula, String>, Integer> htable2 = new HashMap<>();
+
+        for (AbstractTerm t: terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+                String state = "null";
+
+                if (foo.getState() != null)
+                    state = foo.getState().toString();
+
+                Pair<Formula, String> temp = new Pair<>(f, state);
+
+                if (htable1.containsKey(temp))
+                {
+                    htable1.put(temp, htable1.get(temp) + 1);
+                }
+                else
+                {
+                    htable1.put(temp, 1);
+                }
+            }
+        }
+
+        for (AbstractTerm t: expr.terms)
+        {
+            if (t instanceof ErrorTerm)
+            {
+                return false;
+            }
+            else
+            {
+                Term foo = (Term) t;
+                Formula f = foo.getFormula();
+                String state = "null";
+
+                if (foo.getState() != null)
+                    state = foo.getState().toString();
+
+                Pair<Formula, String> temp = new Pair<>(f, state);
+
+                if (htable2.containsKey(temp))
+                {
+                    htable2.put(temp, htable1.get(temp) + 1);
+                }
+                else
+                {
+                    htable2.put(temp, 1);
                 }
             }
         }

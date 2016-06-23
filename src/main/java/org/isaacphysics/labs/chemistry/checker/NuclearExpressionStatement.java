@@ -110,4 +110,23 @@ public class NuclearExpressionStatement extends Statement implements Countable
         return expr.getMassCount();
     }
 
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameCoefficients(Statement s)
+    {
+        if (!(s instanceof NuclearExpressionStatement))
+            return false;
+
+        NuclearExpressionStatement other = (NuclearExpressionStatement) s;
+
+        return expr.sameCoefficients(other.expr);
+    }
 }

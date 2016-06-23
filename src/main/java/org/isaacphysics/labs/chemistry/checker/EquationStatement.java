@@ -149,4 +149,44 @@ public class EquationStatement extends Statement
 
         return left.weaklyEquivalent(other.left) && right.weaklyEquivalent(other.right);
     }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same state symbols in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 20NaOH (aq) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameStateSymbols(Statement s)
+    {
+        if (!(s instanceof EquationStatement))
+            return false;
+
+        EquationStatement other = (EquationStatement) s;
+
+        return left.sameStateSymbols(other.left) && right.sameStateSymbols(other.right);
+    }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameCoefficients(Statement s)
+    {
+        if (!(s instanceof EquationStatement))
+            return false;
+
+        EquationStatement other = (EquationStatement) s;
+
+        return left.sameCoefficients(other.left) && right.sameCoefficients(other.right);
+    }
 }

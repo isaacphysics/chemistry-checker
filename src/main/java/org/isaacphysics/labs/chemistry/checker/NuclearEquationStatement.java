@@ -144,4 +144,24 @@ public class NuclearEquationStatement extends Statement
 
         return left.weaklyEquivalent(other.left) && right.weaklyEquivalent(other.right);
     }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameCoefficients(Statement s)
+    {
+        if (!(s instanceof NuclearEquationStatement))
+            return false;
+
+        NuclearEquationStatement other = (NuclearEquationStatement) s;
+
+        return left.sameCoefficients(other.left) && right.sameCoefficients(other.right);
+    }
 }

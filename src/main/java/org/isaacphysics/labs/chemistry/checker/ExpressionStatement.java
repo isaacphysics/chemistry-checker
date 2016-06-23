@@ -93,6 +93,46 @@ public class ExpressionStatement extends Statement implements Countable
         return expr.weaklyEquivalent(other.expr);
     }
 
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same state symbols in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 20NaOH (aq) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameStateSymbols(Statement s)
+    {
+        if (!(s instanceof ExpressionStatement))
+            return false;
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.sameStateSymbols(other.expr);
+    }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     */
+    public boolean sameCoefficients(Statement s)
+    {
+        if (!(s instanceof ExpressionStatement))
+            return false;
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.sameCoefficients(other.expr);
+    }
+
     @Override
     public String getDotString()
     {
