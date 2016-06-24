@@ -148,7 +148,7 @@ public class NuclearExpressionStatement extends Statement implements Countable
         if (!weaklyEquivalent(e_input))
         {
             // not weakly equivalent: exists irrelevant terms in equation
-            System.out.println("Unrelated terms exist in equation.");
+            System.out.println("Unrelated terms exist in equation, and/or some terms are missing.");
         }
         else
         {

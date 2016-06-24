@@ -204,6 +204,8 @@ public class NuclearEquationStatement extends Statement
                             e_input.left.getAtomicCount(), e_input.right.getAtomicCount());
                 }
                 catch (Exception e) {}
+
+                System.out.println("Atomic numbers are unbalanced.");
             }
 
             return false;
@@ -222,7 +224,7 @@ public class NuclearEquationStatement extends Statement
         if (!weaklyEquivalent(e_input))
         {
             // not weakly equivalent: exists irrelevant terms in equation
-            System.out.println("Unrelated terms exist in equation.");
+            System.out.println("Unrelated terms exist in equation, or some terms are missing.");
         }
         else
         {

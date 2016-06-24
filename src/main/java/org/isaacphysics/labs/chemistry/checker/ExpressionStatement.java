@@ -170,7 +170,7 @@ public class ExpressionStatement extends Statement implements Countable
         if (!weaklyEquivalent(input))
         {
             // not even weakly equivalent: some molecules are unrelated to solution
-            System.out.println("Unrelated terms exist in equation.");
+            System.out.println("Unrelated terms exist in equation, and/or missing some terms.");
             System.out.println("Wrong terms: " + getWrongTerms(e_input));
 
             return false;
@@ -185,7 +185,7 @@ public class ExpressionStatement extends Statement implements Countable
             return false;
         }
 
-        if (sameStateSymbols(input))
+        if (!sameStateSymbols(input))
         {
             // wrong state symbols
             System.out.println("Some terms have incorrect state symbols.");

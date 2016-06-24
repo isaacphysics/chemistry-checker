@@ -253,7 +253,7 @@ public class EquationStatement extends Statement
 
         if (!weaklyEquivalent(input))
         {
-            System.out.println("Unrelated terms exist in equation.");
+            System.out.println("Unrelated terms exist in equation, and/or some terms are missing.");
             System.out.println("Wrong terms: " + getWrongTerms(e_input));
 
             return false;

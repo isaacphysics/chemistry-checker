@@ -101,7 +101,7 @@ public class RunParser {
 
         System.out.println("Wrong terms: " + foo.getWrongTerms(bar));*/
 
-        checkTest();
+        checkNuclearExpression();
     }
 
     public static String parseFromString(String statementString) {
@@ -191,7 +191,7 @@ public class RunParser {
         }
     }
 
-    private static void checkTest() throws Exception
+    private static void checkEquationTest() throws Exception
     {
         String solution = "NaOH (aq) + HCl (aq) -> NaCl (aq) + H2O (l);";
 
@@ -235,6 +235,96 @@ public class RunParser {
         System.out.println("Solution: " + sp_1);
         System.out.println("---------------");
         System.out.println("Statement to be checked: " + stmt_list.get(11).toString());
-        ((EquationStatement) stmt_list.get(10)).check(stmt_list.get(11));
+        stmt_list.get(10).check(stmt_list.get(11));
+    }
+
+    private static void checkExpressionTest() throws Exception
+    {
+        String test = "(CH3)3C^{+} + 3H2(g);" +                 // Correct answer 1
+                "CH3^{+} + 3CH4 -> (CH3)3C^{+} + 3H2(g);" +     // Non-expression
+                "Na++Cl-+3H2(g);" +                             // Error term included
+                "3H2(g) + (CH3)3C^{+};" +                       // Correct user input 1
+                "(CH3)3C^{+};" +                                // Missing terms
+                "2(CH3)3C^{+} + 6H2(g);" +                      // Wrong coefficients
+                "(CH3)3C^{+}(g) + 3H2(g);" +                    // Wrong state symbols
+                "8H2(g) + H2(l);" +                             // Correct answer 2
+                "H2(g) + 8H2(l)";                               // Permuted state symbols
+
+        ArrayList<Statement> stmt_list = stringParser(test);
+
+        Statement answer1 = stmt_list.get(0);
+        Statement answer2 = stmt_list.get(7);
+
+        System.out.println("Solution: " + answer1);
+        System.out.println("---------------");
+        for (int i = 1; i < 7; i++)
+        {
+            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
+            answer1.check(stmt_list.get(i));
+            System.out.println("----------");
+        }
+
+        System.out.println("Solution: " + answer2);
+        System.out.println("---------------");
+        System.out.println("Statement to be checked: " + stmt_list.get(8).toString());
+        answer2.check(stmt_list.get(8));
+        System.out.println("----------");
+    }
+
+    private static void checkNuclearEquation() throws Exception
+    {
+        String test = "^{219}_{86}Rn -> _{84}^{215}Po + /alpha_particle;" +
+                        "Rn -> Po + Ca;" +
+                        "_{219}^{86} Rn -> _{215}^{84}Po ++;" +
+                        "^{220}_{86}Rn -> ^{215}_{84}Po + /alpha_particle;" +
+                        "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{7}N;" +
+                        "^{14}_{6}U -> ^{14}_{7}N + /beta_particle;" +
+                        "^{219}_{86}Rn -> /alpha_particle + ^{215}_{84}Po;" +
+                        "^{219}_{86}Rn -> _{84}^{215}Po + /alpha_particle + /gamma_ray;" +
+                        "^{60}_{27}Co -> ^{60}_{27}Co + /gamma_ray;" +
+                        "^{60}_{27}Co -> ^{60}_{27}Co + 100/gamma_ray;";
+
+        ArrayList<Statement> stmt_list = stringParser(test);
+
+        Statement answer1 = stmt_list.get(0);
+        Statement answer2 = stmt_list.get(8);
+
+        System.out.println("Solution: " + answer1);
+        System.out.println("---------------");
+        for (int i = 1; i < 8; i++)
+        {
+            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
+            answer1.check(stmt_list.get(i));
+            System.out.println("----------");
+        }
+
+        System.out.println("Solution: " + answer2);
+        System.out.println("---------------");
+        System.out.println("Statement to be checked: " + stmt_list.get(9).toString());
+        answer2.check(stmt_list.get(9));
+        System.out.println("----------");
+    }
+
+    private static void checkNuclearExpression() throws Exception
+    {
+        String test = "_{90}^{234}Th + /alpha_particle;" +
+                        "Th + H;" +
+                        "^{234}_{90}Th ++ /alpha_particle;" +
+                        "/alpha_particle + ^{234}_{90}Th;" +
+                        "^{234}_{90}U + /alpha_particle;" +
+                        "^{234}_{90}Th + /alpha_particle + /gamma_ray;" +
+                        "^{234}_{90}Th + 3/alpha_particle";
+
+        ArrayList<Statement> stmt_list = stringParser(test);
+
+        Statement answer1 = stmt_list.get(0);
+        System.out.println("Solution: " + answer1);
+        System.out.println("---------------");
+        for (int i = 1; i < 7; i++)
+        {
+            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
+            answer1.check(stmt_list.get(i));
+            System.out.println("----------");
+        }
     }
 }
