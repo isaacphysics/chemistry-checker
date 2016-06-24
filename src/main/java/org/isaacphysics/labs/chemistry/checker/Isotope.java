@@ -165,7 +165,7 @@ public final class Isotope extends Nuclear
         }
 
         if (periodicTable.containsKey(at.toString()))
-            return periodicTable.get(at.toString()).equals(atom);
+            return periodicTable.get(at.toString()).equals(atom) && (mass >= atom);
         else
             return false;
     }

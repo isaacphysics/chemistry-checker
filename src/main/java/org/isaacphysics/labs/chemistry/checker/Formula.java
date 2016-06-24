@@ -61,7 +61,9 @@ public abstract class Formula implements Countable
 
     /**
      * Method only applicable to nuclear formula.
-     * Checks if atomic number of isotope is valid.
+     * Checks if atomic number of isotope is valid. That is:
+     * 1. Mass number of isotope is not less than its atomic number.
+     * 2. The given atomic number matches the element symbol.
      */
     public boolean isValidAtomicNumber()
     {
