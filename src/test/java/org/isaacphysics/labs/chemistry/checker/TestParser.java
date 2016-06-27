@@ -314,7 +314,7 @@ public class TestParser
     public void checkAtomicNumber() throws Exception
     {
         String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3/neutrino";
-        String invalidAtomicNumber = "^{283}_{112}Uut + 3/alpha ";
+        String invalidAtomicNumber = "^{283}_{112}Uut + 3/alpha_particle ";
 
         ArrayList<Statement> statements = stringParser(alphaDecay + ";" + invalidAtomicNumber);
 

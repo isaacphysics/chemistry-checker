@@ -40,7 +40,7 @@ public class RunParser {
 
     public static void main(String args[]) throws Exception
     {
-        /*//noinspection deprecation (We know DefaultSymbolFactory is depracated!)
+        //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
         @SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
@@ -88,7 +88,7 @@ public class RunParser {
             }
             //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }*/
+        }
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
         String wrong_eq  = "NaOH(l) + HCl(aq) -> NaCl + H2O(l)";
@@ -101,7 +101,7 @@ public class RunParser {
 
         System.out.println("Wrong terms: " + foo.getWrongTerms(bar));*/
 
-        checkNuclearExpression();
+        //checkExpressionTest();
     }
 
     public static String parseFromString(String statementString) {

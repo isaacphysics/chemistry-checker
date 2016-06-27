@@ -19,10 +19,10 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 
 
-terminal END, PLUS, LPAREN, RPAREN;
+terminal END, PLUS, MINUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
-terminal String STATE;
+terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
@@ -31,14 +31,15 @@ terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON;
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
-non terminal Expression expr, n_expr;
-non terminal Term term, n_term;
-non terminal Formula formula;
-non terminal Isotope isotope;
+non terminal Expression expr, n_expr, terms, n_terms;
+non terminal Term term, n_term, end_term, n_end_term;
+non terminal Isotope isotope, isotope_mod;
 non terminal Molecule molecule;
 non terminal Element element;
 non terminal Compound compound, some_eb, b;
 non terminal Nuclear nuclear;
+non terminal Integer opt_number, charge;
+non terminal String opt_state;
 
 start with result;
 
@@ -55,35 +56,58 @@ statement       ::=   expr:e                                {: RESULT = new Expr
                     | expr:l DTO:a expr:r                   {: RESULT = new EquationStatement(l, a, r); :}
                     | n_expr:l TO:a n_expr:r                {: RESULT = new NuclearEquationStatement(l, r); :}
                     ;
-expr            ::=   expr:l PLUS term:r                    {: RESULT = l; RESULT.add(r); :}
-                    | term:t                                {: RESULT = new Expression(t); :}
-                    | expr:e PLUS error                     {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+expr            ::=   terms:e end_term:t                    {: RESULT = e; RESULT.add(t); :}
+                    | end_term:t                            {: RESULT = new Expression(t); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
-n_expr          ::=   n_expr:l PLUS n_term:r                {: RESULT = l; RESULT.add(r); :}
-                    | n_term:t                              {: RESULT = new Expression(t); :}
-                    | n_expr:e PLUS error                   {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+terms           ::=   terms:e term:t                        {: RESULT = e; RESULT.add(t); :}
+                    | term:t                                {: RESULT = new Expression(t); :}
+                    | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
-term            ::=   NUMBER:n formula:f STATE:s            {: RESULT = new Term(n, f, s); :}
-                    | NUMBER:n formula:f                    {: RESULT = new Term(n, f, null); :}
-                    | formula:f STATE:s                     {: RESULT = new Term(1, f, s); :}
-                    | formula:f                             {: RESULT = new Term(1, f, null); :}
-                    | NUMBER:n C_ELECTRON:e                 {: RESULT = new Term(n, e, null); :}
-                    | C_ELECTRON:e                          {: RESULT = new Term(1, e, null); :}
+term            ::=   opt_number:n molecule:m charge:c opt_state:s PLUS
+                                                            {: RESULT = new Term(n, new Ion(m, c), s); :}
+                    | opt_number:n molecule:m PLUS
+                                                            {: RESULT = new Term(n, m, null); :}
+                    | opt_number:n molecule:m STATE:s PLUS  {: RESULT = new Term(n, m, s); :}
+                    | opt_number:n compound:c WATER:w opt_state:s PLUS
+                                                            {: RESULT = new Term(n, new Hydrate(c, w), s); :}
+                    | opt_number:n C_ELECTRON:e PLUS        {: RESULT = new Term(n, e, null); :}
+                    ;
+end_term        ::=   opt_number:n molecule:m charge:c opt_state:s
+                                                            {: RESULT = new Term(n, new Ion(m, c), s); :}
+                    | opt_number:n molecule:m opt_state:s
+                                                            {: RESULT = new Term(n, m, s); :}
+                    | opt_number:n compound:c WATER:w opt_state:s
+                                                            {: RESULT = new Term(n, new Hydrate(c, w), s); :}
+                    | opt_number:n C_ELECTRON:e             {: RESULT = new Term(n, e, null); :}
+                    ;
+n_expr          ::=   n_terms:e n_end_term:t                {: RESULT = e; RESULT.add(t); :}
+                    | n_end_term:t                          {: RESULT = new Expression(t); :}
+                    ;
+n_terms         ::=   n_terms:e n_term:t                    {: RESULT = e; RESULT.add(t); :}
+                    | n_terms:e error                       {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+                    | n_term:t                              {: RESULT = new Expression(t); :}
                     ;
 n_term          ::=   isotope:i                             {: RESULT = new Term(1, i, null); :}
-                    | NUMBER:n nuclear:e                    {: RESULT = new Term(n, e, null); :}
-                    | nuclear:e                             {: RESULT = new Term(1, e, null); :}
+                    | opt_number:n nuclear:e PLUS           {: RESULT = new Term(n, e, null); :}
                     ;
-formula         ::=   molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
-                    | molecule:m                            {: RESULT = m; :}
-                    | compound:m WATER:n                    {: RESULT = new Hydrate(m, n); :}
-                    ;
-isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUB:sub SUP:sup ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUP:sup SUB:sub ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
+isotope         ::=   SUP:sup SUB:sub ELEMENT:e PLUS        {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUB:sub SUP:sup ELEMENT:e PLUS        {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUP:sup SUB:sub ELEMENT:e charge:c PLUS
+                                                            {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
-                    | SUB:sub SUP:sup ELEMENT:e CHARGE:c    {: RESULT = new Isotope(sup, sub,
+                    | SUB:sub SUP:sup ELEMENT:e charge:c PLUS
+                                                            {: RESULT = new Isotope(sup, sub,
+                                                                                    new Ion(new Element(e, 1), c)); :}
+                    ;
+n_end_term      ::=   isotope_mod:i                         {: RESULT = new Term(1, i, null); :}
+                    | opt_number:n nuclear:e                {: RESULT = new Term(n, e, null); :}
+                    ;
+isotope_mod     ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUB:sub SUP:sup ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+                    | SUP:sup SUB:sub ELEMENT:e charge:c    {: RESULT = new Isotope(sup, sub,
+                                                                                    new Ion(new Element(e, 1), c)); :}
+                    | SUB:sub SUP:sup ELEMENT:e charge:c    {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
                     ;
 nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
@@ -96,9 +120,8 @@ nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
 molecule        ::=   element:e                             {: RESULT = e; :}
                     | compound:c                            {: RESULT = c; :}
                     ;
-element         ::=   ELEMENT:e NUMBER:n                    {: RESULT = new Element(e, n); :}
+element         ::=   ELEMENT:e opt_number:n                {: RESULT = new Element(e, n); :}
                     | ELEMENT:e SUB:n                       {: RESULT = new Element(e, n); :}
-                    | ELEMENT:e                             {: RESULT = new Element(e, 1); :}
                     ;
 compound        ::=   b:b some_eb:eb                        {: RESULT = new Compound(b); RESULT.addCompound(eb); :}
                     | element:e1 element:e2 some_eb:eb      {: RESULT = new Compound(e1); RESULT.add(e2);
@@ -112,3 +135,15 @@ some_eb         ::=                                         {: RESULT = new Comp
                     ;
 b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n); :}
                     ;
+
+opt_number      ::=   NUMBER:n                              {: RESULT = n; :}
+                    |                                       {: RESULT = 1; :}
+                    ;
+opt_state       ::=   STATE:s                               {: RESULT = s; :}
+                    |                                       {: RESULT = null; :}
+                    ;
+charge          ::=   CHARGE:c                              {: RESULT = c; :}
+                    | PLUS                                  {: RESULT = 1; :}
+                    | MINUS                                 {: RESULT = -1; :}
+                    ;
+

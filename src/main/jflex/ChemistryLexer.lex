@@ -61,13 +61,14 @@ import java_cup.runtime.Symbol;
     T[abcehilm]|Uu[opst]|Xe|Yb      { return new Symbol(sym.ELEMENT, yytext()); }
     e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
 
-    "."[\s]*[1-9][0-9]*[\s]*H2O       { String s = yytext(); s = s.replaceAll("\\s+","");
+    "."[\s]*[1-9][0-9]*[\s]*H2O     { String s = yytext(); s = s.replaceAll("\\s+","");
                                       s = s.substring(1, s.length() - 3);
                                       return new Symbol(sym.WATER, new Integer(s)); }
 
-    "."[\s]*H2O                       { return new Symbol(sym.WATER, 1); }
+    "."[\s]*H2O                     { return new Symbol(sym.WATER, 1); }
 
     "+"                             { return new Symbol(sym.PLUS); }
+    "-"                             { return new Symbol(sym.MINUS); }
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }
     "/alpha_particle"               { return new Symbol(sym.ALPHA, new AlphaParticle()); }
@@ -78,4 +79,4 @@ import java_cup.runtime.Symbol;
     "/positron"                     { return new Symbol(sym.POSITRON, new Positron()); }
 
     [\s]+                           { /* Ignore all whitespace */ }
-    [^]                             { /* System.err.println("Illegal character or element part: "+yytext()); */ }
+    [^]                             { return new Symbol(sym.ERROR, yytext()); }
