@@ -24,6 +24,13 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * A test suite used for testing the chemical parser.
+ * Each method defined in class should be annotated with @Test to allow automatic testing.
+ * Methods like assertTrue and assertFalse can be used for debugging - test suite will signal failure
+ * if assertion does not hold.
+ * Every time a new feature is implemented, a new method should be implemented to detect potential errors.
+ */
 public class TestParser
 {
     private String simpleMolecule = "H2SO4;";
@@ -38,6 +45,12 @@ public class TestParser
     private String syntaxError = "2H2S(O4;";
     private String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6";
 
+    /**
+     * Invokes ChemicalParser to parse the argument string.
+     * @param s String to be parsed
+     * @return ArrayList containing parsed chemical/physical statements.
+     * @throws Exception
+     */
     @SuppressWarnings({"deprecation", "unchecked"})
     private ArrayList<Statement> stringParser(String s) throws Exception
     {
@@ -47,161 +60,208 @@ public class TestParser
         return (ArrayList<Statement>) output;
     }
 
+    /**
+     * Extremely simple test.
+     * Parses the formula for sulphuric acid (H2SO4), and check if the generated abstract syntax tree is correct.
+     * @throws Exception
+     */
     @Test
     public void testParserSimpleMolecule() throws Exception
     {
         ArrayList<Statement> statements = stringParser(simpleMolecule);
         assertTrue(statements.size() == 1);
 
+        // Check if string outputted is in mhchem format.
         Statement result = statements.get(0);
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!",
                     result.toString().equals("H2SO4"));
 
+        // Checks the type of Statement.
         assertTrue("Result is not an ExpressionStatement!", result instanceof ExpressionStatement);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
 
+        // Checks the number of terms in expression.
         Expression expr = exprStatement.getExpression();
         assertTrue("Expected only one term in the expression, got " + expr.getTerms().size() + "!",
                                                                         expr.getTerms().size() == 1);
         AbstractTerm t = expr.getTerms().get(0);
 
-        if (t instanceof Term)
-        {
-            Term term = (Term) t;
-            assertTrue("Implicit count of 1 for Terms failed, got " + term.getNumber() + "!", term.getNumber() == 1);
+        // Asserts that the term in Expression is not ErrorTerm.
+        assertTrue("Unexpected ErrorTerm present!", t instanceof Term);
+        Term term = (Term) t;
 
-            HashMap<String, Integer> atomCount = term.getAtomCount();
-            assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
-                    atomCount.get("O") == 4);
+        // Asserts that coefficient of term is 1.
+        assertTrue("Implicit count of 1 for Terms failed, got " + term.getNumber() + "!", term.getNumber() == 1);
 
-            assertTrue("Charge of parsed molecule incorrect! Expected no charge (0), got " + term.getCharge() + "!",
-                                                                                             term.getCharge() == 0);
+        // Asserts number of oxygen atoms in term is 4.
+        HashMap<String, Integer> atomCount = term.getAtomCount();
+        assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
+                atomCount.get("O") == 4);
 
-            assertTrue("Physical State of parsed molecule incorrect! Expected null, got " + term.getState() + "!",
-                                                                                            term.getState() == null);
-        } else
-        {
-            assertTrue("Unexpected ErrorTerm present!", false);
-        }
+        // Asserts that the charge of molecule is 0.
+        assertTrue("Charge of parsed molecule incorrect! Expected no charge (0), got " + term.getCharge() + "!",
+                term.getCharge() == 0);
 
+        // Asserts the state of molecule is not defined.
+        assertTrue("Physical State of parsed molecule incorrect! Expected null, got " + term.getState() + "!",
+                term.getState() == null);
     }
 
+    /**
+     * Simple test. Parses a simple molecule (nitrogen dioxide), and test the correctness of the generated abstract
+     * syntax tree.
+     * @throws Exception
+     */
     @Test
     public void testSimpleMoleculeNumber() throws Exception
     {
         ArrayList<Statement> statements = stringParser(simpleMoleculeNumber);
         Statement result = statements.get(0);
 
+        // Asserts that printed expression follows mhchem format.
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!",
                                          result.toString().equals("2NO2"));
 
         AbstractTerm t = ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
-        if (t instanceof Term)
-        {
-            Term term = (Term) t;
-            assertTrue("Setting number of molecule in term failed! Expected 2, got " + term.getNumber() + "!",
-                                                                                       term.getNumber() == 2);
+        // Asserts term in expression is not ErrorTerm.
+        assertTrue("Unexpected ErrorTerm present!", t instanceof Term);
+        Term term = (Term) t;
 
-            HashMap<String, Integer> atomCount = term.getAtomCount();
-            assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
-                                                                                atomCount.get("O") == 4);
-        }
-        else
-        {
-            assertTrue("Unexpected ErrorTerm present!", false);
-        }
+        // Asserts coefficient of term = 2.
+        assertTrue("Setting number of molecule in term failed! Expected 2, got " + term.getNumber() + "!",
+                term.getNumber() == 2);
+
+        // Asserts number of oxygen atoms in expression = 4.
+        HashMap<String, Integer> atomCount = term.getAtomCount();
+        assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
+                atomCount.get("O") == 4);
     }
 
+    /**
+     * Simple test. Parses simple molecule (aqueous ammonia), and test the correctness of the generated
+     * abstract syntax tree. Test mainly focuses on the physical state.
+     * @throws Exception
+     */
     @Test
     public void testSimpleMoleculeState() throws Exception
     {
         ArrayList<Statement> statements = stringParser(simpleMoleculeState);
         Statement result = statements.get(0);
 
+        // Asserts the printed expression is in mhchem format.
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!",
                                          result.toString().equals("NH3(aq)"));
 
         AbstractTerm t = ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
-        if (t instanceof Term)
-        {
-            Term term = (Term) t;
-            assertTrue("Physical State of parsed molecule incorrect! Expected (aq), got " + term.getState() + "!",
-                    term.getState().equals(Term.PhysicalState.aq));
-        } else
-        {
-            assertTrue("Unexpected ErrorTerm present!", false);
-        }
+        // Asserts the term in expression is not ErrorTerm.
+        assertTrue("Unexpected ErrorTerm present!", t instanceof Term);
+        Term term = (Term) t;
+
+        // Asserts the physical state of term = aqueous.
+        assertTrue("Physical State of parsed molecule incorrect! Expected (aq), got " + term.getState() + "!",
+                term.getState().equals(Term.PhysicalState.aq));
     }
 
+    /**
+     * Simple test. Parses `C_{2}O_{4}H^{+}`, and checks the correctness of charge in the corresponding abstract
+     * syntax tree.
+     * @throws Exception
+     */
     @Test
     public void testDiffNotationAndMoleculeCharge() throws Exception
     {
         ArrayList<Statement> statements = stringParser(diffNotationAndMoleculeCharge);
         Statement result = statements.get(0);
 
+        // Asserts printed output is in correct mhchem format.
         assertTrue("Printed output \"" + result.toString() + "\" not in mhchem format!",
                                          result.toString().equals("C2O4H^{+}"));
 
         Term term = (Term) ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
+        // Asserts charge of molecule = 1.
         assertTrue("Charge of parsed molecule incorrect! Expected 1, got " + term.getCharge() + "!", term.getCharge() == 1);
     }
 
+    /**
+     * Simple test. Parses a statement consisting of two terms, and test their properties.
+     * @throws Exception
+     */
     @Test
     public void testExpressionStatement() throws Exception
     {
         ArrayList<Statement> statements = stringParser(expressionStatement);
         Statement result = statements.get(0);
 
+        // Asserts only one statement in expressionStatement.
         assertTrue("Expected 1 statement out, got " + statements.size() + "!", statements.size() == 1);
 
+        // Asserts statement to be an instance of ExpressionStatement.
         assertTrue("Result is not an ExpressionStatement!", result instanceof ExpressionStatement);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
         Expression expr = exprStatement.getExpression();
 
+        // Asserts only two terms in ExpressionStatement.
         assertTrue("Expected 2 terms, got " + expr.getTerms().size() + "!", expr.getTerms().size() == 2);
 
+        // Asserts only 6 oxygen atoms in the whole expression.
         HashMap<String, Integer> atomCount = expr.getAtomCount();
         assertTrue("Parsed oxygen atom count incorrect! Expected 6, got " + atomCount.get("O") + "!" ,
                                                                             atomCount.get("O") == 6);
 
+        // Asserts the string form of first term to be in correct mhchem format.
         AbstractTerm t = expr.getTerms().get(0);
         assertTrue("Printed output \"" + t.toString() + "\" not in mhchem format!", t.toString().equals("C2O4H2"));
 
     }
 
+    /**
+     * Simple test. Parses a chemical equation, and test its correctness.
+     * @throws Exception
+     */
     @Test
     public void testEquationStatement() throws Exception
     {
         ArrayList<Statement> statements = stringParser(equationStatement1);
         Statement result = statements.get(0);
 
+        // Asserts that the parsed syntax tree only contains one statement.
         assertTrue("Expected 1 statement out, got " + statements.size() + "!", statements.size() == 1);
 
+        // Asserts that the statement is indeed a chemical equation.
         assertTrue("Result is not an EquationStatement!", result instanceof EquationStatement);
         EquationStatement eqnStatement = (EquationStatement) result;
 
+        // Asserts both sides of equation is non-empty.
         Expression left = eqnStatement.getLeftExpression();
         Expression right = eqnStatement.getRightExpression();
         assertTrue("The LHS is not an Expression!", null != left);
         assertTrue("The RHS is not an Expression!", null != right);
 
+        // Asserts equation to be balanced.
         assertTrue("Equation is not recognised as being balanced atomically!", eqnStatement.isBalancedAtoms());
         assertTrue("Equation is not recognised as being balanced electrically!", eqnStatement.isBalancedCharge());
         assertTrue("Equation is not recognised as being balanced overall!", eqnStatement.isBalanced());
 
+        // Asserts equation to contain no error terms.
         assertFalse("Equation unexpectedly recognised as containing an error!", eqnStatement.containsError());
     }
 
+    /**
+     * Simple test. Parses two chemical equations that are semantically equivalent. Tests if equals method works.
+     * @throws Exception
+     */
     @Test
     public void testEquationStatementEquality() throws Exception
     {
         ArrayList<Statement> statements = stringParser(equationStatement1 + equationStatement2);
 
+        // Asserts only two statements in ArrayList.
         assertTrue("Expected 2 statements out, got " + statements.size() + "!", statements.size() == 2);
 
+        // Asserts both statements to be actual instances of EquationStatement.
         Statement result1 = statements.get(0);
         Statement result2 = statements.get(1);
         assertTrue("Results are not EquationStatements!",
@@ -209,9 +269,14 @@ public class TestParser
         EquationStatement eqnStatement1 = (EquationStatement) result1;
         EquationStatement eqnStatement2 = (EquationStatement) result2;
 
+        // Asserts that first statement is equivalent to second one.
         assertTrue("Equations not recognised as being equal!", eqnStatement1.equals(eqnStatement2));
     }
 
+    /**
+     * Hard test. Parses chemical expression with nested parenthesis, and test if count of oxygen atoms is correct.
+     * @throws Exception
+     */
     @Test
     public void testNestedGroupMolecule() throws Exception
     {
@@ -219,11 +284,16 @@ public class TestParser
         Statement result = statements.get(0);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
 
+        // Asserts number of oxygen atoms in expression = 36.
         HashMap<String, Integer> atomCount = exprStatement.getAtomCount();
         assertTrue("Count of Oxygen atoms in nested group incorrect! Expected 36, got " + atomCount.get("O") + "!",
                                                                                           atomCount.get("O") == 36);
     }
 
+    /**
+     * Simple test. Parses an erroneous statement, and check if result contains error.
+     * @throws Exception
+     */
     @Test
     public void testSyntaxErrors() throws Exception
     {
@@ -231,12 +301,18 @@ public class TestParser
         ExpressionStatement result = (ExpressionStatement) statements.get(0);
         AbstractTerm t = result.getExpression().getTerms().get(0);
 
+        // Asserts that expression got contains error.
         assertTrue("ExpressionStatement not recognised as containing an error!", result.containsError());
 
+        // Assert that the term in expression is ErrorTerm.
         assertTrue("The result is not an ErrorTerm!", t instanceof ErrorTerm);
 
     }
 
+    /**
+     * Simple test. Parses two erroneous statement, and checks if both statements are considered equivalent or not.
+     * @throws Exception
+     */
     @Test
     public void testSyntaxErrorEquality() throws Exception
     {
@@ -248,12 +324,15 @@ public class TestParser
         ExpressionStatement exprStatement1 = (ExpressionStatement) result1;
         ExpressionStatement exprStatement2 = (ExpressionStatement) result2;
 
+        // Asserts that both statements are erroneous.
         assertTrue("ExpressionStatements not recognised as containing errors!",
                     exprStatement1.containsError() && exprStatement2.containsError());
+
+        // Asserts both statements not equivalent to each other.
         assertFalse("Two expression statements containing errors recognised as equal!",
                     exprStatement1.equals(exprStatement2));
     }
-
+    
     @Test
     public void testArrowDifference() throws Exception
     {
