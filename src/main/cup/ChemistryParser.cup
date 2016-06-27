@@ -57,10 +57,12 @@ statement       ::=   expr:e                                {: RESULT = new Expr
                     | n_expr:l TO:a n_expr:r                {: RESULT = new NuclearEquationStatement(l, r); :}
                     ;
 expr            ::=   terms:e end_term:t                    {: RESULT = e; RESULT.add(t); :}
+                    | terms:e error                         {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | end_term:t                            {: RESULT = new Expression(t); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
 terms           ::=   terms:e term:t                        {: RESULT = e; RESULT.add(t); :}
+                    | terms:e error                         {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | term:t                                {: RESULT = new Expression(t); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
@@ -82,6 +84,7 @@ end_term        ::=   opt_number:n molecule:m charge:c opt_state:s
                     | opt_number:n C_ELECTRON:e             {: RESULT = new Term(n, e, null); :}
                     ;
 n_expr          ::=   n_terms:e n_end_term:t                {: RESULT = e; RESULT.add(t); :}
+                    | n_terms:e error                       {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | n_end_term:t                          {: RESULT = new Expression(t); :}
                     ;
 n_terms         ::=   n_terms:e n_term:t                    {: RESULT = e; RESULT.add(t); :}
