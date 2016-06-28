@@ -25,6 +25,18 @@ import java_cup.runtime.Symbol;
 %%
 %class ChemistryLexer
 %cup
+
+/* comments */
+    LineTerminator = \r|\n|\r\n
+    InputCharacter = [^\r\n]
+
+    Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+
+    TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+    // Comment can be the last line of the file, without line terminator.
+    EndOfLineComment     = "//" {InputCharacter}* {LineTerminator}?
+    DocumentationComment = "/**" {CommentContent} "*"+ "/"
+    CommentContent       = ( [^*] | \*+ [^/*] )*
 %%
     /**
      * Statement/Equation separator
@@ -123,6 +135,9 @@ import java_cup.runtime.Symbol;
      * White space: No special purpose.
      */
     [\s]+                           { /* Ignore all whitespace */ }
+
+    /* Comments */
+    {Comment}                       { /* ignore */ }
 
     /**
      * Error capturing symbol.
