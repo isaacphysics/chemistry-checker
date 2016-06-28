@@ -98,6 +98,7 @@ import java_cup.runtime.Symbol;
      * Electrons used in chemical (half) equations.
      */
     e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
+    e[\s]*-                         { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
 
     /**
      * Hydrate part (. NUM H2O):
