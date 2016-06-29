@@ -140,9 +140,13 @@ public class ExpressionStatement extends Statement implements Countable
         return null;
     }
 
-    public ArrayList<Term> getWrongTerms(ExpressionStatement e)
+    @Override
+    public ArrayList<Term> getWrongTerms(Statement e)
     {
-        return expr.getWrongTerms(e.expr);
+        if (e instanceof ExpressionStatement)
+            return expr.getWrongTerms(((ExpressionStatement) e).expr);
+        else
+            return new ArrayList<>();
     }
 
     @Override

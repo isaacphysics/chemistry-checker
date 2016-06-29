@@ -16,6 +16,8 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
+
 abstract class Statement
 {
     /**
@@ -45,4 +47,12 @@ abstract class Statement
      * Prints helpful message if expression is wrong.
      */
     public abstract boolean check(Statement input);
+
+    /**
+     * Find terms in argument statement that do not exist in this one.
+     *
+     * @param e The supposedly wrong equation statement.
+     * @return ArrayList of wrong terms in e.
+     */
+    public abstract ArrayList<Term> getWrongTerms(Statement e);
 }

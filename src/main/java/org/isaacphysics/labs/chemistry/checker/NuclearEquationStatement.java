@@ -71,7 +71,7 @@ public class NuclearEquationStatement extends Statement
     /**
      * Checks if mass numbers on both sides of equation are balanced.
      */
-    private boolean isBalancedMass()
+    public boolean isBalancedMass()
     {
         try
         {
@@ -86,7 +86,7 @@ public class NuclearEquationStatement extends Statement
     /**
      * Checks if atomic numbers on both sides of equation are balanced.
      */
-    private boolean isBalancedAtom()
+    public boolean isBalancedAtom()
     {
         try
         {
@@ -147,17 +147,17 @@ public class NuclearEquationStatement extends Statement
         return left.weaklyEquivalent(other.left) && right.weaklyEquivalent(other.right);
     }
 
-    /**
-     * Find terms in argument statement that do not exist in this one.
-     *
-     * @param e The supposedly wrong equation statement.
-     * @return ArrayList of wrong terms in e.
-     */
-    public ArrayList<Term> getWrongTerms(NuclearEquationStatement e)
+    @Override
+    public ArrayList<Term> getWrongTerms(Statement e)
     {
-        ArrayList<Term> toReturn = left.getWrongTerms(e.left);
+        if (!(e instanceof NuclearEquationStatement))
+            return new ArrayList<>();
 
-        toReturn.addAll(right.getWrongTerms(e.right));
+        NuclearEquationStatement expr = (NuclearEquationStatement) e;
+
+        ArrayList<Term> toReturn = left.getWrongTerms(expr.left);
+
+        toReturn.addAll(right.getWrongTerms(expr.right));
 
         return toReturn;
     }

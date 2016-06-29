@@ -111,9 +111,13 @@ public class NuclearExpressionStatement extends Statement implements Countable
         return expr.getMassCount();
     }
 
-    public ArrayList<Term> getWrongTerms(NuclearExpressionStatement e)
+    @Override
+    public ArrayList<Term> getWrongTerms(Statement e)
     {
-        return expr.getWrongTerms(e.expr);
+        if (e instanceof NuclearExpressionStatement)
+            return expr.getWrongTerms(((NuclearExpressionStatement) e).expr);
+        else
+            return new ArrayList<>();
     }
 
     @Override

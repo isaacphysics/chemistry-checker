@@ -19,6 +19,7 @@ package org.isaacphysics.labs.chemistry.checker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java_cup.runtime.DefaultSymbolFactory;
 
 import java.io.FileInputStream;
@@ -41,7 +42,7 @@ public class RunParser {
     public static void main(String args[]) throws Exception
     {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
-        @SuppressWarnings("unchecked")
+        /*@SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
@@ -86,9 +87,9 @@ public class RunParser {
                 System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());
                 System.out.println("Total mass# RHS: " + s.getRightExpression().getMassCount());
             }
-            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
+            System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }
+        }*/
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
         String wrong_eq  = "NaOH(l) + HCl(aq) -> NaCl + H2O(l)";
@@ -102,6 +103,8 @@ public class RunParser {
         System.out.println("Wrong terms: " + foo.getWrongTerms(bar));*/
 
         //checkExpressionTest();
+
+        System.out.println(check("^{234}_{90}Th + /alpha_particle + /gamma_ray;", "_{90}^{234}Th + /alpha_particle;"));
     }
 
     public static String parseFromString(String statementString) {
@@ -159,6 +162,37 @@ public class RunParser {
         }
     }
 
+    /**
+     * This method checks user input against target string, and returns a JSON object.
+     * The JSON object contains following information:
+     * <p>
+     *     <ul>
+     *         <li>testString: The user-provided argument.</li>
+     *         <li>targetString: String to be matched against.</li>
+     *         <li>test: Parsed testString, in mhchem format.</li>
+     *         <li>target: Parsed targetString, in mhchem format.</li>
+     *         <li>error: Boolean value stating whether or not user input contains error terms.</li>
+     *         <li>equal: Determines if user input equivalent to target.</li>
+     *         <li>typeMismatch: Determines if user input and target have different types.</li>
+     *         <li>expectedType: Determines the type of target string.</li>
+     *         <li>receivedType: Determines the type of user input.</li>
+     *         <li>weaklyEquivalent: Determines if user input is equivalent to target, disregarding state symbols and coefficients. </li>
+     *         <li>sameCoefficient: Checks if both target and user input have same coefficient on equal terms.</li>
+     *         <li>sameArrow: Checks if arrows used in both statements are the same. A feature only in ExpressionStatement.</li>
+     *         <li>sameState: Checks if the state symbols used in the two expressions are the same. Feature only available for chemical expressions.</li>
+     *         <li>isBalanced: Checks if equation is balanced on both sides. Only featured in EquationStatement and NuclearEquationStatement.</li>
+     *         <li>balancedAtoms: Checks if atom count is balanced on both sides of an equation. Only a feature in EquationStatement.</li>
+     *         <li>balancedCharge: Checks if charge is balanced on both sides of an equation. Only a feature in EquationStatement.</li>
+     *         <li>balancedAtomic: Checks if atomic number is balanced. Only useful for NuclearEquationStatement.</li>
+     *         <li>balancedMass: Checks if mass number is balanced. Only useful for NuclearEquationStatment.</li>
+     *         <li>validAtomicNumber: Checks if atomic number of isotopes in user input is matches the element symbol.</li>
+     *         <li>wrongTerms: A list of all wrong terms in user input, in mhchem format.</li>
+     *     </ul>
+     * </p>
+     * @param testString User-inputted string
+     * @param targetString String to be matched with.
+     * @return JSON object containing information about the matching.
+     */
     public static String check(String testString, String targetString) {
         try {
             ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString))).parse().value;
@@ -173,6 +207,7 @@ public class RunParser {
             node.put("targetString", targetString);
             node.put("test", testStatement.toString());
             node.put("target", targetStatement.toString());
+
             if (targetStatement.containsError()) {
                 System.err.println("Trusted string contains error!");
                 System.err.println("\t\"" + targetString + "\"");
@@ -183,9 +218,65 @@ public class RunParser {
             node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
             node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
             node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
-            node.put("sameMolecules", targetStatement.equals(testStatement));
+            node.put("weaklyEquivalent", targetStatement.weaklyEquivalent(testStatement));
+
+            if (targetStatement instanceof ExpressionStatement)
+            {
+                ExpressionStatement target = (ExpressionStatement) targetStatement;
+
+                node.put("sameCoefficient", target.sameCoefficients(testStatement));
+                node.put("sameState", target.sameStateSymbols(testStatement));
+            }
+            else if (targetStatement instanceof EquationStatement)
+            {
+                EquationStatement target = (EquationStatement) targetStatement;
+
+                node.put("sameCoefficient", target.sameCoefficients(testStatement));
+                node.put("sameState", target.sameStateSymbols(testStatement));
+
+                if (testStatement instanceof EquationStatement)
+                {
+                    EquationStatement test = (EquationStatement) testStatement;
+
+                    node.put("sameArrow", target.getArrow().equals(test.getArrow()));
+                    node.put("isBalanced", test.isBalanced());
+                    node.put("balancedAtoms", test.isBalancedAtoms());
+                    node.put("balancedCharge", test.isBalancedCharge());
+                }
+            }
+            else if (targetStatement instanceof NuclearExpressionStatement)
+            {
+                if (testStatement instanceof NuclearExpressionStatement)
+                {
+                    NuclearExpressionStatement test = (NuclearExpressionStatement) testStatement;
+
+                    node.put("validAtomicNumber", test.isValid());
+                }
+            }
+            else // instanceof NuclearEquationStatement
+            {
+                if (testStatement instanceof NuclearEquationStatement)
+                {
+                    NuclearEquationStatement test = (NuclearEquationStatement) testStatement;
+
+                    node.put("isBalanced", test.isBalanced());
+                    node.put("balancedAtomic", test.isBalancedAtom());
+                    node.put("balancedMass", test.isBalancedMass());
+                    node.put("validAtomicNumber", test.isValid());
+                }
+            }
+
+            ArrayNode array = mapper.createArrayNode();
+
+            for (Term t: targetStatement.getWrongTerms(testStatement))
+            {
+                array.add(t.toString());
+            }
+
+            node.putArray("wrongTerms").addAll(array);
 
             return mapper.writeValueAsString(node);
+
         } catch (Exception e) {
             return "";
         }

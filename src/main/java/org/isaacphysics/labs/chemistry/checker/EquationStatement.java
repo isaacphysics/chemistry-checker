@@ -110,6 +110,12 @@ public class EquationStatement extends Statement
         return this.right;
     }
 
+    /**
+     * Getter function. Returns arrow.
+     * @return
+     */
+    AbstractArrow getArrow() { return this.arrow; }
+
     @Override
     public String getDotCode()
     {
@@ -192,17 +198,17 @@ public class EquationStatement extends Statement
         return left.sameCoefficients(other.left) && right.sameCoefficients(other.right);
     }
 
-    /**
-     * Find terms in argument statement that do not exist in this one.
-     *
-     * @param e The supposedly wrong equation statement.
-     * @return ArrayList of wrong terms in e.
-     */
-    public ArrayList<Term> getWrongTerms(EquationStatement e)
+    @Override
+    public ArrayList<Term> getWrongTerms(Statement e)
     {
-        ArrayList<Term> toReturn = left.getWrongTerms(e.left);
+        if (!(e instanceof EquationStatement))
+            return new ArrayList<>();
 
-        toReturn.addAll(right.getWrongTerms(e.right));
+        EquationStatement expr = (EquationStatement) e;
+
+        ArrayList<Term> toReturn = left.getWrongTerms(expr.left);
+
+        toReturn.addAll(right.getWrongTerms(expr.right));
 
         return toReturn;
     }
