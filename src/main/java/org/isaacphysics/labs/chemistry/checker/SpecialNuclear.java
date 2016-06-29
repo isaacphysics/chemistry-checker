@@ -74,7 +74,7 @@ public abstract class SpecialNuclear extends Nuclear
     abstract public boolean equals(Object o);
 
     @Override
-    public String toString() { return "/" + syntax; }
+    public String toString() { return "\\" + syntax; }
 
     @Override
     public String getDotId() { return syntax + "_" + dotId; }

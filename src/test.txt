@@ -13,7 +13,7 @@ Ca(NO3)2;
 Mg(CH3COO)2;
 
 /* Check if equation has balanced charge, in presence of ions. */
-CH3CO2H + H2O <--> CH3CO2^{-} + H3O^{+};
+CH3CO2H + H2O <=> CH3CO2^{-} + H3O^{+};
 Co^{2+} -> Co^{3+} + e^{-};
 8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);
 3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(g);
@@ -37,11 +37,11 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 
 /* Simple test for nuclear equations. */
 ^{222}_{88}Ra ->  ^{4}_{2}He + ^{218}_{86}Rn;
-^{14}_{6}Na -> ^{14}_{7}N + /electron + /gamma_ray;
-^{14}_{7}N + 3/electron + /gamma_ray;
+^{14}_{6}Na -> ^{14}_{7}N + \electron + \gamma_ray;
+^{14}_{7}N + 3\electron + \gamma_ray;
 
 /* Test for hydrates. */
 CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
 
 /* Test for semantic sugar (N+), and see if program can pick up the invalid atomic number 6. */
-^{14}_{6}Na -> ^{14}_{7}N+ + /electron + /gamma_ray;
+^{14}_{6}Na -> ^{14}_{7}N+ + \electron + \gamma_ray;

@@ -42,7 +42,7 @@ public class RunParser {
     public static void main(String args[]) throws Exception
     {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
-        /*@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
@@ -89,7 +89,8 @@ public class RunParser {
             }
             System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }*/
+        }
+    }
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
         String wrong_eq  = "NaOH(l) + HCl(aq) -> NaCl + H2O(l)";
@@ -100,11 +101,11 @@ public class RunParser {
 
         System.out.printf("Correct    : %s\nInput      : %s\n", foo.toString(), bar.toString());
 
-        System.out.println("Wrong terms: " + foo.getWrongTerms(bar));*/
+        System.out.println("Wrong terms: " + foo.getWrongTerms(bar));
 
         //checkExpressionTest();
 
-        System.out.println(check("^{234}_{90}Th + /alpha_particle + /gamma_ray;", "_{90}^{234}Th + /alpha_particle;"));
+        //System.out.println(check("^{234}_{90}Th + \\alpha_particle + \\gamma_ray;", "_{90}^{234}Th + \\alpha_particle;"));
     }
 
     public static String parseFromString(String statementString) {
@@ -298,7 +299,7 @@ public class RunParser {
 
         String wrong_term  = "NaOH (aq) + HCl(aq) -> HOH(l) + ClNa(aq);"; // Poorly-written terms
 
-        String wrong_arrow = "NaOH (aq) + HCl (aq) <--> NaCl (aq) + H2O (l);"; // Wrong arrow
+        String wrong_arrow = "NaOH (aq) + HCl (aq) <=> NaCl (aq) + H2O (l);"; // Wrong arrow
 
         String wrong_coeff = "10NaOH(aq) + 10HCl(aq) -> 10NaCl(aq) + 10H2O(l);"; // Wrong coefficients
 
@@ -364,16 +365,16 @@ public class RunParser {
 
     private static void checkNuclearEquation() throws Exception
     {
-        String test = "^{219}_{86}Rn -> _{84}^{215}Po + /alpha_particle;" +
+        String test = "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle;" +
                         "Rn -> Po + Ca;" +
                         "_{219}^{86} Rn -> _{215}^{84}Po ++;" +
-                        "^{220}_{86}Rn -> ^{215}_{84}Po + /alpha_particle;" +
+                        "^{220}_{86}Rn -> ^{215}_{84}Po + \\alpha_particle;" +
                         "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{7}N;" +
-                        "^{14}_{6}U -> ^{14}_{7}N + /beta_particle;" +
-                        "^{219}_{86}Rn -> /alpha_particle + ^{215}_{84}Po;" +
-                        "^{219}_{86}Rn -> _{84}^{215}Po + /alpha_particle + /gamma_ray;" +
-                        "^{60}_{27}Co -> ^{60}_{27}Co + /gamma_ray;" +
-                        "^{60}_{27}Co -> ^{60}_{27}Co + 100/gamma_ray;";
+                        "^{14}_{6}U -> ^{14}_{7}N + \\beta_particle;" +
+                        "^{219}_{86}Rn -> \\alpha_particle + ^{215}_{84}Po;" +
+                        "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle + \\gamma_ray;" +
+                        "^{60}_{27}Co -> ^{60}_{27}Co + \\gamma_ray;" +
+                        "^{60}_{27}Co -> ^{60}_{27}Co + 100\\gamma_ray;";
 
         ArrayList<Statement> stmt_list = stringParser(test);
 
@@ -398,13 +399,13 @@ public class RunParser {
 
     private static void checkNuclearExpression() throws Exception
     {
-        String test = "_{90}^{234}Th + /alpha_particle;" +
+        String test = "_{90}^{234}Th + \\alpha_particle;" +
                         "Th + H;" +
-                        "^{234}_{90}Th ++ /alpha_particle;" +
-                        "/alpha_particle + ^{234}_{90}Th;" +
-                        "^{234}_{90}U + /alpha_particle;" +
-                        "^{234}_{90}Th + /alpha_particle + /gamma_ray;" +
-                        "^{234}_{90}Th + 3/alpha_particle";
+                        "^{234}_{90}Th ++ \\alpha_particle;" +
+                        "\\alpha_particle + ^{234}_{90}Th;" +
+                        "^{234}_{90}U + \\alpha_particle;" +
+                        "^{234}_{90}Th + \\alpha_particle + \\gamma_ray;" +
+                        "^{234}_{90}Th + 3\\alpha_particle";
 
         ArrayList<Statement> stmt_list = stringParser(test);
 

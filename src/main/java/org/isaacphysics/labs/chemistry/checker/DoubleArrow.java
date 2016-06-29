@@ -30,7 +30,7 @@ public final class DoubleArrow extends AbstractArrow
     }
 
     @Override
-    public String toString() { return " <--> "; }
+    public String toString() { return " <=> "; }
 
     @Override
     String getDotCode()
