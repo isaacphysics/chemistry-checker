@@ -42,6 +42,11 @@ public final class Term extends AbstractTerm
         g,
 
         /**
+         * Metal state
+         */
+        m,
+
+        /**
          * Aqueous state
          */
         aq

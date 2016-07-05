@@ -80,7 +80,7 @@ import java_cup.runtime.Symbol;
     /**
      * All possible state symbols.
      */
-    \((s|l|g|aq)\)                  { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }
+    \((s|l|g|m|aq)\)                { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }
 
     /**
      * All existing chemical elements.
