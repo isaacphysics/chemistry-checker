@@ -47,7 +47,7 @@ public class RunParser {
         System.err.flush();
         System.out.flush();
         System.out.println();
-        for (Statement statement : statements)
+        /*for (Statement statement : statements)
         {
             System.out.println(statement);
 
@@ -89,8 +89,8 @@ public class RunParser {
             }
             System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }
-    }
+        }*/
+
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
         String wrong_eq  = "NaOH(l) + HCl(aq) -> NaCl + H2O(l)";
@@ -104,8 +104,9 @@ public class RunParser {
         System.out.println("Wrong terms: " + foo.getWrongTerms(bar));
 
         //checkExpressionTest();
+        */
 
-        //System.out.println(check("^{234}_{90}Th + \\alpha_particle + \\gamma_ray;", "_{90}^{234}Th + \\alpha_particle;"));
+        System.out.println(check("H2+O2->H2O", "2H2+O2->2H2O"));
     }
 
     public static String parseFromString(String statementString) {
@@ -172,7 +173,7 @@ public class RunParser {
      *         <li>targetString: String to be matched against.</li>
      *         <li>test: Parsed testString, in mhchem format.</li>
      *         <li>target: Parsed targetString, in mhchem format.</li>
-     *         <li>error: Boolean value stating whether or not user input contains error terms.</li>
+     *         <li>containsError: Boolean value stating whether or not user input contains error terms.</li>
      *         <li>equal: Determines if user input equivalent to target.</li>
      *         <li>typeMismatch: Determines if user input and target have different types.</li>
      *         <li>expectedType: Determines the type of target string.</li>
@@ -194,8 +195,7 @@ public class RunParser {
      * @param targetString String to be matched with.
      * @return JSON object containing information about the matching.
      */
-    public static String check(String testString, String targetString) {
-        try {
+    public static String check(String testString, String targetString) throws Exception {
             ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString))).parse().value;
             ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(targetString))).parse().value;
             Statement testStatement = testStatements.get(0);
@@ -214,7 +214,7 @@ public class RunParser {
                 System.err.println("\t\"" + targetString + "\"");
                 System.err.println("\t\"" + targetStatement.toString() + "\"");
             }
-            node.put("error", testStatement.containsError());
+            node.put("containsError", testStatement.containsError());
             node.put("equal", targetStatement.equals(testStatement));
             node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
             node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
@@ -277,10 +277,6 @@ public class RunParser {
             node.putArray("wrongTerms").addAll(array);
 
             return mapper.writeValueAsString(node);
-
-        } catch (Exception e) {
-            return "";
-        }
     }
 
     private static void checkEquationTest() throws Exception
