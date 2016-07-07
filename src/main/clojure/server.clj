@@ -10,11 +10,12 @@
     {:status 200
      :body (RunParser/check test target)
      :headers {"Content-Type" "application/json"}})
-  (POST "/parse" [test]
-    (println "Parsing" test)
-    {:status 200
-     :body (RunParser/parseFromString test)
-     :headers {"Content-Type" "application/json"}}))
+;  (POST "/parse" [test]
+;    (println "Parsing" test)
+;    {:status 200
+;     :body (RunParser/parseFromString test)
+;     :headers {"Content-Type" "application/json"}})
+     )
 
 (print "Starting server...")
 (server/run-server (site #'routes) {:port 80})
