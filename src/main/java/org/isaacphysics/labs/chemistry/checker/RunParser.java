@@ -121,7 +121,7 @@ public class RunParser {
                 node.put("type", "expression");
                 node.put("input", statementString);
                 node.put("result", exprStatement.toString());
-                node.put("error", exprStatement.containsError());
+                node.put("containsError", exprStatement.containsError());
                 node.put("charge", exprStatement.getCharge());
                 HashMap<String, Integer> atomCount = exprStatement.getAtomCount();
                 ObjectNode atomCountNode = node.putObject("atom_count");
@@ -133,14 +133,14 @@ public class RunParser {
                 node.put("type", "equation");
                 node.put("input", statementString);
                 node.put("result", eqnStatement.toString());
-                node.put("error", eqnStatement.containsError());
+                node.put("containsError", eqnStatement.containsError());
                 node.put("balanced", eqnStatement.isBalanced());
                 node.put("balancedAtoms", eqnStatement.isBalancedAtoms());
                 node.put("balancedCharge", eqnStatement.isBalancedCharge());
 
                 ObjectNode leftHandSide = node.putObject("left");
                 Expression left = eqnStatement.getLeftExpression();
-                leftHandSide.put("error", left.containsError());
+                leftHandSide.put("containsError", left.containsError());
                 leftHandSide.put("charge", left.getCharge());
                 HashMap<String, Integer> atomCountLeft = left.getAtomCount();
                 ObjectNode atomCountLeftNode = leftHandSide.putObject("atom_count");
@@ -150,7 +150,7 @@ public class RunParser {
 
                 ObjectNode rightHandSide = node.putObject("right");
                 Expression right = eqnStatement.getRightExpression();
-                rightHandSide.put("error", right.containsError());
+                rightHandSide.put("containsError", right.containsError());
                 rightHandSide.put("charge", right.getCharge());
                 HashMap<String, Integer> atomCountRight = right.getAtomCount();
                 ObjectNode atomCountRightNode = rightHandSide.putObject("atom_count");
