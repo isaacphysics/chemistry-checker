@@ -47,7 +47,7 @@ public class RunParser {
         System.err.flush();
         System.out.flush();
         System.out.println();
-        /*for (Statement statement : statements)
+        for (Statement statement : statements)
         {
             System.out.println(statement);
 
@@ -89,7 +89,7 @@ public class RunParser {
             }
             System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }*/
+        }
 
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
@@ -106,7 +106,7 @@ public class RunParser {
         //checkExpressionTest();
         */
 
-        System.out.println(check("H2+O2->H2O", "2H2+O2->2H2O"));
+        //System.out.println(check("H2+O2->H2O", "2H2+O2->2H2O"));
     }
 
     public static String parseFromString(String statementString) {

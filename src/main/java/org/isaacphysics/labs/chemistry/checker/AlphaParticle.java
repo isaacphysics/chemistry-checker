@@ -24,7 +24,7 @@ public final class AlphaParticle extends SpecialNuclear
 {
     public AlphaParticle()
     {
-        super(4, 2, 2, "Alpha particle", "alpha_particle", "&#945;");
+        super(4, 2, 2, "Alpha particle", "alphaparticle", "&#945;");
     }
 
     @Override

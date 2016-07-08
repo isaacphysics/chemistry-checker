@@ -25,7 +25,7 @@ terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
-terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON;
+terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -225,6 +225,8 @@ nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
                     | NEUTRINO:e                            {: RESULT = e; :}
                     | P_ELECTRON:e                          {: RESULT = e; :}
                     | POSITRON:e                            {: RESULT = e; :}
+                    | NEUTRON:e                             {: RESULT = e; :}
+                    | PROTON:e                              {: RESULT = e; :}
                     ;
 
 /**

@@ -24,7 +24,7 @@ public final class BetaParticle extends SpecialNuclear
 {
     public BetaParticle()
     {
-        super(0, -1, -1, "Beta particle", "beta_particle", "&#946;");
+        super(0, -1, -1, "Beta particle", "betaparticle", "&#946;");
     }
 
     @Override

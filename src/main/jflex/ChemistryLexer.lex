@@ -125,12 +125,14 @@ import java_cup.runtime.Symbol;
      * Special nuclear particles:
      * Including alpha, beta particles, gamma rays, neutrinoes, electrons and positrons.
      */
-    \\"alpha_particle"               { return new Symbol(sym.ALPHA, new AlphaParticle()); }
-    \\"beta_particle"                { return new Symbol(sym.BETA, new BetaParticle()); }
-    \\"gamma_ray"                    { return new Symbol(sym.GAMMA, new GammaRay()); }
+    \\"alphaparticle"                { return new Symbol(sym.ALPHA, new AlphaParticle()); }
+    \\"betaparticle"                 { return new Symbol(sym.BETA, new BetaParticle()); }
+    \\"gammaray"                     { return new Symbol(sym.GAMMA, new GammaRay()); }
     \\"neutrino"                     { return new Symbol(sym.NEUTRINO, new Neutrino()); }
     \\"electron"                     { return new Symbol(sym.P_ELECTRON, new PhysicalElectron()); }
     \\"positron"                     { return new Symbol(sym.POSITRON, new Positron()); }
+    \\"neutron"                      { return new Symbol(sym.NEUTRON, new Neutron()); }
+    \\"proton"                       { return new Symbol(sym.PROTON, new Proton()); }
 
     /**
      * White space: No special purpose.

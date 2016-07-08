@@ -24,7 +24,7 @@ public final class GammaRay extends SpecialNuclear
 {
     public GammaRay()
     {
-        super(0, 0, 0, "Gamma ray", "gamma_ray", "&#947;");
+        super(0, 0, 0, "Gamma ray", "gammaray", "&#947;");
     }
 
     @Override

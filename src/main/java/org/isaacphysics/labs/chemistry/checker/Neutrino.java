@@ -24,7 +24,7 @@ public final class Neutrino extends SpecialNuclear
 {
     public Neutrino()
     {
-        super(1, 0, 0, "Neutrino", "neutrino", "n");
+        super(0, 0, 0, "Neutrino", "neutrino", "&#957;&zwj;e&zwnj;");
     }
 
     @Override

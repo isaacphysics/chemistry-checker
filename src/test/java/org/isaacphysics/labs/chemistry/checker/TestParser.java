@@ -392,7 +392,7 @@ public class TestParser
     public void testInvalidNuclear() throws Exception
     {
         // State symbols should not be assigned to isotopes.
-        String stateSymbol = "^{226}_{88}Ra (s) -> \\alpha_particle + ^{222}_{86}Rn (aq)";
+        String stateSymbol = "^{226}_{88}Ra (s) -> \\alphaparticle + ^{222}_{86}Rn (aq)";
 
         // Coefficients should not be assigned to isotopes.
         String coefficient = "^{14}_{6}C -> 20^{14}_{7}N + \\electron";
@@ -424,10 +424,10 @@ public class TestParser
     @Test
     public void checkAtomicNumber() throws Exception
     {
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutrino";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
 
         // Uut does not have an atomic number of 112.
-        String invalidAtomicNumber = "^{283}_{112}Uut + 3\\alpha_particle ";
+        String invalidAtomicNumber = "^{283}_{112}Uut + 3\\alphaparticle ";
 
         ArrayList<Statement> statements = stringParser(alphaDecay + ";" + invalidAtomicNumber);
 
@@ -514,8 +514,8 @@ public class TestParser
         String eStream3 = "\\electron + \\neutrino + \\neutrino";
 
         // Nuclear expression: Set 2
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutrino";
-        String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3\\neutrino + ^{288}_{115}Uup";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
+        String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3\\neutron + ^{288}_{115}Uup";
         String alphaDecay3 = "^{48}_{20}Ca + ^{243}_{95}Am -> ^{288}_{115}Uup";
 
 
@@ -642,8 +642,8 @@ public class TestParser
     @Test
     public void testIsotopes() throws Exception
     {
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutrino";
-        String sameDecay  = "_{20}^{48}Ca + _{95}^{243}Am -> 3\\neutrino + ^{288}_{115}Uup";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
+        String sameDecay  = "_{20}^{48}Ca + _{95}^{243}Am -> 3\\neutron + ^{288}_{115}Uup";
 
         ArrayList<Statement> statements = stringParser(alphaDecay + ";" + sameDecay);
         assertTrue("Expected 2 statements, got " + statements.size(), statements.size() == 2);
