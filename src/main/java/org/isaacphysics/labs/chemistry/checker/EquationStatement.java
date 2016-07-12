@@ -18,7 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-public class EquationStatement extends Statement
+public final class EquationStatement extends Statement
 {
     /**
      * The left expression of a equation

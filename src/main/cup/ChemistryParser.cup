@@ -18,7 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-terminal END, PLUS, MINUS, LPAREN, RPAREN;
+terminal END, PLUS, LPAREN, RPAREN;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE, ERROR;
@@ -30,14 +30,16 @@ terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PR
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
-non terminal Expression expr, n_expr, terms, n_terms;
-non terminal Term term, n_term, end_term, n_end_term;
-non terminal Isotope isotope, isotope_mod;
+non terminal Expression expr, n_expr;
+non terminal Term term, n_term;
+non terminal Formula r_term;
+non terminal IonChain i_chain;
+non terminal Isotope isotope;
 non terminal Molecule molecule;
 non terminal Element element;
 non terminal Compound compound, some_eb, b;
 non terminal Nuclear nuclear;
-non terminal Integer opt_number, charge;
+non terminal Integer opt_number;
 non terminal String opt_state;
 
 start with result;
@@ -80,27 +82,11 @@ statement       ::=   expr:e                                {: RESULT = new Expr
  *
  * A chemical expression consists of list of chemical terms, separated by PLUS.
  *
- * To avoid shift/reduce conflicts, PLUS are meld into chemical terms. So expression like
- * `K + Na+ + Cl- + Mg` should be read as `[(K+) (Na++) (Cl-+)] (Mg)`.
- *
- * The first 3 terms are regular terms, and the last term (without trailing PLUS) is called an end term.
- * Regular terms and end terms are parsed differently.
  */
-expr            ::=   terms:e end_term:t                    {: RESULT = e; RESULT.add(t); :}
-                    | terms:e error                         {: RESULT = e; RESULT.add(new ErrorTerm()); :}
-                    | end_term:t                            {: RESULT = new Expression(t); :}
+expr            ::=   expr:e PLUS term:t                    {: RESULT = e; RESULT.add(t); :}
+                    | expr:e error                          {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
-                    ;
-
-/**
- * Non-terminal Expression terms:
- * Parses a list of chemical terms, where each term consists of a trailing PLUS.
- * Is rather intuitive.
- */
-terms           ::=   terms:e term:t                        {: RESULT = e; RESULT.add(t); :}
-                    | terms:e error                         {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | term:t                                {: RESULT = new Expression(t); :}
-                    | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
                     ;
 
 /**
@@ -108,58 +94,48 @@ terms           ::=   terms:e term:t                        {: RESULT = e; RESUL
  * Parses a term. A term could be:
  * 1. An ion, i.e. charged molecule.
  * 2. An uncharged molecule.
- * 3. A hydrate.
- * 4. Electrons.
+ * 3. A chain of ions (Say Na+Cl-...)
+ * 4. A hydrate.
+ * 5. Electrons.
  *
  * The parsing considers all possibilities mentioned above, and reads the trailing PLUS as well.
  * The code may look messy, but I cannot further simplify terms.
  * Further simplifications introduce shift/reduce conflicts.
  */
-term            ::=   opt_number:n molecule:m charge:c opt_state:s PLUS
-                                                            {: RESULT = new Term(n, new Ion(m, c), s); :}
-                    | opt_number:n molecule:m PLUS
-                                                            {: RESULT = new Term(n, m, null); :}
-                    | opt_number:n molecule:m STATE:s PLUS  {: RESULT = new Term(n, m, s); :}
-                    | opt_number:n compound:c WATER:w opt_state:s PLUS
-                                                            {: RESULT = new Term(n, new Hydrate(c, w), s); :}
-                    | opt_number:n C_ELECTRON:e PLUS        {: RESULT = new Term(n, e, null); :}
-                    ;
-
-/**
- * Non-terminal Term end_term (ending term):
- * Parses an ending term.
- * The parsing is done similar to non-terminal term, but without the trailing PLUS.
- */
-end_term        ::=   opt_number:n molecule:m charge:c opt_state:s
-                                                            {: RESULT = new Term(n, new Ion(m, c), s); :}
-                    | opt_number:n molecule:m opt_state:s
-                                                            {: RESULT = new Term(n, m, s); :}
+term            ::=   opt_number:n r_term:t opt_state:s     {: RESULT = new Term(n, t, s); :}
                     | opt_number:n compound:c WATER:w opt_state:s
                                                             {: RESULT = new Term(n, new Hydrate(c, w), s); :}
                     | opt_number:n C_ELECTRON:e             {: RESULT = new Term(n, e, null); :}
                     ;
 
 /**
- * Non-terminal Expression n_expr (nuclear expression):
- * Parses a list of nuclear terms (n_term).
- *
- * Similar to non-terminal expr, PLUS-es are bound to the term to the left.
- * Therefore expressions like `\gamma_ray + ^{43}_{32}X + ^{74}_{53}Y` should be read as:
- * `[(\gamma_ray+) (^{43}_{32}X+)] (^{74}_{53}Y)`,
- * where first 2 terms belong to n_terms, and last term is called a nuclear ending term.
+ * Non-terminal Term r_term (regular term):
+ * Parses a regular term. That means:
+ * 1. Uncharged atom/compound.
+ * 2. Charged atom/compound.
+ * 3. Charged chain of ions.
  */
-n_expr          ::=   n_terms:e n_end_term:t                {: RESULT = e; RESULT.add(t); :}
-                    | n_terms:e error                       {: RESULT = e; RESULT.add(new ErrorTerm()); :}
-                    | n_end_term:t                          {: RESULT = new Expression(t); :}
+r_term          ::=   molecule:m                            {: RESULT = m; :}
+                    | molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
+                    | molecule:m CHARGE:c i_chain:i         {: i.add(new Ion(m, c)); i.reverse(); RESULT = i; :}
                     ;
 
 /**
- * Non-terminal Expression n_terms (nuclear terms):
- * Parses a list of nuclear terms (n_term) with trailing PLUS.
- * The code is rather straightforward.
+ * Non-terminal i_chain (ion chain):
+ * Parses a charged chain of ions.
  */
-n_terms         ::=   n_terms:e n_term:t                    {: RESULT = e; RESULT.add(t); :}
-                    | n_terms:e error                       {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+i_chain         ::=   molecule:m CHARGE:c i_chain:i         {: RESULT = i; RESULT.add(new Ion(m, c)); :}
+                    | molecule:m                            {: RESULT = new IonChain(m); :}
+                    | molecule:m CHARGE:c                   {: RESULT = new IonChain(new Ion(m, c)); :}
+                    ;
+
+/**
+ * Non-terminal Expression n_expr (nuclear expression):
+ * Parses a list of nuclear terms (n_term), separated by PLUS.
+ *
+ */
+n_expr          ::=   n_expr:e PLUS n_term:t                {: RESULT = e; RESULT.add(t); :}
+                    | n_expr:e error                        {: RESULT = e; RESULT.add(new ErrorTerm()); :}
                     | n_term:t                              {: RESULT = new Expression(t); :}
                     ;
 
@@ -169,7 +145,7 @@ n_terms         ::=   n_terms:e n_term:t                    {: RESULT = e; RESUL
  * A nuclear term is either an isotope, or a special term like /alpha_particle.
  */
 n_term          ::=   isotope:i                             {: RESULT = new Term(1, i, null); :}
-                    | opt_number:n nuclear:e PLUS           {: RESULT = new Term(n, e, null); :}
+                    | opt_number:n nuclear:e                {: RESULT = new Term(n, e, null); :}
                     ;
 
 /**
@@ -179,39 +155,14 @@ n_term          ::=   isotope:i                             {: RESULT = new Term
  * 2. Superscripted SUP: The mass number.
  * 3. Element ELEMENT:   The relevant element.
  * 4. Optional charge:   Charge of the isotope.
- *
- * One might notice that the parsing includes trailing plus symbol.
- * This is to prevent shift/reduce conflicts in LALR(1) parser.
  */
-isotope         ::=   SUP:sup SUB:sub ELEMENT:e PLUS        {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUB:sub SUP:sup ELEMENT:e PLUS        {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUP:sup SUB:sub ELEMENT:e charge:c PLUS
-                                                            {: RESULT = new Isotope(sup, sub,
-                                                                                    new Ion(new Element(e, 1), c)); :}
-                    | SUB:sub SUP:sup ELEMENT:e charge:c PLUS
-                                                            {: RESULT = new Isotope(sup, sub,
-                                                                                    new Ion(new Element(e, 1), c)); :}
-                    ;
-
-/**
- * Non-terminal Term n_end_term (nuclear ending term):
- * Parses the last nuclear term in an expression. Could either be an isotope,
- * or special nuclear particles without trailing plus.
- */
-n_end_term      ::=   isotope_mod:i                         {: RESULT = new Term(1, i, null); :}
-                    | opt_number:n nuclear:e                {: RESULT = new Term(n, e, null); :}
-                    ;
-
-/**
- * Non-terminal Isotope isotope_mod (modified isotope):
- * Parses the isotope at the end of an expression.
- * Very similar to non-terminal isotope, but with trailing PLUS removed.
- */
-isotope_mod     ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
+isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
                     | SUB:sub SUP:sup ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUP:sup SUB:sub ELEMENT:e charge:c    {: RESULT = new Isotope(sup, sub,
+                    | SUP:sup SUB:sub ELEMENT:e CHARGE:c
+                                                            {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
-                    | SUB:sub SUP:sup ELEMENT:e charge:c    {: RESULT = new Isotope(sup, sub,
+                    | SUB:sub SUP:sup ELEMENT:e CHARGE:c
+                                                            {: RESULT = new Isotope(sup, sub,
                                                                                     new Ion(new Element(e, 1), c)); :}
                     ;
 
@@ -295,14 +246,4 @@ opt_number      ::=   NUMBER:n                              {: RESULT = n; :}
  */
 opt_state       ::=   STATE:s                               {: RESULT = s; :}
                     |                                       {: RESULT = null; :}
-                    ;
-/**
- * Non-terminal Integer charge:
- * Parses the charge of a chemical formula.
- * Formula like molecule CHARGE:c has charge of c.
- * molecule PLUS has charge of 1, and molecule MINUS has -1.
- */
-charge          ::=   CHARGE:c                              {: RESULT = c; :}
-                    | PLUS                                  {: RESULT = 1; :}
-                    | MINUS                                 {: RESULT = -1; :}
                     ;

@@ -5,7 +5,7 @@ package org.isaacphysics.labs.chemistry.checker;
  *
  * Created by hhrl2 on 08/07/2016.
  */
-public class Neutron extends SpecialNuclear
+public final class Neutron extends SpecialNuclear
 {
     public Neutron()
     {

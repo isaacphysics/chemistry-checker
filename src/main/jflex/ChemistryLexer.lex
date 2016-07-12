@@ -110,10 +110,9 @@ import java_cup.runtime.Symbol;
     "."[\s]*H2O                     { return new Symbol(sym.WATER, 1); }
 
     /**
-     * Plus/minus symbols.
+     * Plus symbol.
      */
     "+"                             { return new Symbol(sym.PLUS); }
-    "-"                             { return new Symbol(sym.MINUS); }
 
     /**
      * Parenthesis. Commonly used in chemical compounds.

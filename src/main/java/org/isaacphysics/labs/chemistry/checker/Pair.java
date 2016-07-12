@@ -20,7 +20,7 @@ package org.isaacphysics.labs.chemistry.checker;
  * A tuple class compatible with hash tables.
  * Created by Ryan on 23/06/2016.
  */
-public class Pair<A, B>
+public final class Pair<A, B>
 {
     /**
      * First element of tuple.

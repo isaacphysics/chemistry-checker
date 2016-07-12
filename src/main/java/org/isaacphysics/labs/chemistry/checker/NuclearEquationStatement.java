@@ -24,7 +24,7 @@ import java.util.ArrayList;
  * are balanced.
  * Created by Ryan on 20/06/2016.
  */
-public class NuclearEquationStatement extends Statement
+public final class NuclearEquationStatement extends Statement
 {
     /**
      * The left expression of a equation

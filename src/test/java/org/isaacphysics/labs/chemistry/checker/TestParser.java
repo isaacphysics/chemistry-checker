@@ -18,11 +18,13 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java_cup.runtime.DefaultSymbolFactory;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * A test suite used for testing the chemical parser.

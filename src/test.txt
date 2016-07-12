@@ -24,11 +24,11 @@ C2O4H2 + H2O2 -> 2CO2 + 2H2O;
 Bi2(MoO4)3 + Fe3H2Na2O45Si + MgNaAl5(Si4O10)3(OH)6 -> MnPb8(Si2O7)3;
 
 /* Test alternative notation for chemical compound C2O4H^{+}. */
-C_{2}O_{4}H+;
+C_{2}O_{4}H^{+};
 
-/* Test if parser can pick up invalid syntax for ionic compounds. Should have error term somewhere. */
+/* Test ion chains. */
 (CH3)2S^{+}CH2CH2COO^{-};
-NaFe^{2+}3Al6(BO3)3Si6O18O3F;
+NaFe3^{2+}Al6(BO3)3Si6O18O3F;
 
 /* Intentionally invalid grammar. */
 2H2SO4 + Jjj2H2 -> H2) + Hibberish!;
@@ -43,5 +43,5 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 /* Test for hydrates. */
 CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
 
-/* Test for semantic sugar (N+), and see if program can pick up the invalid atomic number 6. */
-^{14}_{6}Na -> ^{14}_{7}N+ + \electron + \gammaray;
+/* See if program can pick up the invalid atomic number 6. */
+^{14}_{6}Na -> ^{14}_{7}N^{+} + \electron + \gammaray;

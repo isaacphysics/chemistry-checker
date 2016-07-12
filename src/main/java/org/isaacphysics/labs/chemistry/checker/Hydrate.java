@@ -22,7 +22,7 @@ import java.util.HashMap;
  * Class for storing water of crystallization.
  * Created by Ryan on 22/06/2016.
  */
-public class Hydrate extends Formula
+public final class Hydrate extends Formula
 {
     /**
      * Formula of the dehydrated salt.

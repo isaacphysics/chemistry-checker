@@ -20,7 +20,7 @@ package org.isaacphysics.labs.chemistry.checker;
  * An instance of a positron.
  * Created by Ryan on 20/06/2016.
  */
-public class Positron extends SpecialNuclear
+public final class Positron extends SpecialNuclear
 {
     public Positron()
     {

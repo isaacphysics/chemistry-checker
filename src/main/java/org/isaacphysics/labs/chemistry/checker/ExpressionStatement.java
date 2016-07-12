@@ -19,7 +19,7 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ExpressionStatement extends Statement implements Countable
+public final class ExpressionStatement extends Statement implements Countable
 {
     /**
      * Expression involved in statement

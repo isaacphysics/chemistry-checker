@@ -23,7 +23,7 @@ import java.util.HashMap;
  * Statement containing nuclear expressions.
  * Created by Ryan on 21/06/2016.
  */
-public class NuclearExpressionStatement extends Statement implements Countable
+public final class NuclearExpressionStatement extends Statement implements Countable
 {
     /**
      * Expression involved in statement
