@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class GammaRay extends SpecialNuclear
 {
-    public GammaRay()
+    public GammaRay(Integer mass, Integer atom)
     {
-        super(0, 0, 0, "Gamma ray", "gammaray", "&#947;");
+        super(0, 0, mass, atom, 0, "Gamma ray", "gammaray", "&#947;");
     }
 
     @Override

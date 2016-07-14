@@ -25,7 +25,7 @@ terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
-terminal Nuclear ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON;
+terminal ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -34,7 +34,7 @@ non terminal Expression expr, n_expr;
 non terminal Term term, n_term;
 non terminal Formula r_term;
 non terminal IonChain i_chain;
-non terminal Isotope isotope;
+non terminal Formula isotope;
 non terminal Molecule molecule;
 non terminal Element element;
 non terminal Compound compound, some_eb, b;
@@ -144,40 +144,42 @@ n_expr          ::=   n_expr:e PLUS n_term:t                {: RESULT = e; RESUL
  * Parses a single nuclear term with trailing PLUS.
  * A nuclear term is either an isotope, or a special term like /alpha_particle.
  */
-n_term          ::=   isotope:i                             {: RESULT = new Term(1, i, null); :}
-                    | opt_number:n nuclear:e                {: RESULT = new Term(n, e, null); :}
+n_term          ::=   SUP:sup SUB:sub isotope:i             {: RESULT = new Term(1, new Isotope(sup, sub, i), null); :}
+                    | SUB:sub SUP:sup isotope:i             {: RESULT = new Term(1, new Isotope(sup, sub, i), null); :}
+                    | nuclear:e                             {: RESULT = new Term(1, e, null); :}
+                    | NUMBER:n nuclear:e                    {: RESULT = new Term(n, e, null); :}
                     ;
 
 /**
- * Non-terminal Isotope isotope:
- * Parses an isotope. An isotope consists of four parts:
- * 1. Subscripted SUB:   The atomic number.
- * 2. Superscripted SUP: The mass number.
- * 3. Element ELEMENT:   The relevant element.
- * 4. Optional charge:   Charge of the isotope.
+ * Non-terminal Formula isotope:
+ * Parses an isotope. An isotope consists of two parts:
+ * 1. Element ELEMENT:   The relevant element.
+ * 2. Optional charge:   Charge of the isotope.
  */
-isotope         ::=   SUP:sup SUB:sub ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUB:sub SUP:sup ELEMENT:e             {: RESULT = new Isotope(sup, sub, new Element(e, 1)); :}
-                    | SUP:sup SUB:sub ELEMENT:e CHARGE:c
-                                                            {: RESULT = new Isotope(sup, sub,
-                                                                                    new Ion(new Element(e, 1), c)); :}
-                    | SUB:sub SUP:sup ELEMENT:e CHARGE:c
-                                                            {: RESULT = new Isotope(sup, sub,
-                                                                                    new Ion(new Element(e, 1), c)); :}
+isotope         ::=   ELEMENT:e                             {: RESULT = new Element(e, 1); :}
+                    | ELEMENT:e CHARGE:c                    {: RESULT = new Ion(new Element(e, 1), c); :}
                     ;
 
 /**
  * Non-terminal Nuclear nuclear:
  * Parses special nuclear particles like ALPHA, BETA. It is rather straightforward.
  */
-nuclear         ::=   ALPHA:e                               {: RESULT = e; :}
-                    | BETA:e                                {: RESULT = e; :}
-                    | GAMMA:e                               {: RESULT = e; :}
-                    | NEUTRINO:e                            {: RESULT = e; :}
-                    | P_ELECTRON:e                          {: RESULT = e; :}
-                    | POSITRON:e                            {: RESULT = e; :}
-                    | NEUTRON:e                             {: RESULT = e; :}
-                    | PROTON:e                              {: RESULT = e; :}
+nuclear         ::=   SUP:sup SUB:sub ALPHA                 {: RESULT = new AlphaParticle(sup, sub); :}
+                    | SUB:sub SUP:sup ALPHA                 {: RESULT = new AlphaParticle(sup, sub); :}
+                    | SUP:sup SUB:sub BETA                  {: RESULT = new BetaParticle(sup, sub); :}
+                    | SUB:sub SUP:sup BETA                  {: RESULT = new BetaParticle(sup, sub); :}
+                    | SUP:sup SUB:sub GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
+                    | SUB:sub SUP:sup GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
+                    | SUP:sup SUB:sub NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
+                    | SUB:sub SUP:sup NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
+                    | SUP:sup SUB:sub P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUB:sub SUP:sup P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUP:sup SUB:sub POSITRON              {: RESULT = new Positron(sup, sub); :}
+                    | SUB:sub SUP:sup POSITRON              {: RESULT = new Positron(sup, sub); :}
+                    | SUP:sup SUB:sub NEUTRON               {: RESULT = new Neutron(sup, sub); :}
+                    | SUB:sub SUP:sup NEUTRON               {: RESULT = new Neutron(sup, sub); :}
+                    | SUP:sup SUB:sub PROTON                {: RESULT = new Proton(sup, sub); :}
+                    | SUB:sub SUP:sup PROTON                {: RESULT = new Proton(sup, sub); :}
                     ;
 
 /**

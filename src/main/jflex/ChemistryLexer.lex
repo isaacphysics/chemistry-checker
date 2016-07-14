@@ -62,13 +62,19 @@ import java_cup.runtime.Symbol;
      * Mass numbers:   ^{NUM}.
      * Atomic numbers: _{NUM}.
      */
-    \^\{[1-9][0-9]*\}               { String s = yytext();
+    \^\{([1-9][0-9]*|0)\}           { String s = yytext();
                                         s = s.substring(2, s.length() - 1);
-                                        // System.out.println(s); // s = correctly formatted integer
+                                        //System.out.println(s); // s = correctly formatted integer
                                         return new Symbol(sym.SUP, new Integer(s)); }
-    "_{"[1-9][0-9]*\}               { String s = yytext();
+    "_{"([1-9][0-9]*|0)\}
+                                    { String s = yytext();
                                         s = s.substring(2, s.length() - 1);
-                                        // System.out.println(s); // s = correctly formatted integer
+                                        //System.out.println(s); // s = correctly formatted integer
+                                        return new Symbol(sym.SUB, new Integer(s)); }
+
+    "_{-"[1-9][0-9]*\}              { String s = yytext();
+                                        s = s.substring(2, s.length() - 1);
+                                        //System.out.println(s); // s = correctly formatted integer
                                         return new Symbol(sym.SUB, new Integer(s)); }
 
     /**
@@ -124,14 +130,14 @@ import java_cup.runtime.Symbol;
      * Special nuclear particles:
      * Including alpha, beta particles, gamma rays, neutrinoes, electrons and positrons.
      */
-    \\"alphaparticle"                { return new Symbol(sym.ALPHA, new AlphaParticle()); }
-    \\"betaparticle"                 { return new Symbol(sym.BETA, new BetaParticle()); }
-    \\"gammaray"                     { return new Symbol(sym.GAMMA, new GammaRay()); }
-    \\"neutrino"                     { return new Symbol(sym.NEUTRINO, new Neutrino()); }
-    \\"electron"                     { return new Symbol(sym.P_ELECTRON, new PhysicalElectron()); }
-    \\"positron"                     { return new Symbol(sym.POSITRON, new Positron()); }
-    \\"neutron"                      { return new Symbol(sym.NEUTRON, new Neutron()); }
-    \\"proton"                       { return new Symbol(sym.PROTON, new Proton()); }
+    \\"alphaparticle"                { return new Symbol(sym.ALPHA); }
+    \\"betaparticle"                 { return new Symbol(sym.BETA); }
+    \\"gammaray"                     { return new Symbol(sym.GAMMA); }
+    \\"neutrino"                     { return new Symbol(sym.NEUTRINO); }
+    \\"electron"                     { return new Symbol(sym.P_ELECTRON); }
+    \\"positron"                     { return new Symbol(sym.POSITRON); }
+    \\"neutron"                      { return new Symbol(sym.NEUTRON); }
+    \\"proton"                       { return new Symbol(sym.PROTON); }
 
     /**
      * White space: No special purpose.

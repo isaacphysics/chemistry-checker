@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class Neutrino extends SpecialNuclear
 {
-    public Neutrino()
+    public Neutrino(Integer mass, Integer atom)
     {
-        super(0, 0, 0, "Neutrino", "neutrino", "&#957;&zwj;e&zwnj;");
+        super(0, 0, mass, atom, 0, "Neutrino", "neutrino", "&#957;&zwj;e&zwnj;");
     }
 
     @Override

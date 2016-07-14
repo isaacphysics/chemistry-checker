@@ -7,9 +7,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class Proton extends SpecialNuclear
 {
-    public Proton()
+    public Proton(Integer mass, Integer atom)
     {
-        super(1, 1, 1, "Proton", "proton", "p");
+        super(1, 1, mass, atom, 1, "Proton", "proton", "p");
     }
 
     @Override

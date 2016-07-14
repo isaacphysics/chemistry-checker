@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class AlphaParticle extends SpecialNuclear
 {
-    public AlphaParticle()
+    public AlphaParticle(Integer mass, Integer atom)
     {
-        super(4, 2, 2, "Alpha particle", "alphaparticle", "&#945;");
+        super(4, 2, mass, atom, 2, "Alpha particle", "alphaparticle", "&#945;");
     }
 
     @Override

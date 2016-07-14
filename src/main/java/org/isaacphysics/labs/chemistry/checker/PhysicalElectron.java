@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class PhysicalElectron extends SpecialNuclear
 {
-    public PhysicalElectron()
+    public PhysicalElectron(Integer mass, Integer atom)
     {
-        super(0, -1, -1, "Electron", "electron", "e&zwj;&zwj;-&zwnj;");
+        super(0, -1, mass, atom, -1, "Electron", "electron", "e&zwj;&zwj;-&zwnj;");
     }
 
     @Override

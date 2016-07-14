@@ -55,8 +55,5 @@ public abstract class Nuclear extends Formula
     public abstract Integer getAtomicNumber();
 
     @Override
-    public boolean isValidAtomicNumber()
-    {
-        return true;
-    }
+    public abstract boolean isValidAtomicNumber();
 }

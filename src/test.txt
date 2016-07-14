@@ -37,11 +37,11 @@ This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letter
 
 /* Simple test for nuclear equations. */
 ^{222}_{88}Ra ->  ^{4}_{2}He + ^{218}_{86}Rn;
-^{14}_{6}Na -> ^{14}_{7}N + \electron + \gammaray;
-^{14}_{7}N + 3\electron + \gammaray;
+^{14}_{6}Na -> ^{14}_{7}N + ^{0}_{0}\gammaray + ^{0}_{-1}\electron ;
+^{14}_{7}N + 3^{0}_{-1}\electron + ^{0}_{0}\gammaray;
 
 /* Test for hydrates. */
 CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
 
 /* See if program can pick up the invalid atomic number 6. */
-^{14}_{6}Na -> ^{14}_{7}N^{+} + \electron + \gammaray;
+^{14}_{6}Na -> ^{14}_{7}N^{+} + ^{0}_{-1}\electron + ^{0}_{0}\gammaray;

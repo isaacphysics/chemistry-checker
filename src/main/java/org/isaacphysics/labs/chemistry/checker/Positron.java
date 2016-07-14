@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class Positron extends SpecialNuclear
 {
-    public Positron()
+    public Positron(Integer mass, Integer atom)
     {
-        super(0, 1, 1, "Positron", "positron", "e&zwj;&zwj;+&zwnj;");
+        super(0, 1, mass, atom, 1, "Positron", "positron", "e&zwj;&zwj;+&zwnj;");
     }
 
     @Override

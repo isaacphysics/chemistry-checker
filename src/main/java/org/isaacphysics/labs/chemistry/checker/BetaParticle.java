@@ -22,9 +22,9 @@ package org.isaacphysics.labs.chemistry.checker;
  */
 public final class BetaParticle extends SpecialNuclear
 {
-    public BetaParticle()
+    public BetaParticle(Integer mass, Integer atom)
     {
-        super(0, -1, -1, "Beta particle", "betaparticle", "&#946;");
+        super(0, -1, mass, atom, -1, "Beta particle", "betaparticle", "&#946;");
     }
 
     @Override

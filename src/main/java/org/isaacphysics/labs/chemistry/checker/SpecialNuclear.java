@@ -27,12 +27,12 @@ import java.util.HashMap;
 public abstract class SpecialNuclear extends Nuclear
 {
     /**
-     * Mass number
+     * Mass number (correct answer)
      */
     private Integer mass;
 
     /**
-     * Atomic number
+     * Atomic number (correct answer)
      */
     private Integer atom;
 
@@ -40,6 +40,16 @@ public abstract class SpecialNuclear extends Nuclear
      * Charge
      */
     private Integer charge;
+
+    /**
+     * Actual atomic number (user input)
+     */
+    private Integer actual_atom;
+
+    /**
+     * Actual mass number (user input)
+     */
+    private Integer actual_mass;
 
     /**
      * Name of subparticle
@@ -64,10 +74,12 @@ public abstract class SpecialNuclear extends Nuclear
      * @param name Name of nuclear particle
      * @param abbr Abbreviation of nuclear particle
      */
-    public SpecialNuclear(Integer mass, Integer atom, Integer charge, String name, String syntax, String abbr)
+    public SpecialNuclear(Integer mass, Integer atom, Integer actual_mass, Integer actual_atom, Integer charge, String name, String syntax, String abbr)
     {
         this.mass = mass;
         this.atom = atom;
+        this.actual_mass = actual_mass;
+        this.actual_atom = actual_atom;
         this.charge = charge;
         this.name = name;
         this.syntax = syntax;
@@ -75,10 +87,10 @@ public abstract class SpecialNuclear extends Nuclear
     }
 
     @Override
-    public Integer getMassNumber() { return mass; }
+    public Integer getMassNumber() { return actual_mass; }
 
     @Override
-    public Integer getAtomicNumber() { return atom; }
+    public Integer getAtomicNumber() { return actual_atom; }
 
     @Override
     public Integer getCharge() { return charge; }
@@ -90,7 +102,7 @@ public abstract class SpecialNuclear extends Nuclear
     abstract public boolean equals(Object o);
 
     @Override
-    public String toString() { return "\\" + syntax; }
+    public String toString() { return "^{" + actual_mass + "}" + "_{" + actual_atom + "}" + "\\" + syntax; }
 
     @Override
     public String getDotId() { return syntax + "_" + dotId; }
@@ -106,9 +118,9 @@ public abstract class SpecialNuclear extends Nuclear
         result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;" + name + "&zwnj;|\\n");
         result.append(getDotString());
 
-        result.append("\\n\\n|&zwj;&zwj;&zwj;atomic #&zwnj;: " + atom);
+        result.append("\\n\\n|&zwj;&zwj;&zwj;atomic #&zwnj;: " + actual_atom);
 
-        result.append("\\n|&zwj;&zwj;&zwj;mass #&zwnj;: " + mass);
+        result.append("\\n|&zwj;&zwj;&zwj;mass #&zwnj;: " + actual_mass);
 
         result.append("}\",color=\"#4c7fbe\"];\n");
         return result.toString();
@@ -117,6 +129,12 @@ public abstract class SpecialNuclear extends Nuclear
     @Override
     public String getDotString()
     {
-        return "&zwj;&zwj;" + mass + "&zwnj;&zwj;" + atom + "&zwnj;" + abbr;
+        return "&zwj;&zwj;" + actual_mass + "&zwnj;&zwj;" + actual_atom + "&zwnj;" + abbr;
+    }
+
+    @Override
+    public boolean isValidAtomicNumber()
+    {
+        return actual_atom.equals(atom) && actual_mass.equals(mass);
     }
 }

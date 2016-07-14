@@ -426,10 +426,10 @@ public class TestParser
     @Test
     public void checkAtomicNumber() throws Exception
     {
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3_{0}^{1}\\neutron";
 
         // Uut does not have an atomic number of 112.
-        String invalidAtomicNumber = "^{283}_{112}Uut + 3\\alphaparticle ";
+        String invalidAtomicNumber = "^{283}_{112}Uut + 3_{2}^{4}\\alphaparticle ";
 
         ArrayList<Statement> statements = stringParser(alphaDecay + ";" + invalidAtomicNumber);
 
@@ -468,10 +468,10 @@ public class TestParser
     @Test
     public void checkNuclearBalance() throws Exception
     {
-        String c14_decay = "^{14}_{6}C -> ^{14}_{7}N + \\electron";
+        String c14_decay = "^{14}_{6}C -> ^{14}_{7}N + ^{0}_{-1}\\electron";
 
         // Unbalanced mass number.
-        String bad_decay = "^{12}_{6}C -> ^{14}_{7}N + \\electron";
+        String bad_decay = "^{12}_{6}C -> ^{14}_{7}N + ^{0}_{-1}\\electron";
 
         ArrayList<Statement> statements = stringParser(c14_decay + ";" + bad_decay);
 
@@ -511,13 +511,13 @@ public class TestParser
     public void testNuclearExpressionEquivalence() throws Exception
     {
         // Nuclear expressions: Set 1
-        String eStream = "\\electron + \\electron + \\neutrino";
-        String eStream2 = "2\\electron + \\neutrino";
-        String eStream3 = "\\electron + \\neutrino + \\neutrino";
+        String eStream = "^{0}_{-1}\\electron + ^{0}_{-1}\\electron + ^{0}_{0}\\neutrino";
+        String eStream2 = "2^{0}_{-1}\\electron + ^{0}_{0}\\neutrino";
+        String eStream3 = "^{0}_{-1}\\electron + ^{0}_{0}\\neutrino + ^{0}_{0}\\neutrino";
 
         // Nuclear expression: Set 2
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
-        String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3\\neutron + ^{288}_{115}Uup";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3^{1}_{0}\\neutron";
+        String alphaDecay2 = "^{48}_{20}Ca + ^{243}_{95}Am -> 3^{1}_{0}\\neutron + ^{288}_{115}Uup";
         String alphaDecay3 = "^{48}_{20}Ca + ^{243}_{95}Am -> ^{288}_{115}Uup";
 
 
@@ -644,8 +644,8 @@ public class TestParser
     @Test
     public void testIsotopes() throws Exception
     {
-        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3\\neutron";
-        String sameDecay  = "_{20}^{48}Ca + _{95}^{243}Am -> 3\\neutron + ^{288}_{115}Uup";
+        String alphaDecay = "^{243}_{95}Am + ^{48}_{20}Ca -> ^{288}_{115}Uup + 3_{0}^{1}\\neutron";
+        String sameDecay  = "_{20}^{48}Ca + _{95}^{243}Am -> 3_{0}^{1}\\neutron + ^{288}_{115}Uup";
 
         ArrayList<Statement> statements = stringParser(alphaDecay + ";" + sameDecay);
         assertTrue("Expected 2 statements, got " + statements.size(), statements.size() == 2);
