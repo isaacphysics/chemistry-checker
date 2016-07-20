@@ -28,7 +28,7 @@ public class CheckerServlet extends HttpServlet {
 
         }
 
-        System.out.println(requestString);
+        // System.out.println(requestString);
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, String> req = mapper.readValue(requestString, HashMap.class);
 
