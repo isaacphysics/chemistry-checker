@@ -18,12 +18,10 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java_cup.runtime.DefaultSymbolFactory;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +40,7 @@ public class RunParser {
     public static void main(String args[]) throws Exception
     {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
-        @SuppressWarnings("unchecked")
+        /*@SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
@@ -93,7 +91,7 @@ public class RunParser {
             }
             //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }
+        }*/
 
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
@@ -110,7 +108,7 @@ public class RunParser {
         //checkExpressionTest();
         */
 
-        //System.out.println(check("H2+O2->H2O", "2H2+O2->2H2O"));
+        System.out.println(check("^{222}_{88}Ra -> ^{4}_{2}H + ^{218}_{86}Rn", "^{222}_{88}Ra -> ^{4}_{2}\\alphaparticle + ^{218}_{86}Rn"));
     }
 
     public static String parseFromString(String statementString) {
