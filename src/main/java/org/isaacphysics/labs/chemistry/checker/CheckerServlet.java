@@ -34,8 +34,8 @@ public class CheckerServlet extends HttpServlet {
 
         String targetMhchemExpression = req.get("target");
         String testMhchemExpresion = req.get("test");
-        /*System.out.println("Target: " + targetMhchemExpression);
-        System.out.println("Test: " + testMhchemExpresion);*/
+        System.out.println("Target: " + targetMhchemExpression);
+        System.out.println("Test: " + testMhchemExpresion);
 
         try {
 

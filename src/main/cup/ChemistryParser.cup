@@ -231,6 +231,7 @@ some_eb         ::=                                         {: RESULT = new Comp
  * Parses bracketed terms (B) of a compound. See annotations of non-terminal compound for more details.
  */
 b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n); :}
+                    | LPAREN compound:c RPAREN              {: RESULT = c; RESULT.setNumber(1); :}
                     ;
 
 /**

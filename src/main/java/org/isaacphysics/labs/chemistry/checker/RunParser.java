@@ -108,7 +108,7 @@ public class RunParser {
         //checkExpressionTest();
         */
 
-        System.out.println(check("^{222}_{88}Ra -> ^{4}_{2}H + ^{218}_{86}Rn", "^{222}_{88}Ra -> ^{4}_{2}\\alphaparticle + ^{218}_{86}Rn"));
+        System.out.println(check("^{219}_{86}Rn", "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{2}\\alphaparticle"));
     }
 
     public static String parseFromString(String statementString) {
@@ -189,7 +189,7 @@ public class RunParser {
      *         <li>balancedCharge: Checks if charge is balanced on both sides of an equation. Only a feature in EquationStatement.</li>
      *         <li>balancedAtomic: Checks if atomic number is balanced. Only useful for NuclearEquationStatement.</li>
      *         <li>balancedMass: Checks if mass number is balanced. Only useful for NuclearEquationStatment.</li>
-     *         <li>validAtomicNumber: Checks if atomic number of isotopes in user input is matches the element symbol.</li>
+     *         <li>validAtomicNumber: Checks if atomic number of isotopes in user input matches the element symbol.</li>
      *         <li>wrongTerms: A list of all wrong terms in user input, in mhchem format.</li>
      *     </ul>
      * </p>
