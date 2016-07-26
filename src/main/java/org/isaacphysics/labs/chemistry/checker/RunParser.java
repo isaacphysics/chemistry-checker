@@ -138,12 +138,12 @@ public final class RunParser {
     }
 
     /**
-     * Parses a mhchem expression, and outputs a JSON object describing that statement.
+     * Parses a mhchem expression, and outputs an extremely detailed JSON object describing that statement.
      *
      * @param statementString A single mhchem statement in string form.
      * @return JSON object, describing the mhchem statement parsed from the string.
      */
-    public static String parseFromString(final String statementString) {
+    static String parseFromString(final String statementString) {
         try {
             @SuppressWarnings("unchecked, deprecation")
             ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(
@@ -153,7 +153,9 @@ public final class RunParser {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             ObjectNode node = mapper.createObjectNode();
+
             if (statement instanceof ExpressionStatement) {
+
                 ExpressionStatement exprStatement = (ExpressionStatement) statement;
                 node.put("type", "expression");
                 node.put("input", statementString);
@@ -162,10 +164,13 @@ public final class RunParser {
                 node.put("charge", exprStatement.getCharge().toString());
                 HashMap<String, Fraction> atomCount = exprStatement.getAtomCount();
                 ObjectNode atomCountNode = node.putObject("atom_count");
+
                 for (String element : atomCount.keySet()) {
                     atomCountNode.put(element, atomCount.get(element).toString());
                 }
+
             } else if (statement instanceof EquationStatement) {
+
                 EquationStatement eqnStatement = (EquationStatement) statement;
                 node.put("type", "equation");
                 node.put("input", statementString);
@@ -181,6 +186,7 @@ public final class RunParser {
                 leftHandSide.put("charge", left.getCharge().toString());
                 HashMap<String, Fraction> atomCountLeft = left.getAtomCount();
                 ObjectNode atomCountLeftNode = leftHandSide.putObject("atom_count");
+
                 for (String element : atomCountLeft.keySet()) {
                     atomCountLeftNode.put(element, atomCountLeft.get(element).toString());
                 }
@@ -191,6 +197,60 @@ public final class RunParser {
                 rightHandSide.put("charge", right.getCharge().toString());
                 HashMap<String, Fraction> atomCountRight = right.getAtomCount();
                 ObjectNode atomCountRightNode = rightHandSide.putObject("atom_count");
+
+                for (String element : atomCountRight.keySet()) {
+                    atomCountRightNode.put(element, atomCountRight.get(element).toString());
+                }
+
+            } else if (statement instanceof NuclearExpressionStatement) {
+
+                NuclearExpressionStatement exprStatement = (NuclearExpressionStatement) statement;
+                node.put("type", "nuclearexpression");
+                node.put("input", statementString);
+                node.put("result", exprStatement.toString());
+                node.put("containsError", exprStatement.containsError());
+                node.put("massCount", exprStatement.getMassCount().toString());
+                node.put("atomCount", exprStatement.getAtomicCount().toString());
+
+                HashMap<String, Fraction> atomCount = exprStatement.getAtomCount();
+                ObjectNode atomCountNode = node.putObject("atom_count");
+
+                for (String element : atomCount.keySet()) {
+                    atomCountNode.put(element, atomCount.get(element).toString());
+                }
+
+            } else {
+
+                // Statement is an instance of NuclearEquationStatement
+                NuclearEquationStatement eqnStatement = (NuclearEquationStatement) statement;
+                node.put("type", "nuclearequation");
+                node.put("input", statementString);
+                node.put("result", eqnStatement.toString());
+                node.put("containsError", eqnStatement.containsError());
+                node.put("balanced", eqnStatement.isBalanced());
+                node.put("balancedAtom", eqnStatement.isBalancedAtom());
+                node.put("balancedMass", eqnStatement.isBalancedMass());
+
+                ObjectNode leftHandSide = node.putObject("left");
+                Expression left = eqnStatement.getLeftExpression();
+                leftHandSide.put("containsError", left.containsError());
+                leftHandSide.put("massCount", left.getMassCount().toString());
+                leftHandSide.put("atomCount", left.getAtomicCount().toString());
+                HashMap<String, Fraction> atomCountLeft = left.getAtomCount();
+                ObjectNode atomCountLeftNode = leftHandSide.putObject("atom_count");
+
+                for (String element : atomCountLeft.keySet()) {
+                    atomCountLeftNode.put(element, atomCountLeft.get(element).toString());
+                }
+
+                ObjectNode rightHandSide = node.putObject("right");
+                Expression right = eqnStatement.getRightExpression();
+                rightHandSide.put("containsError", right.containsError());
+                rightHandSide.put("massCount", right.getMassCount().toString());
+                rightHandSide.put("atomCount", right.getAtomicCount().toString());
+                HashMap<String, Fraction> atomCountRight = right.getAtomCount();
+                ObjectNode atomCountRightNode = rightHandSide.putObject("atom_count");
+
                 for (String element : atomCountRight.keySet()) {
                     atomCountRightNode.put(element, atomCountRight.get(element).toString());
                 }

@@ -16,4 +16,14 @@
         <url-pattern>/check</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Parse</servlet-name>
+        <servlet-class>org.isaacphysics.labs.chemistry.checker.ParserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Parse</servlet-name>
+        <url-pattern>/parse</url-pattern>
+    </servlet-mapping>
+
 </web-app>
