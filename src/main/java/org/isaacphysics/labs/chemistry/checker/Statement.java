@@ -18,10 +18,14 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-abstract class Statement
-{
+/**
+ * The base class of expressions and equations.
+ */
+abstract class Statement {
     /**
      * Checks if statement contains any error terms.
+     *
+     * @return True if statement contains error terms.
      */
     abstract boolean containsError();
 
@@ -30,6 +34,8 @@ abstract class Statement
 
     /**
      * Returns abstract syntax tree of statement.
+     *
+     * @return Abstract syntax tree of statement, in string form.
      */
     abstract String getDotCode();
 
@@ -38,13 +44,18 @@ abstract class Statement
      * equivalent when ignoring coefficients, arrows (if they have one) and state symbols.
      * <p>
      *     For instance, NaOH (aq) -> 3 H^{+} is weakly equivalent to NaOH <--> H^{+} (aq).
-     * @param s Statement to be compared against
+     *
+     * @param s Statement to be compared against.
+     * @return True if two statements are weakly equivalent.
      */
     public abstract boolean weaklyEquivalent(Statement s);
 
     /**
-     * Check if argument expression equals to this expression.
-     * Prints helpful message if expression is wrong.
+     * Check if argument statement equals to this statement.
+     * Prints helpful message if statement is wrong.
+     *
+     * @param input Statement to be compared against.
+     * @return True if argument statement is equivalent to this statement.
      */
     public abstract boolean check(Statement input);
 
@@ -55,4 +66,9 @@ abstract class Statement
      * @return ArrayList of wrong terms in e.
      */
     public abstract ArrayList<Term> getWrongTerms(Statement e);
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

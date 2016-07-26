@@ -1,31 +1,32 @@
 package org.isaacphysics.labs.chemistry.checker;
 
 /**
- * Instance of a neutron.
+ * An instance of anti-neutrino (in nuclear equations).
  *
- * Created by hhrl2 on 08/07/2016.
+ * Created by hhrl2 on 25/07/2016.
  */
-public final class Neutron extends SpecialNuclear {
+public class AntiNeutrino extends SpecialNuclear {
 
-    private static final int RealMass = 1;
+    private static final int RealMass = 0;
     private static final int RealAtom = 0;
 
     /**
-     * Constructor method of Neutron.
+     * Constructor method of PhysicalElectron.
+     *
      * @param mass Mass number inputted by user.
      * @param atom Atom number inputted by user.
      */
-    public Neutron(final Integer mass, final Integer atom) {
-        super(RealMass, RealAtom, mass, atom, 0, "Neutron", "neutron", "n");
+    public AntiNeutrino(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, 0, "Antineutrino", "antineutrino", "&#957;&zwj;e&zwnj;");
     }
 
     @Override
     public boolean equals(final Object o) {
-        if (!(o instanceof Neutron)) {
+        if (!(o instanceof AntiNeutrino)) {
             return false;
         }
 
-        Neutron p = (Neutron) o;
+        AntiNeutrino p = (AntiNeutrino) o;
         return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
     }
 
@@ -33,4 +34,5 @@ public final class Neutron extends SpecialNuclear {
     public int hashCode() {
         return toString().hashCode();
     }
+
 }

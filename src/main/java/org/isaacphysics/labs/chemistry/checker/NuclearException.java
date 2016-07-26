@@ -22,10 +22,15 @@ package org.isaacphysics.labs.chemistry.checker;
  *
  * Created by Ryan on 20/06/2016.
  */
-public class NuclearException extends Exception
-{
-    public NuclearException(String e)
-    {
+public class NuclearException extends Exception {
+
+    /**
+     * Constructor of an exception.
+     * Simply invokes superclass to help throwing the error message.
+     *
+     * @param e The error message that you want to show.
+     */
+    public NuclearException(final String e) {
         super(e);
     }
 }

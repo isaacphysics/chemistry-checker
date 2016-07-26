@@ -18,8 +18,11 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-interface Countable
-{
+/**
+ * An interface where all countable chemical/physical objects should implement.
+ * Forces the classes to implement useful methods.
+ */
+interface Countable {
     /**
      * Getter function. Returns total charge of a countable term.
      * @return Total charge of a term
@@ -62,7 +65,7 @@ interface Countable
     String getDotCode();
 
     /**
-     * Returns pretty-printed chemical term/equation/expression
+     * Returns pretty-printed chemical term/equation/expression.
      * @return Pretty printed chemical term/equation/expression
      */
     String getDotString();

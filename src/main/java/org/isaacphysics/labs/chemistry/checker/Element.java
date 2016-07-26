@@ -22,8 +22,7 @@ import java.util.HashMap;
  * Created by Ryan on 15/06/2016.
  * Element: Special class of molecule that consists of only one type of atom.
  */
-public final class Element extends Molecule
-{
+public final class Element extends Molecule {
     /**
      * The name of atom involved in this element.
      */
@@ -40,27 +39,31 @@ public final class Element extends Molecule
      * @param e Element
      * @param n Subscript of element
      */
-    public Element(String e, Integer n)
-    {
+    public Element(final String e, final Integer n) {
         super();
         element = e;
         number = n;
     }
 
     @Override
-    public String toString()
-    {
-        return element + (number > 1 ? number.toString() : "");
+    public String toString() {
+
+        if (number > 1) {
+            return element + number.toString();
+        } else {
+            return element;
+        }
+
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof Element)
-        {
+    public boolean equals(final Object o) {
+
+        if (o instanceof Element) {
             Element other = (Element) o;
             return this.toString().equals(other.toString());
         }
+
         return false;
     }
 
@@ -81,12 +84,13 @@ public final class Element extends Molecule
     }*/
 
     @Override
-    public HashMap<String, Integer> getAtomCount()
-    {
+    public HashMap<String, Integer> getAtomCount() {
+
         HashMap<String, Integer> h = new HashMap<>();
 
-        if (element != null)
+        if (element != null) {
             h.put(element, number);
+        }
 
         return h;
     }
@@ -95,12 +99,11 @@ public final class Element extends Molecule
 
     @Override
     public String getDotId() {
-        return "group_" + dotId;
+        return "group_" + getdotId();
     }
 
     @Override
-    public String getDotCode()
-    {
+    public String getDotCode() {
         StringBuilder result = new StringBuilder();
 
         result.append("\t");
@@ -113,26 +116,36 @@ public final class Element extends Molecule
         result.append(number);
 
         result.append("|&zwj;&zwj;&zwj;element&zwnj;");
-        if (element != null)
-        {
+
+        if (element != null) {
             result.append(": ");
             result.append(element);
-        }
-        else
+        } else {
             result.append(": none");
+        }
 
         result.append("}\",color=\"#4c7fbe\"];\n");
         return result.toString();
     }
 
     @Override
-    public String getDotString()
-    {
-        return element + (number > 1 ? "&zwj;"+number.toString()+"&zwnj;" : "");
+    public String getDotString() {
+
+        if (number > 1) {
+            return element + "&zwj;" + number.toString();
+        } else {
+            return element;
+        }
+
     }
 
     @Override
     public Integer getNumber() {
         return number;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

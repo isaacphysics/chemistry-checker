@@ -20,13 +20,33 @@ package org.isaacphysics.labs.chemistry.checker;
  * An instance of a positron.
  * Created by Ryan on 20/06/2016.
  */
-public final class Positron extends SpecialNuclear
-{
-    public Positron(Integer mass, Integer atom)
-    {
-        super(0, 1, mass, atom, 1, "Positron", "positron", "e&zwj;&zwj;+&zwnj;");
+public final class Positron extends SpecialNuclear {
+
+    private static final int RealMass = 0;
+    private static final int RealAtom = 1;
+
+    /**
+     * Constructor method of positron.
+     *
+     * @param mass Mass number inputted.
+     * @param atom Atomic number inputted.
+     */
+    public Positron(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, 1, "Positron", "positron", "e&zwj;&zwj;+&zwnj;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof Positron); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof Positron)) {
+            return false;
+        }
+
+        Positron p = (Positron) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

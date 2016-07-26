@@ -21,8 +21,8 @@ package org.isaacphysics.labs.chemistry.checker;
  * May be extended in the future to include items on top of arrows, e.g. heat, catalyst.
  * Created by Ryan on 16/06/2016.
  */
-public abstract class AbstractArrow
-{
+abstract class AbstractArrow {
+
     @Override
     public abstract String toString();
 
@@ -43,7 +43,7 @@ public abstract class AbstractArrow
     abstract String getDotCode();
 
     /**
-     * Returns pretty-printed chemical term/equation/expression
+     * Returns pretty-printed chemical term/equation/expression.
      * @return Pretty printed chemical term/equation/expression
      */
     abstract String getDotString();

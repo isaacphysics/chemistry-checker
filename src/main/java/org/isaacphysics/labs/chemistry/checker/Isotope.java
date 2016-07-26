@@ -22,19 +22,19 @@ import java.util.HashMap;
  * Class for regular isotopes, i.e. single atom with subscripted and superscripted numbers on the left.
  * Created by Ryan on 17/06/2016.
  */
-public final class Isotope extends Nuclear
-{
+public final class Isotope extends Nuclear {
+
     /**
      * Maps elements to their corresponding atomic number.
      */
     private static HashMap<String, Integer> periodicTable;
 
-    static
-    {
+    static {
+
         periodicTable = new HashMap<>();
 
         String[] elemList =
-                {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
+            {"H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl",
                 "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As",
                 "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In",
                 "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb",
@@ -43,9 +43,8 @@ public final class Isotope extends Nuclear
                 "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Uut",
                 "Fl", "Uup", "Lv", "Uus", "Uuo"};
 
-        for (int i = 0; i < elemList.length; i++)
-        {
-            periodicTable.put(elemList[i], i+1);
+        for (int i = 0; i < elemList.length; i++) {
+            periodicTable.put(elemList[i], i + 1);
         }
     }
 
@@ -70,8 +69,7 @@ public final class Isotope extends Nuclear
      * @param atom Atomic number of isotope.
      * @param f Atom/charged atom associated with the isotope.
      */
-    public Isotope(Integer mass, Integer atom, Formula f)
-    {
+    public Isotope(final Integer mass, final Integer atom, final Formula f) {
         super();
 
         this.mass = mass;
@@ -80,109 +78,94 @@ public final class Isotope extends Nuclear
     }
 
     @Override
-    public Integer getMassNumber()
-    {
+    public Integer getMassNumber() {
         return mass;
     }
 
     @Override
-    public Integer getAtomicNumber()
-    {
+    public Integer getAtomicNumber() {
         return atom;
     }
 
     @Override
-    public Integer getCharge() { return formula.getCharge(); }
+    public Integer getCharge() {
+        return formula.getCharge();
+    }
 
     @Override
-    public HashMap<String, Integer> getAtomCount()
-    {
+    public HashMap<String, Integer> getAtomCount() {
         return formula.getAtomCount();
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof Isotope)
-        {
+    public boolean equals(final Object o) {
+
+        if (o instanceof Isotope) {
             Isotope i = (Isotope) o;
 
-            return (this.mass.equals(i.mass)) &&
-                    (this.atom.equals(i.atom)) &&
-                    (this.formula.equals(i.formula));
+            return (this.mass.equals(i.mass))
+                    && (this.atom.equals(i.atom))
+                    && (this.formula.equals(i.formula));
         }
 
         return false;
     }
 
     @Override
-    public String toString()
-    {
-        return "^{" + mass.toString() + "}_{" +
-                atom.toString() + "}" +
-                formula.toString();
+    public String toString() {
+        return "^{" + mass.toString() + "}_{" + atom.toString() + "}" + formula.toString();
     }
 
     @Override
-    public String getDotId()
-    {
-        return "isotope_" + dotId;
+    public String getDotId() {
+        return "isotope_" + getdotId();
     }
 
     @Override
-    public String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
+    public String getDotCode() {
 
-        result.append("\t");
-        result.append(getDotId());
+        return "\t" + getDotId() + " [label=\"{&zwj;&zwj;&zwj;&zwj;Isotope&zwnj;|\\n"
 
-        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Isotope&zwnj;|\\n");
-        result.append(getDotString());
+                + getDotString()
 
-        result.append("\\n\\n|&zwj;&zwj;&zwj;atomic #&zwnj;: ");
-        result.append(atom);
+                + "\\n\\n|&zwj;&zwj;&zwj;atomic #&zwnj;: " + atom
 
-        result.append("\\n|&zwj;&zwj;&zwj;mass #&zwnj;: ");
-        result.append(mass);
+                + "\\n|&zwj;&zwj;&zwj;mass #&zwnj;: " + mass
 
-        result.append("\\n|&zwj;&zwj;&zwj;related atom&zwnj;}\",color=\"#944cbe\"];\n");
+                + "\\n|&zwj;&zwj;&zwj;related atom&zwnj;}\",color=\"#944cbe\"];\n"
 
-        result.append("\t");
-        result.append(getDotId());
-        result.append(":s -> ");
-        result.append(formula.getDotId());
-        result.append(":n;\n");
-        result.append(formula.getDotCode());
+                + "\t" + getDotId() + ":s -> " + formula.getDotId() + ":n;\n"
 
-        return result.toString();
+                + formula.getDotCode();
+
     }
 
     @Override
-    public String getDotString()
-    {
-        return "&zwj;&zwj;" + mass + "&zwnj;" +
-                "&zwj;" + atom + "&zwnj;" +
-                formula.getDotString();
+    public String getDotString() {
+
+        return "&zwj;&zwj;" + mass + "&zwnj;"
+                + "&zwj;" + atom + "&zwnj;"
+                + formula.getDotString();
+
     }
 
     @Override
-    public boolean isValidAtomicNumber()
-    {
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    public boolean isValidAtomicNumber() {
+
         Molecule at;
 
-        if (formula instanceof Ion)
-        {
+        if (formula instanceof Ion) {
             at = ((Ion) formula).getMolecule();
-        }
-        else
-        {
+        } else {
             at = (Element) formula;
         }
 
-        if (periodicTable.containsKey(at.toString()))
-            return periodicTable.get(at.toString()).equals(atom) && (mass >= atom);
-        else
-            return false;
+        return periodicTable.containsKey(at.toString())
+                && periodicTable.get(at.toString()).equals(atom) && (mass >= atom);
     }
 }

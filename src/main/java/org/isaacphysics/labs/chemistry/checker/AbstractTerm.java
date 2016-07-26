@@ -16,57 +16,73 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-abstract class AbstractTerm implements Countable
-{
+/**
+ * The abstract base class for all possible terms in an equation/expression.
+ *
+ * Created by Ryan on 17/06/2016.
+ */
+abstract class AbstractTerm implements Countable {
+
     /**
-     * Helper static variable for issuing unique IDs
+     * Helper static variable for issuing unique IDs.
      */
     private static int dotIdTracker = 0;
 
     /**
-     * Stores unique ID for every Term
+     * Stores unique ID for every Term.
      */
-    int dotId;
+    private int dotId;
 
     /**
      * Constructor function.
      * Initializes dotId, so that every term has an unique ID number.
      */
-    AbstractTerm()
-    {
+    AbstractTerm() {
         dotId = dotIdTracker;
         dotIdTracker += 1;
     }
 
-    @Override
-    abstract public boolean equals(Object o);
+    /**
+     * Gives the private unique ID for an abstract term.
+     *
+     * @return Unique ID for an abstract term.
+     */
+    int getdotId() {
+        return dotId;
+    }
 
     @Override
-    public int hashCode()
-    {
+    public abstract boolean equals(Object o);
+
+    @Override
+    public int hashCode() {
         //System.out.printf("HashCode of %s: %d\n", toString(), toString().hashCode());
         return toString().hashCode();
     }
 
     /**
      * Defined for nuclear terms only.
+     *
      * @return Mass number of term.
+     * @throws NuclearException The particle is not nuclear.
      */
-    abstract public Integer getMassNumber() throws NuclearException;
+    public abstract Integer getMassNumber() throws NuclearException;
 
     /**
      * Defined for nuclear terms only.
+     *
      * @return Atomic number of term.
+     * @throws NuclearException The particle is not nuclear.
      */
-    abstract public Integer getAtomicNumber() throws NuclearException;
+    public abstract Integer getAtomicNumber() throws NuclearException;
 
     /**
      * Method only applicable to nuclear formula.
      * Checks if atomic number of isotope is valid.
-     * @throws NuclearException
+     *
+     * @return The validity of atomic number in nuclear formula.
      */
-    public boolean isValidAtomicNumber()
-    {
+    public boolean isValidAtomicNumber() {
         return false;
     }
 }

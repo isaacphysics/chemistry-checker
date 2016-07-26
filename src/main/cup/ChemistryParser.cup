@@ -25,7 +25,7 @@ terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ChemicalElectron C_ELECTRON;
-terminal ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON;
+terminal ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON, ANTI_NEUTRINO;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -172,6 +172,8 @@ nuclear         ::=   SUP:sup SUB:sub ALPHA                 {: RESULT = new Alph
                     | SUB:sub SUP:sup GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
                     | SUP:sup SUB:sub NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
                     | SUB:sub SUP:sup NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
+                    | SUP:sup SUB:sub ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
+                    | SUB:sub SUP:sup ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
                     | SUP:sup SUB:sub P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
                     | SUB:sub SUP:sup P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
                     | SUP:sup SUB:sub POSITRON              {: RESULT = new Positron(sup, sub); :}

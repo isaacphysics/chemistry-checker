@@ -18,10 +18,16 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public final class ErrorTerm extends AbstractTerm
-{
-    public ErrorTerm()
-    {
+/**
+ * Instance of an error term - terms that contain syntax errors.
+ */
+public final class ErrorTerm extends AbstractTerm {
+
+    /**
+     * Constructor method for ErrorTerm.
+     * Does nothing other than invoking its base class, AbstractTerm for generating dotId.
+     */
+    public ErrorTerm() {
         super();
     }
 
@@ -31,47 +37,54 @@ public final class ErrorTerm extends AbstractTerm
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         // Enforce assertion that error terms can never be equal.
         return false;
     }
 
     @Override
-    public Integer getMassNumber() throws NuclearException
-    {
+    public Integer getMassNumber() throws NuclearException {
         throw new NuclearException("Mass number not defined for ErrorTerm.");
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException
-    {
+    public Integer getAtomicNumber() throws NuclearException {
         throw new NuclearException("Atomic number not defined for ErrorTerm.");
     }
 
+    @Override
     public HashMap<String, Integer> getAtomCount() {
         return new HashMap<>();
     }
 
+    @Override
     public Integer getCharge() {
         return 0;
     }
 
+    @Override
     public String getDotId() {
-        return "error_term_" + dotId;
+        return "error_term_" + getdotId();
     }
 
-    public String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
-        result.append("\t");
-        result.append(getDotId());
-        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n");
-        result.append("Syntax Error");
-        result.append("\\n\\n}\",color=\"#49902a\"];\n");
-        return result.toString();
+    @Override
+    public String getDotCode() {
+
+        return "\t"
+                + getDotId()
+                + " [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n"
+                + "Syntax Error"
+                + "\\n\\n}\",color=\"#49902a\"];\n";
+
     }
 
+    @Override
     public String getDotString() {
         return toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

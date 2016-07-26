@@ -20,13 +20,33 @@ package org.isaacphysics.labs.chemistry.checker;
  * An instance of gamma ray.
  * Created by Ryan on 20/06/2016.
  */
-public final class GammaRay extends SpecialNuclear
-{
-    public GammaRay(Integer mass, Integer atom)
-    {
-        super(0, 0, mass, atom, 0, "Gamma ray", "gammaray", "&#947;");
+public final class GammaRay extends SpecialNuclear {
+
+    private static final int RealMass = 0;
+    private static final int RealAtom = 0;
+
+    /**
+     * Constructor method of GammaRay.
+     *
+     * @param mass Mass number inputted by user.
+     * @param atom Atom number inputted by user.
+     */
+    public GammaRay(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, 0, "Gamma ray", "gammaray", "&#947;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof GammaRay); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof GammaRay)) {
+            return false;
+        }
+
+        GammaRay p = (GammaRay) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

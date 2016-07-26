@@ -18,52 +18,54 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public final class Term extends AbstractTerm
-{
+/**
+ * An instance of a term that contains no syntax error.
+ */
+public final class Term extends AbstractTerm {
     /**
      *  States that can be used in a chemical term.
      *  If state is not provided, physical state is set to null.
      */
-    enum PhysicalState
-    {
+    enum PhysicalState {
+
         /**
-         * Solid state
+         * Solid state.
          */
         s,
 
         /**
-         * Liquid state
+         * Liquid state.
          */
         l,
 
         /**
-         * Gas state
+         * Gas state.
          */
         g,
 
         /**
-         * Metal state
+         * Metal state.
          */
         m,
 
         /**
-         * Aqueous state
+         * Aqueous state.
          */
         aq
     }
 
     /**
-     * Chemical formula associated to this term
+     * Chemical formula associated to this term.
      */
     private Formula formula;
 
     /**
-     * Coefficient of this term
+     * Coefficient of this term.
      */
     private Integer coefficient;
 
     /**
-     * Physical state of this term
+     * Physical state of this term.
      */
     private PhysicalState state;
 
@@ -73,77 +75,78 @@ public final class Term extends AbstractTerm
      * @param m Chemical formula involved in the term
      * @param s State of the formula
      */
-    public Term(int n, Formula m, String s)
-    {
+    public Term(final int n, final Formula m, final String s) {
         super();
 
         this.coefficient = n;
         this.formula = m;
 
-        if (null == s)
+        if (null == s) {
             this.state = null;
-        else
+        } else {
             this.state = PhysicalState.valueOf(s);
+        }
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
+
         String t = "";
+
         if (coefficient > 1) {
             t += coefficient.toString();
         }
+
         t += formula.toString();
+
         if (state != null) {
             t += "(" + state.toString() + ")";
         }
+
         return t;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(final Object o) {
+
         //System.out.printf("Checking if %s and %s are equal...\n", toString(), o.toString());
 
-        if (o instanceof ErrorTerm)
-        {
+        if (o instanceof ErrorTerm) {
             //System.out.println("One is ErrorTerm, no.");
             return false;
-        }
-        else if (o instanceof Term)
-        {
+
+        } else if (o instanceof Term) {
             Term other = (Term) o;
             /*System.out.printf("Formula: %b, Coefficient: %b, State: %b\n",
                     this.formula.equals(other.formula),
                     this.coefficient.equals(other.coefficient),
                     this.state == other.state);*/
-            return (this.formula.equals(other.formula)
+            return this.formula.equals(other.formula)
                     && this.coefficient.equals(other.coefficient)
-                    && (this.state == other.state));
+                    && (this.state == other.state);
         }
         //System.out.println("One is not even a term, no.");
         return false;
     }
 
     @Override
-    public Integer getMassNumber() throws NuclearException
-    {
+    public Integer getMassNumber() throws NuclearException {
         return coefficient * formula.getMassNumber();
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException
-    {
+    public Integer getAtomicNumber() throws NuclearException {
         return coefficient * formula.getAtomicNumber();
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount()
-    {
+    public HashMap<String, Integer> getAtomCount() {
+
         HashMap<String, Integer> h = new HashMap<>();
 
-        for (String element: formula.getAtomCount().keySet())
+        for (String element: formula.getAtomCount().keySet()) {
             h.put(element, formula.getAtomCount().get(element) * coefficient);
+        }
 
         return h;
     }
@@ -179,12 +182,12 @@ public final class Term extends AbstractTerm
 
     @Override
     public String getDotId() {
-        return "term_" + dotId;
+        return "term_" + getdotId();
     }
 
     @Override
-    public String getDotCode()
-    {
+    public String getDotCode() {
+
         StringBuilder result = new StringBuilder();
         result.append("\t");
         result.append(getDotId());
@@ -194,10 +197,11 @@ public final class Term extends AbstractTerm
         result.append(coefficient);
         result.append("|&zwj;&zwj;&zwj;state&zwnj;: ");
 
-        if (state != null)
+        if (state != null) {
             result.append(state.toString());
-        else
+        } else {
             result.append("none");
+        }
 
         result.append("|&zwj;&zwj;&zwj;formula&zwnj;}\",color=\"#49902a\"];\n");
 
@@ -213,24 +217,29 @@ public final class Term extends AbstractTerm
     }
 
     @Override
-    public String getDotString()
-    {
+    public String getDotString() {
         String t = "";
 
-        if (coefficient > 1)
+        if (coefficient > 1) {
             t += coefficient.toString();
+        }
 
         t += formula.getDotString();
 
-        if (state != null)
+        if (state != null) {
             t += "(" + state.toString() + ")";
+        }
         
         return t;
     }
 
     @Override
-    public boolean isValidAtomicNumber()
-    {
+    public boolean isValidAtomicNumber() {
         return formula.isValidAtomicNumber();
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

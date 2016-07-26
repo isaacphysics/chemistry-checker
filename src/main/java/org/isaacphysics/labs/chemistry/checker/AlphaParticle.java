@@ -20,13 +20,33 @@ package org.isaacphysics.labs.chemistry.checker;
  * Instance of an alpha particle.
  * Created by Ryan on 20/06/2016.
  */
-public final class AlphaParticle extends SpecialNuclear
-{
-    public AlphaParticle(Integer mass, Integer atom)
-    {
-        super(4, 2, mass, atom, 2, "Alpha particle", "alphaparticle", "&#945;");
+public final class AlphaParticle extends SpecialNuclear {
+
+    private static final int RealMass = 4;
+    private static final int RealAtom = 2;
+
+    /**
+     * Constructor method of AlphaParticle.
+     *
+     * @param mass Mass number inputted by user.
+     * @param atom Atom number inputted by user.
+     */
+    public AlphaParticle(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, 2, "Alpha particle", "alphaparticle", "&#945;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof AlphaParticle); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof AlphaParticle)) {
+            return false;
+        }
+
+        AlphaParticle p = (AlphaParticle) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

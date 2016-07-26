@@ -16,29 +16,36 @@ import java.util.HashMap;
  */
 public class CheckerServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @Override
+    protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
 
         BufferedReader requestStringReader = request.getReader();
         String requestString = "";
         String line;
 
+        // Read the JSON object
         while ((line = requestStringReader.readLine()) != null) {
 
             requestString += line;
 
         }
 
-        // System.out.println(requestString);
         ObjectMapper mapper = new ObjectMapper();
+
+        @SuppressWarnings("unchecked")
         HashMap<String, String> req = mapper.readValue(requestString, HashMap.class);
 
+        // Get target and test mhchem expressions from JSON object
         String targetMhchemExpression = req.get("target");
         String testMhchemExpresion = req.get("test");
+
+        // Debug print
         System.out.println("Target: " + targetMhchemExpression);
         System.out.println("Test: " + testMhchemExpresion);
 
         try {
 
+            // Return
             response.getWriter().println(RunParser.check(testMhchemExpresion, targetMhchemExpression));
 
         } catch (Exception e) {

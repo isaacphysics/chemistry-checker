@@ -20,13 +20,33 @@ package org.isaacphysics.labs.chemistry.checker;
  * Instance of a beta particle for nuclear physics.
  * Created by Ryan on 20/06/2016.
  */
-public final class BetaParticle extends SpecialNuclear
-{
-    public BetaParticle(Integer mass, Integer atom)
-    {
-        super(0, -1, mass, atom, -1, "Beta particle", "betaparticle", "&#946;");
+public final class BetaParticle extends SpecialNuclear {
+
+    private static final int RealMass = 0;
+    private static final int RealAtom = -1;
+
+    /**
+     * Constructor method of BetaParticle.
+     *
+     * @param mass Mass number inputted by user.
+     * @param atom Atom number inputted by user.
+     */
+    public BetaParticle(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, -1, "Beta particle", "betaparticle", "&#946;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof BetaParticle); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof BetaParticle)) {
+            return false;
+        }
+
+        BetaParticle p = (BetaParticle) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

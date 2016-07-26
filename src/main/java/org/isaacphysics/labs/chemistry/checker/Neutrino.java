@@ -20,13 +20,33 @@ package org.isaacphysics.labs.chemistry.checker;
  * Instance of a neutrino.
  * Created by Ryan on 20/06/2016.
  */
-public final class Neutrino extends SpecialNuclear
-{
-    public Neutrino(Integer mass, Integer atom)
-    {
-        super(0, 0, mass, atom, 0, "Neutrino", "neutrino", "&#957;&zwj;e&zwnj;");
+public final class Neutrino extends SpecialNuclear {
+
+    private static final int RealMass = 0;
+    private static final int RealAtom = 0;
+
+    /**
+     * Constructor method of Neutrino.
+     *
+     * @param mass Mass number inputted by user.
+     * @param atom Atom number inputted by user.
+     */
+    public Neutrino(final Integer mass, final Integer atom) {
+        super(RealMass, RealAtom, mass, atom, 0, "Neutrino", "neutrino", "&#957;&zwj;e&zwnj;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof Neutrino); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof Neutrino)) {
+            return false;
+        }
+
+        Neutrino p = (Neutrino) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
 }

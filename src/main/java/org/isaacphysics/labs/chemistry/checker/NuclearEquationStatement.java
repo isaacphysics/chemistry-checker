@@ -22,17 +22,18 @@ import java.util.ArrayList;
  * Special class for nuclear equations.
  * Very similar to EquationStatement, it holds two expressions, and checks if the mass and atomic numbers of both sides
  * are balanced.
+ *
  * Created by Ryan on 20/06/2016.
  */
-public final class NuclearEquationStatement extends Statement
-{
+public final class NuclearEquationStatement extends Statement {
+
     /**
-     * The left expression of a equation
+     * The left expression of a equation.
      */
     private Expression left;
 
     /**
-     * The right expression of a equation
+     * The right expression of a equation.
      */
     private Expression right;
 
@@ -41,8 +42,7 @@ public final class NuclearEquationStatement extends Statement
      * @param l Left expression of equation.
      * @param r Right expression of equation.
      */
-    public NuclearEquationStatement(Expression l, Expression r)
-    {
+    public NuclearEquationStatement(final Expression l, final Expression r) {
         left = l;
         right = r;
     }
@@ -53,15 +53,15 @@ public final class NuclearEquationStatement extends Statement
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof NuclearEquationStatement)
-        {
+    public boolean equals(final Object o) {
+
+        if (o instanceof NuclearEquationStatement) {
             NuclearEquationStatement other = (NuclearEquationStatement) o;
 
-            return this.left.equals(other.left) &&
-                    this.right.equals(other.right);
+            return this.left.equals(other.left)
+                    && this.right.equals(other.right);
         }
+
         return false;
     }
 
@@ -72,6 +72,8 @@ public final class NuclearEquationStatement extends Statement
 
     /**
      * Getter function. Returns left expression.
+     *
+     * @return Left expression.
      */
     public Expression getLeftExpression() {
         return this.left;
@@ -79,6 +81,8 @@ public final class NuclearEquationStatement extends Statement
 
     /**
      * Getter function. Returns right expression.
+     *
+     * @return Right expression.
      */
     public Expression getRightExpression() {
         return this.right;
@@ -86,77 +90,84 @@ public final class NuclearEquationStatement extends Statement
 
     /**
      * Checks if mass numbers on both sides of equation are balanced.
+     *
+     * @return True if mass numbers are balanced.
      */
-    public boolean isBalancedMass()
-    {
-        try
-        {
+    boolean isBalancedMass() {
+
+        try {
+
             return !containsError() && left.getMassCount().equals(right.getMassCount());
-        }
-        catch (NuclearException e)
-        {
+
+        } catch (NuclearException e) {
+
             return false;
+
         }
+
     }
 
     /**
      * Checks if atomic numbers on both sides of equation are balanced.
+     *
+     * @return True if atomic numbers are balanced.
      */
-    public boolean isBalancedAtom()
-    {
-        try
-        {
+    boolean isBalancedAtom() {
+
+        try {
+
             return !containsError() && left.getAtomicCount().equals(right.getAtomicCount());
-        }
-        catch (NuclearException e)
-        {
+
+        } catch (NuclearException e) {
+
             return false;
+
         }
     }
 
     /**
      * Checks if both mass numbers and atomic numbers on both sides of equation are balanced.
+     *
+     * @return True if both mass numbers and atomic numbers are balanced.
      */
-    boolean isBalanced() { return isBalancedAtom() && isBalancedMass(); }
+    boolean isBalanced() {
+        return isBalancedAtom() && isBalancedMass();
+    }
 
     /**
      * Checks if the atomic number of all isotopes matches element name.
+     *
+     * @return True if all isotopes have valid atomic numbers.
      */
-    boolean isValid() { return left.isValidAtomicNumber() && right.isValidAtomicNumber(); }
-
-    @Override
-    String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
-        result.append("digraph chemical_syntax_tree {\n");
-        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
-
-        result.append("\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Nuclear Equation&zwnj;|\\n");
-        result.append(left.getDotString());
-        result.append(" &#8594; ");
-        result.append(right.getDotString());
-        result.append("\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|" +
-                "<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n");
-
-        result.append("\tequation:left:w -> ");
-        result.append(left.getDotId());
-        result.append(";\n");
-
-        result.append("\tequation:right:e -> ");
-        result.append(right.getDotId());
-        result.append(";\n");
-
-        result.append(left.getDotCode());
-        result.append(right.getDotCode());
-        result.append("}\n");
-        return result.toString();
+    boolean isValid() {
+        return left.isValidAtomicNumber() && right.isValidAtomicNumber();
     }
 
     @Override
-    public boolean weaklyEquivalent(Statement s)
-    {
-        if (!(s instanceof NuclearEquationStatement))
+    String getDotCode() {
+
+        return  "digraph chemical_syntax_tree {\n"
+                + "\tnode [shape=record,penwidth=2,splines=ortho];\n\n"
+                + "\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Nuclear Equation&zwnj;|\\n"
+
+                + left.getDotString() + " &#8594; " + right.getDotString()
+
+                + "\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n"
+
+                + "\tequation:left:w -> " + left.getDotId() + ";\n"
+
+                + "\tequation:right:e -> " + right.getDotId() + ";\n"
+
+                + left.getDotCode() + right.getDotCode() + "}\n";
+
+    }
+
+    @Override
+    public boolean weaklyEquivalent(final Statement s) {
+
+        if (!(s instanceof NuclearEquationStatement)) {
             return false;
+        }
 
         NuclearEquationStatement other = (NuclearEquationStatement) s;
 
@@ -164,10 +175,11 @@ public final class NuclearEquationStatement extends Statement
     }
 
     @Override
-    public ArrayList<Term> getWrongTerms(Statement e)
-    {
-        if (!(e instanceof NuclearEquationStatement))
+    public ArrayList<Term> getWrongTerms(final Statement e) {
+
+        if (!(e instanceof NuclearEquationStatement)) {
             return new ArrayList<>();
+        }
 
         NuclearEquationStatement expr = (NuclearEquationStatement) e;
 
@@ -179,47 +191,43 @@ public final class NuclearEquationStatement extends Statement
     }
 
     @Override
-    public boolean check(Statement input)
-    {
-        if (!(input instanceof NuclearEquationStatement))
-        {
+    public boolean check(final Statement input) {
+
+        if (!(input instanceof NuclearEquationStatement)) {
             // Not even nuclear equation statement
             System.out.println("Not a NuclearEquationStatement!");
             return false;
         }
 
-        if (input.containsError())
-        {
+        if (input.containsError()) {
             // Error term exists in argument
             System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
             return false;
         }
 
-        NuclearEquationStatement e_input = (NuclearEquationStatement) input;
+        NuclearEquationStatement equationInput = (NuclearEquationStatement) input;
 
-        if (!e_input.isBalanced())
-        {
-            if (!e_input.isBalancedMass())
-            {
+        if (!equationInput.isBalanced()) {
+            if (!equationInput.isBalancedMass()) {
                 // Mass number not balanced.
-                try
-                {
+                try {
                     System.out.printf("Total mass# LHS: %d\nTotal mass# RHS: %d\n",
-                            e_input.left.getMassCount(), e_input.right.getMassCount());
+                            equationInput.left.getMassCount(), equationInput.right.getMassCount());
+                } catch (Exception e) {
+                    System.out.printf("Equation is not nuclear!");
                 }
-                catch (Exception e) {}
 
                 System.out.println("Mass numbers are unbalanced.");
-            }
-            else
-            {
+
+            } else {
+
                 // Atomic number not balanced.
-                try
-                {
+                try {
                     System.out.printf("Total atomic# LHS: %d\nTotal atomic# RHS: %d\n",
-                            e_input.left.getAtomicCount(), e_input.right.getAtomicCount());
+                            equationInput.left.getAtomicCount(), equationInput.right.getAtomicCount());
+                } catch (Exception e) {
+                    System.out.printf("Equation is not nuclear!");
                 }
-                catch (Exception e) {}
 
                 System.out.println("Atomic numbers are unbalanced.");
             }
@@ -227,28 +235,30 @@ public final class NuclearEquationStatement extends Statement
             return false;
         }
 
-        if (!e_input.isValid())
-        {
+        if (!equationInput.isValid()) {
             // invalid atomic numbers
             System.out.println("There are elements with invalid atomic numbers.");
             return false;
         }
 
-        if (equals(e_input))
+        if (equals(equationInput)) {
             return true;
+        }
 
-        if (!weaklyEquivalent(e_input))
-        {
+        if (!weaklyEquivalent(equationInput)) {
             // not weakly equivalent: exists irrelevant terms in equation
             System.out.println("Unrelated terms exist in equation, or some terms are missing.");
-        }
-        else
-        {
+        } else {
             // wrong coefficients in some terms
             System.out.println("Some terms have incorrect coefficients.");
         }
 
-        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        System.out.println("Wrong terms: " + getWrongTerms(equationInput));
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

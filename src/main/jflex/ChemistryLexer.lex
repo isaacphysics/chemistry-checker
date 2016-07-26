@@ -134,6 +134,7 @@ import java_cup.runtime.Symbol;
     \\"betaparticle"                 { return new Symbol(sym.BETA); }
     \\"gammaray"                     { return new Symbol(sym.GAMMA); }
     \\"neutrino"                     { return new Symbol(sym.NEUTRINO); }
+    \\"antineutrino"                 { return new Symbol(sym.ANTI_NEUTRINO); }
     \\"electron"                     { return new Symbol(sym.P_ELECTRON); }
     \\"positron"                     { return new Symbol(sym.POSITRON); }
     \\"neutron"                      { return new Symbol(sym.NEUTRON); }

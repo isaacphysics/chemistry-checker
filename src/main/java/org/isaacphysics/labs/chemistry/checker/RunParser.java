@@ -26,22 +26,45 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class RunParser {
+/**
+ * The (original) main class. The class is mainly for testing purposes.
+ */
+public final class RunParser {
 
+    /**
+     * Constructor method of RunParser.
+     * Set to private, because we don't want people to instantiate an utility class.
+     */
+    private RunParser() {
+        // Nothing here.
+    }
+
+    /**
+     * Parses the string provided, and return a list of statement from it.
+     *
+     * @param s The string to be parsed.
+     * @return A list of statement parsed from argument.
+     * @throws Exception Parser has trouble parsing a few terms.
+     */
     @SuppressWarnings({"deprecation", "unchecked"})
-    private static ArrayList<Statement> stringParser(String s) throws Exception
-    {
+    private static ArrayList<Statement> stringParser(final String s) throws Exception {
         Object output = new ChemistryParser(new ChemistryLexer(new StringReader(s)),
                 new DefaultSymbolFactory()).parse().value;
 
         return (ArrayList<Statement>) output;
     }
 
-    public static void main(String args[]) throws Exception
-    {
+    /**
+     * Main method of RunParser. Used to test all sorts of methods defined below.
+     *
+     * @param args No use at all.
+     * @throws Exception Parser has trouble parsing a few terms.
+     */
+    public static void main(final String[] args) throws Exception {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
         /*@SuppressWarnings("unchecked")
-        ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
+        ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(
+        new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
         System.out.println();
@@ -108,12 +131,21 @@ public class RunParser {
         //checkExpressionTest();
         */
 
-        System.out.println(check("^{219}_{86}Rn", "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{2}\\alphaparticle"));
+        System.out.println(check("C2H4(g) + O2(g) -> H2O(l) + CO2(g)", "C2H4(g) + 3O2(g) -> 2CO2(g) + 2H2O(l)"));
     }
 
-    public static String parseFromString(String statementString) {
+    /**
+     * Parses a mhchem expression, and outputs a JSON object describing that statement.
+     *
+     * @param statementString A single mhchem statement in string form.
+     * @return JSON object, describing the mhchem statement parsed from the string.
+     */
+    public static String parseFromString(final String statementString) {
         try {
-            ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(statementString))).parse().value;
+            @SuppressWarnings("unchecked, deprecation")
+            ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(
+                    new ChemistryLexer(new StringReader(statementString))).parse().value;
+
             Statement statement = statements.get(0);
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -180,156 +212,179 @@ public class RunParser {
      *         <li>typeMismatch: Determines if user input and target have different types.</li>
      *         <li>expectedType: Determines the type of target string.</li>
      *         <li>receivedType: Determines the type of user input.</li>
-     *         <li>weaklyEquivalent: Determines if user input is equivalent to target, disregarding state symbols and coefficients. </li>
+     *         <li>weaklyEquivalent: Determines if user input is equivalent to target,
+     *         disregarding state symbols and coefficients. </li>
      *         <li>sameCoefficient: Checks if both target and user input have same coefficient on equal terms.</li>
-     *         <li>sameArrow: Checks if arrows used in both statements are the same. A feature only in ExpressionStatement.</li>
-     *         <li>sameState: Checks if the state symbols used in the two expressions are the same. Feature only available for chemical expressions.</li>
-     *         <li>isBalanced: Checks if equation is balanced on both sides. Only featured in EquationStatement and NuclearEquationStatement.</li>
-     *         <li>balancedAtoms: Checks if atom count is balanced on both sides of an equation. Only a feature in EquationStatement.</li>
-     *         <li>balancedCharge: Checks if charge is balanced on both sides of an equation. Only a feature in EquationStatement.</li>
+     *         <li>sameArrow: Checks if arrows used in both statements are the same.
+     *         A feature only in ExpressionStatement.</li>
+     *         <li>sameState: Checks if the state symbols used in the two expressions are the same.
+     *         Feature only available for chemical expressions.</li>
+     *         <li>isBalanced: Checks if equation is balanced on both sides.
+     *         Only featured in EquationStatement and NuclearEquationStatement.</li>
+     *         <li>balancedAtoms: Checks if atom count is balanced on both sides of an equation.
+     *         Only a feature in EquationStatement.</li>
+     *         <li>balancedCharge: Checks if charge is balanced on both sides of an equation.
+     *         Only a feature in EquationStatement.</li>
      *         <li>balancedAtomic: Checks if atomic number is balanced. Only useful for NuclearEquationStatement.</li>
      *         <li>balancedMass: Checks if mass number is balanced. Only useful for NuclearEquationStatment.</li>
      *         <li>validAtomicNumber: Checks if atomic number of isotopes in user input matches the element symbol.</li>
      *         <li>wrongTerms: A list of all wrong terms in user input, in mhchem format.</li>
      *     </ul>
      * </p>
+     *
      * @param testString User-inputted string
      * @param targetString String to be matched with.
      * @return JSON object containing information about the matching.
+     * @throws Exception Parser having trouble reading strings.
      */
-    public static String check(String testString, String targetString) throws Exception {
-            ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(testString))).parse().value;
-            ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(new StringReader(targetString))).parse().value;
-            Statement testStatement = testStatements.get(0);
-            Statement targetStatement = targetStatements.get(0);
+    public static String check(final String testString, final String targetString) throws Exception {
 
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            ObjectNode node = mapper.createObjectNode();
-            node.put("testString", testString);
-            node.put("targetString", targetString);
-            node.put("test", testStatement.toString());
-            node.put("target", targetStatement.toString());
+        @SuppressWarnings("unchecked, deprecation")
+            ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(
+                    new ChemistryLexer(new StringReader(testString))).parse().value;
 
-            if (targetStatement.containsError()) {
-                System.err.println("Trusted string contains error!");
-                System.err.println("\t\"" + targetString + "\"");
-                System.err.println("\t\"" + targetStatement.toString() + "\"");
-            }
-            node.put("containsError", testStatement.containsError());
-            node.put("equal", targetStatement.equals(testStatement));
-            node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
-            node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
-            node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
-            node.put("weaklyEquivalent", targetStatement.weaklyEquivalent(testStatement));
+        @SuppressWarnings("unchecked, deprecation")
+            ArrayList<Statement> targetStatements = (ArrayList<Statement>) new ChemistryParser(
+                    new ChemistryLexer(new StringReader(targetString))).parse().value;
 
-            if (targetStatement instanceof ExpressionStatement)
-            {
-                ExpressionStatement target = (ExpressionStatement) targetStatement;
+        Statement testStatement = testStatements.get(0);
+        Statement targetStatement = targetStatements.get(0);
 
-                node.put("sameCoefficient", target.sameCoefficients(testStatement));
-                node.put("sameState", target.sameStateSymbols(testStatement));
-            }
-            else if (targetStatement instanceof EquationStatement)
-            {
-                EquationStatement target = (EquationStatement) targetStatement;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        ObjectNode node = mapper.createObjectNode();
+        node.put("testString", testString);
+        node.put("targetString", targetString);
+        node.put("test", testStatement.toString());
+        node.put("target", targetStatement.toString());
 
-                node.put("sameCoefficient", target.sameCoefficients(testStatement));
-                node.put("sameState", target.sameStateSymbols(testStatement));
+        if (targetStatement.containsError()) {
+            System.err.println("Trusted string contains error!");
+            System.err.println("\t\"" + targetString + "\"");
+            System.err.println("\t\"" + targetStatement.toString() + "\"");
+        }
+        node.put("containsError", testStatement.containsError());
+        node.put("equal", targetStatement.equals(testStatement));
+        node.put("typeMismatch", !targetStatement.getClass().equals(testStatement.getClass()));
+        node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
+        node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
+        node.put("weaklyEquivalent", targetStatement.weaklyEquivalent(testStatement));
 
-                if (testStatement instanceof EquationStatement)
-                {
-                    EquationStatement test = (EquationStatement) testStatement;
+        if (targetStatement instanceof ExpressionStatement) {
 
-                    node.put("sameArrow", target.getArrow().equals(test.getArrow()));
-                    node.put("isBalanced", test.isBalanced());
-                    node.put("balancedAtoms", test.isBalancedAtoms());
-                    node.put("balancedCharge", test.isBalancedCharge());
-                }
-            }
-            else if (targetStatement instanceof NuclearExpressionStatement)
-            {
-                if (testStatement instanceof NuclearExpressionStatement)
-                {
-                    NuclearExpressionStatement test = (NuclearExpressionStatement) testStatement;
+            ExpressionStatement target = (ExpressionStatement) targetStatement;
 
-                    node.put("validAtomicNumber", test.isValid());
-                }
-            }
-            else // instanceof NuclearEquationStatement
-            {
-                if (testStatement instanceof NuclearEquationStatement)
-                {
-                    NuclearEquationStatement test = (NuclearEquationStatement) testStatement;
+            node.put("sameCoefficient", target.sameCoefficients(testStatement));
+            node.put("sameState", target.sameStateSymbols(testStatement));
 
-                    node.put("isBalanced", test.isBalanced());
-                    node.put("balancedAtomic", test.isBalancedAtom());
-                    node.put("balancedMass", test.isBalancedMass());
-                    node.put("validAtomicNumber", test.isValid());
-                }
+        } else if (targetStatement instanceof EquationStatement) {
+
+            EquationStatement target = (EquationStatement) targetStatement;
+
+            node.put("sameCoefficient", target.sameCoefficients(testStatement));
+            node.put("sameState", target.sameStateSymbols(testStatement));
+
+            if (testStatement instanceof EquationStatement) {
+
+                EquationStatement test = (EquationStatement) testStatement;
+
+                node.put("sameArrow", target.getArrow().equals(test.getArrow()));
+                node.put("isBalanced", test.isBalanced());
+                node.put("balancedAtoms", test.isBalancedAtoms());
+                node.put("balancedCharge", test.isBalancedCharge());
             }
 
-            ArrayNode array = mapper.createArrayNode();
+        } else if (targetStatement instanceof NuclearExpressionStatement) {
 
-            for (Term t: targetStatement.getWrongTerms(testStatement))
-            {
-                array.add(t.toString());
+            if (testStatement instanceof NuclearExpressionStatement) {
+                NuclearExpressionStatement test = (NuclearExpressionStatement) testStatement;
+
+                node.put("validAtomicNumber", test.isValid());
             }
+        } else {
 
-            node.putArray("wrongTerms").addAll(array);
+            // instanceof NuclearEquationStatement
+            if (testStatement instanceof NuclearEquationStatement) {
 
-            return mapper.writeValueAsString(node);
+                NuclearEquationStatement test = (NuclearEquationStatement) testStatement;
+
+                node.put("isBalanced", test.isBalanced());
+                node.put("balancedAtomic", test.isBalancedAtom());
+                node.put("balancedMass", test.isBalancedMass());
+                node.put("validAtomicNumber", test.isValid());
+            }
+        }
+
+        ArrayNode array = mapper.createArrayNode();
+
+        for (Term t: targetStatement.getWrongTerms(testStatement)) {
+            array.add(t.toString());
+        }
+
+        node.putArray("wrongTerms").addAll(array);
+
+        return mapper.writeValueAsString(node);
     }
 
-    private static void checkEquationTest() throws Exception
-    {
+    /**
+     * Simple test for chemical equations.
+     *
+     * @throws Exception Parser having trouble reading strings.
+     */
+    private static void checkEquationTest() throws Exception {
         String solution = "NaOH (aq) + HCl (aq) -> NaCl (aq) + H2O (l);";
 
-        String non_eq   = "NaOH(aq)+HCl(aq);"; // Non-equation
+        String nonEq   = "NaOH(aq)+HCl(aq);"; // Non-equation
 
         String error    = "NaOH -> Na++Cl-;";  // Error term Na++Cl-
 
-        String unbalanced_atom = "NaOH + HCl -> 2NaCl + H2O;";   // Atom count unbalanced
+        String unbalancedAtom = "NaOH + HCl -> 2NaCl + H2O;";   // Atom count unbalanced
 
-        String unbalanced_charge = "OH^{-} + H^{+} -> H2O^{2+};"; // Charge unbalanced
+        String unbalancedCharge = "OH^{-} + H^{+} -> H2O^{2+};"; // Charge unbalanced
 
-        String correct_ans = "NaOH (aq) + HCl (aq) -> H2O(l)+NaCl(aq);"; // Correct answer
+        String correctAns = "NaOH (aq) + HCl (aq) -> H2O(l)+NaCl(aq);"; // Correct answer
 
-        String wrong_term  = "NaOH (aq) + HCl(aq) -> HOH(l) + ClNa(aq);"; // Poorly-written terms
+        String wrongTerm  = "NaOH (aq) + HCl(aq) -> HOH(l) + ClNa(aq);"; // Poorly-written terms
 
-        String wrong_arrow = "NaOH (aq) + HCl (aq) <=> NaCl (aq) + H2O (l);"; // Wrong arrow
+        String wrongArrow = "NaOH (aq) + HCl (aq) <=> NaCl (aq) + H2O (l);"; // Wrong arrow
 
-        String wrong_coeff = "10NaOH(aq) + 10HCl(aq) -> 10NaCl(aq) + 10H2O(l);"; // Wrong coefficients
+        String wrongCoeff = "10NaOH(aq) + 10HCl(aq) -> 10NaCl(aq) + 10H2O(l);"; // Wrong coefficients
 
-        String wrong_state = "HCl(g) + NaOH(l) -> NaCl + H2O(l);"; // Wrong state symbols
+        String wrongState = "HCl(g) + NaOH(l) -> NaCl + H2O(l);"; // Wrong state symbols
 
-        String sp_1 = "8H(g) + H(l) -> 9H(l);"; // Made-up test cases
+        String sp1 = "8H(g) + H(l) -> 9H(l);"; // Made-up test cases
 
-        String sp_2 = "8H(l) + H(g) -> 9H(l)"; // Switched state symbols
+        String sp2 = "8H(l) + H(g) -> 9H(l)"; // Switched state symbols
 
-        ArrayList<Statement> stmt_list = stringParser(solution + non_eq + error + unbalanced_atom + unbalanced_charge
-                + correct_ans + wrong_term + wrong_arrow + wrong_coeff + wrong_state + sp_1 + sp_2);
+        ArrayList<Statement> stmtList = stringParser(solution + nonEq + error + unbalancedAtom + unbalancedCharge
+                + correctAns + wrongTerm + wrongArrow + wrongCoeff + wrongState + sp1 + sp2);
 
-        EquationStatement ans = (EquationStatement) stmt_list.get(0);
+        EquationStatement ans = (EquationStatement) stmtList.get(0);
+
+        final int lastIndex = 11;
 
         System.out.println("Solution: " + solution);
         System.out.println("---------------");
 
-        for (int i = 1; i < 10; i++)
-        {
-            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
-            ans.check(stmt_list.get(i));
+        for (int i = 1; i < lastIndex - 1; i++) {
+            System.out.println("Statement to be checked: " + stmtList.get(i).toString());
+            ans.check(stmtList.get(i));
             System.out.println("----------");
         }
 
-        System.out.println("Solution: " + sp_1);
+        System.out.println("Solution: " + stmtList);
         System.out.println("---------------");
-        System.out.println("Statement to be checked: " + stmt_list.get(11).toString());
-        stmt_list.get(10).check(stmt_list.get(11));
+        System.out.println("Statement to be checked: " + stmtList.get(lastIndex).toString());
+        stmtList.get(lastIndex - 1).check(stmtList.get(lastIndex));
     }
 
-    private static void checkExpressionTest() throws Exception
-    {
+    /**
+     * Simple test for chemical expressions.
+     *
+     * @throws Exception Parser having trouble reading strings.
+     */
+    private static void checkExpressionTest() throws Exception {
+
         String test = "(CH3)3C^{+} + 3H2(g);" +                 // Correct answer 1
                 "CH3^{+} + 3CH4 -> (CH3)3C^{+} + 3H2(g);" +     // Non-expression
                 "Na++Cl-+3H2(g);" +                             // Error term included
@@ -340,80 +395,95 @@ public class RunParser {
                 "8H2(g) + H2(l);" +                             // Correct answer 2
                 "H2(g) + 8H2(l)";                               // Permuted state symbols
 
-        ArrayList<Statement> stmt_list = stringParser(test);
+        ArrayList<Statement> stmtList = stringParser(test);
 
-        Statement answer1 = stmt_list.get(0);
-        Statement answer2 = stmt_list.get(7);
+        final int secondCorrectAnsIndex = 7;
+
+        Statement answer1 = stmtList.get(0);
+        Statement answer2 = stmtList.get(secondCorrectAnsIndex);
 
         System.out.println("Solution: " + answer1);
         System.out.println("---------------");
-        for (int i = 1; i < 7; i++)
-        {
-            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
-            answer1.check(stmt_list.get(i));
+
+        for (int i = 1; i < secondCorrectAnsIndex; i++) {
+            System.out.println("Statement to be checked: " + stmtList.get(i).toString());
+            answer1.check(stmtList.get(i));
             System.out.println("----------");
         }
 
         System.out.println("Solution: " + answer2);
         System.out.println("---------------");
-        System.out.println("Statement to be checked: " + stmt_list.get(8).toString());
-        answer2.check(stmt_list.get(8));
+        System.out.println("Statement to be checked: " + stmtList.get(secondCorrectAnsIndex + 1).toString());
+        answer2.check(stmtList.get(secondCorrectAnsIndex + 1));
         System.out.println("----------");
     }
 
-    private static void checkNuclearEquation() throws Exception
-    {
-        String test = "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle;" +
-                        "Rn -> Po + Ca;" +
-                        "_{219}^{86} Rn -> _{215}^{84}Po ++;" +
-                        "^{220}_{86}Rn -> ^{215}_{84}Po + \\alpha_particle;" +
-                        "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{7}N;" +
-                        "^{14}_{6}U -> ^{14}_{7}N + \\beta_particle;" +
-                        "^{219}_{86}Rn -> \\alpha_particle + ^{215}_{84}Po;" +
-                        "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle + \\gamma_ray;" +
-                        "^{60}_{27}Co -> ^{60}_{27}Co + \\gamma_ray;" +
-                        "^{60}_{27}Co -> ^{60}_{27}Co + 100\\gamma_ray;";
+    /**
+     * Simple test for nuclear equations.
+     *
+     * @throws Exception Parser having trouble reading strings.
+     */
+    private static void checkNuclearEquation() throws Exception {
 
-        ArrayList<Statement> stmt_list = stringParser(test);
+        String test = "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle;"
+                + "Rn -> Po + Ca;"
+                + "_{219}^{86} Rn -> _{215}^{84}Po ++;"
+                + "^{220}_{86}Rn -> ^{215}_{84}Po + \\alpha_particle;"
+                + "^{219}_{86}Rn -> ^{215}_{84}Po + ^{4}_{7}N;"
+                + "^{14}_{6}U -> ^{14}_{7}N + \\beta_particle;"
+                + "^{219}_{86}Rn -> \\alpha_particle + ^{215}_{84}Po;"
+                + "^{219}_{86}Rn -> _{84}^{215}Po + \\alpha_particle + \\gamma_ray;"
+                + "^{60}_{27}Co -> ^{60}_{27}Co + \\gamma_ray;"
+                + "^{60}_{27}Co -> ^{60}_{27}Co + 100\\gamma_ray;";
 
-        Statement answer1 = stmt_list.get(0);
-        Statement answer2 = stmt_list.get(8);
+        ArrayList<Statement> stmtList = stringParser(test);
+
+        final int secondCorrectAnsIndex = 8;
+
+        Statement answer1 = stmtList.get(0);
+        Statement answer2 = stmtList.get(secondCorrectAnsIndex);
 
         System.out.println("Solution: " + answer1);
         System.out.println("---------------");
-        for (int i = 1; i < 8; i++)
-        {
-            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
-            answer1.check(stmt_list.get(i));
+
+        for (int i = 1; i < secondCorrectAnsIndex; i++) {
+            System.out.println("Statement to be checked: " + stmtList.get(i).toString());
+            answer1.check(stmtList.get(i));
             System.out.println("----------");
         }
 
         System.out.println("Solution: " + answer2);
         System.out.println("---------------");
-        System.out.println("Statement to be checked: " + stmt_list.get(9).toString());
-        answer2.check(stmt_list.get(9));
+        System.out.println("Statement to be checked: " + stmtList.get(secondCorrectAnsIndex + 1).toString());
+        answer2.check(stmtList.get(secondCorrectAnsIndex + 1));
         System.out.println("----------");
     }
 
-    private static void checkNuclearExpression() throws Exception
-    {
-        String test = "_{90}^{234}Th + \\alpha_particle;" +
-                        "Th + H;" +
-                        "^{234}_{90}Th ++ \\alpha_particle;" +
-                        "\\alpha_particle + ^{234}_{90}Th;" +
-                        "^{234}_{90}U + \\alpha_particle;" +
-                        "^{234}_{90}Th + \\alpha_particle + \\gamma_ray;" +
-                        "^{234}_{90}Th + 3\\alpha_particle";
+    /**
+     * A test for our parsing program.
+     * Checks if parser can parse all the nuclear expressions below.
+     *
+     * @throws Exception Parser have trouble parsing a particular term.
+     */
+    private static void checkNuclearExpression() throws Exception {
 
-        ArrayList<Statement> stmt_list = stringParser(test);
+        String test = "_{90}^{234}Th + \\alpha_particle;"
+                + "Th + H;"
+                + "^{234}_{90}Th ++ \\alpha_particle;"
+                + "\\alpha_particle + ^{234}_{90}Th;"
+                + "^{234}_{90}U + \\alpha_particle;"
+                + "^{234}_{90}Th + \\alpha_particle + \\gamma_ray;"
+                + "^{234}_{90}Th + 3\\alpha_particle";
 
-        Statement answer1 = stmt_list.get(0);
+        ArrayList<Statement> stmtList = stringParser(test);
+
+        Statement answer1 = stmtList.get(0);
         System.out.println("Solution: " + answer1);
         System.out.println("---------------");
-        for (int i = 1; i < 7; i++)
-        {
-            System.out.println("Statement to be checked: " + stmt_list.get(i).toString());
-            answer1.check(stmt_list.get(i));
+
+        for (int i = 1; i < stmtList.size(); i++) {
+            System.out.println("Statement to be checked: " + stmtList.get(i).toString());
+            answer1.check(stmtList.get(i));
             System.out.println("----------");
         }
     }

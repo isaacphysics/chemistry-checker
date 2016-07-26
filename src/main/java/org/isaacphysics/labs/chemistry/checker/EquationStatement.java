@@ -18,30 +18,34 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-public final class EquationStatement extends Statement
-{
+/**
+ * Class for all physical equations.
+ */
+final class EquationStatement extends Statement {
+
     /**
-     * The left expression of a equation
+     * The left expression of a equation.
      */
     private Expression left;
 
     /**
-     * The right expression of a equation
+     * The right expression of a equation.
      */
     private Expression right;
 
     /**
-     * The arrow used in equation
+     * The arrow used in equation.
      */
     private AbstractArrow arrow;
 
     /**
      * Constructor method of EquationStatement.
+     *
      * @param l Left expression of equation.
+     * @param a Arrow used in equation.
      * @param r Right expression of equation.
      */
-    public EquationStatement(Expression l, AbstractArrow a, Expression r)
-    {
+    EquationStatement(final Expression l, final AbstractArrow a, final Expression r) {
         left = l;
         right = r;
         arrow = a;
@@ -53,18 +57,16 @@ public final class EquationStatement extends Statement
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof EquationStatement)
-        {
+    public boolean equals(final Object o) {
+        if (o instanceof EquationStatement) {
             EquationStatement other = (EquationStatement) o;
             //System.out.println("Checking equality: ");
             //System.out.println(this.left.equals(other.left));
             //System.out.println(this.arrow.equals(other.arrow));
             //System.out.println(this.right.equals(other.right));
-            return this.left.equals(other.left) &&
-                    this.arrow.equals(other.arrow) &&
-                    this.right.equals(other.right);
+            return this.left.equals(other.left)
+                    && this.arrow.equals(other.arrow)
+                    && this.right.equals(other.right);
         }
         return false;
     }
@@ -77,6 +79,8 @@ public final class EquationStatement extends Statement
     /**
      * Checks if numbers of atoms on both sides of equation are balanced.
      * Subparticles like electrons are not considered.
+     *
+     * @return True if atom counts are balanced.
      */
     boolean isBalancedAtoms() {
         return !containsError() && left.getAtomCount().equals(right.getAtomCount());
@@ -84,6 +88,8 @@ public final class EquationStatement extends Statement
 
     /**
      * Checks if charges on both sides of equation are balanced.
+     *
+     * @return True if charges are balanced.
      */
     boolean isBalancedCharge() {
         return !containsError() && (left.getCharge().equals(right.getCharge()));
@@ -91,6 +97,8 @@ public final class EquationStatement extends Statement
 
     /**
      * Checks if both numbers and charges on both sides of equation are balanced.
+     *
+     * @return True if both atom counts and charges are balanced.
      */
     boolean isBalanced() {
         return isBalancedAtoms() && isBalancedCharge();
@@ -98,6 +106,8 @@ public final class EquationStatement extends Statement
 
     /**
      * Getter function. Returns left expression.
+     *
+     * @return The left expression.
      */
     Expression getLeftExpression() {
         return this.left;
@@ -105,6 +115,8 @@ public final class EquationStatement extends Statement
 
     /**
      * Getter function. Returns right expression.
+     *
+     * @return The right expression.
      */
     Expression getRightExpression() {
         return this.right;
@@ -112,46 +124,39 @@ public final class EquationStatement extends Statement
 
     /**
      * Getter function. Returns arrow.
-     * @return
+     *
+     * @return The arrow used in equation.
      */
-    AbstractArrow getArrow() { return this.arrow; }
-
-    @Override
-    public String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
-        result.append("digraph chemical_syntax_tree {\n");
-        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
-
-        result.append("\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Equation&zwnj;|\\n");
-        result.append(left.getDotString());
-        result.append(arrow.getDotString());
-        result.append(right.getDotString());
-        result.append("\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<arrow>&zwj;&zwj;&zwj;arrow&zwnj;|" +
-                "<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n");
-
-        result.append("\tequation:left:w -> ");
-        result.append(left.getDotId());
-        result.append(";\n");
-        result.append("\tequation:arrow -> ");
-        result.append("arrow:w");
-        result.append(";\n");
-        result.append("\tequation:right:e -> ");
-        result.append(right.getDotId());
-        result.append(";\n");
-
-        result.append(left.getDotCode());
-        result.append(arrow.getDotCode());
-        result.append(right.getDotCode());
-        result.append("}\n");
-        return result.toString();
+    AbstractArrow getArrow() {
+        return this.arrow;
     }
 
     @Override
-    public boolean weaklyEquivalent(Statement s)
-    {
-        if (!(s instanceof EquationStatement))
+    public String getDotCode() {
+        return "digraph chemical_syntax_tree {\n"
+                + "\tnode [shape=record,penwidth=2,splines=ortho];\n\n"
+                + "\tequation [label=\"{&zwj;&zwj;&zwj;&zwj;Equation&zwnj;|\\n"
+
+                + left.getDotString() + arrow.getDotString() + right.getDotString()
+
+                + "\\n\\n|<left>&zwj;&zwj;&zwj;left&zwnj;|<arrow>&zwj;&zwj;&zwj;arrow&zwnj;|"
+                + "<right>&zwj;&zwj;&zwj;right&zwnj;}\",color=\"#bb2828\"];\n"
+
+                + "\tequation:left:w -> " + left.getDotId() + ";\n"
+                + "\tequation:arrow -> " + "arrow:w" + ";\n"
+                + "\tequation:right:e -> " + right.getDotId() + ";\n"
+
+                + left.getDotCode() + arrow.getDotCode() + right.getDotCode()
+
+                + "}\n";
+    }
+
+    @Override
+    public boolean weaklyEquivalent(final Statement s) {
+
+        if (!(s instanceof EquationStatement)) {
             return false;
+        }
 
         EquationStatement other = (EquationStatement) s;
 
@@ -167,11 +172,13 @@ public final class EquationStatement extends Statement
      * as it is quite time consuming.
      *
      * @param s Statement to be compared against.
+     * @return True if both statements are weakly equivalent, and contains same states symbols in all terms.
      */
-    public boolean sameStateSymbols(Statement s)
-    {
-        if (!(s instanceof EquationStatement))
+    boolean sameStateSymbols(final Statement s) {
+
+        if (!(s instanceof EquationStatement)) {
             return false;
+        }
 
         EquationStatement other = (EquationStatement) s;
 
@@ -187,11 +194,13 @@ public final class EquationStatement extends Statement
      * as it is quite time consuming.
      *
      * @param s Statement to be compared against.
+     * @return True if both statements are weakly equivalent, and contains same coefficients in relevant terms.
      */
-    public boolean sameCoefficients(Statement s)
-    {
-        if (!(s instanceof EquationStatement))
+    boolean sameCoefficients(final Statement s) {
+
+        if (!(s instanceof EquationStatement)) {
             return false;
+        }
 
         EquationStatement other = (EquationStatement) s;
 
@@ -199,10 +208,11 @@ public final class EquationStatement extends Statement
     }
 
     @Override
-    public ArrayList<Term> getWrongTerms(Statement e)
-    {
-        if (!(e instanceof EquationStatement))
+    public ArrayList<Term> getWrongTerms(final Statement e) {
+
+        if (!(e instanceof EquationStatement)) {
             return new ArrayList<>();
+        }
 
         EquationStatement expr = (EquationStatement) e;
 
@@ -214,39 +224,36 @@ public final class EquationStatement extends Statement
     }
 
     @Override
-    public boolean check(Statement input)
-    {
-        if (!(input instanceof EquationStatement))
-        {
+    public boolean check(final Statement input) {
+
+        if (!(input instanceof EquationStatement)) {
             // Not even EquationStatement
             System.out.println("Not an EquationStatement!");
             return false;
         }
 
-        if (input.containsError())
-        {
+        if (input.containsError()) {
             // Error term exists in argument
             System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
             return false;
         }
 
-        EquationStatement e_input = (EquationStatement) input;
+        EquationStatement equationInput = (EquationStatement) input;
 
-        if (!e_input.isBalanced())
-        {
-            if (!e_input.isBalancedAtoms())
-            {
+        if (!equationInput.isBalanced()) {
+
+            if (!equationInput.isBalancedAtoms()) {
+
                 // Atom count is unbalanced
                 System.out.printf("Total atoms LHS: %s\nTotal atoms RHS: %s\n",
-                                    e_input.left.getAtomCount(), e_input.right.getAtomCount());
+                        equationInput.left.getAtomCount(), equationInput.right.getAtomCount());
 
                 System.out.println("Atom counts are unbalanced.");
-            }
-            else
-            {
+
+            } else {
                 // Charge is unbalanced
                 System.out.printf("Total charge LHS: %s\nTotal charge LHS: %s\n",
-                                    e_input.left.getCharge(), e_input.right.getCharge());
+                        equationInput.left.getCharge(), equationInput.right.getCharge());
 
                 System.out.println("Charges are unbalanced.");
             }
@@ -254,42 +261,48 @@ public final class EquationStatement extends Statement
             return false;
         }
 
-        if (equals(input))
+        if (equals(input)) {
             return true;
+        }
 
-        if (!weaklyEquivalent(input))
-        {
+        if (!weaklyEquivalent(input)) {
+
             System.out.println("Unrelated terms exist in equation, and/or some terms are missing.");
-            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+            System.out.println("Wrong terms: " + getWrongTerms(equationInput));
 
             return false;
         }
 
-        if (!this.arrow.equals(e_input.arrow))
-        {
+        if (!this.arrow.equals(equationInput.arrow)) {
+
             System.out.println("Wrong arrow used.");
 
             return false;
         }
 
-        if (!sameCoefficients(input))
-        {
+        if (!sameCoefficients(input)) {
+
             System.out.println("Some terms have incorrect coefficients.");
-            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+            System.out.println("Wrong terms: " + getWrongTerms(equationInput));
 
             return false;
         }
 
-        if (!sameStateSymbols(input))
-        {
+        if (!sameStateSymbols(input)) {
+
             System.out.println("Some terms have incorrect state symbols.");
-            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+            System.out.println("Wrong terms: " + getWrongTerms(equationInput));
 
             return false;
         }
 
         System.out.println("Coefficient/state symbols are misplaced.");
-        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        System.out.println("Wrong terms: " + getWrongTerms(equationInput));
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

@@ -19,10 +19,13 @@ package org.isaacphysics.labs.chemistry.checker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public final class ExpressionStatement extends Statement implements Countable
-{
+/**
+ *
+ */
+public final class ExpressionStatement extends Statement implements Countable {
+
     /**
-     * Expression involved in statement
+     * Expression involved in statement.
      */
     private Expression expr;
 
@@ -30,7 +33,7 @@ public final class ExpressionStatement extends Statement implements Countable
      * Constructor method of ExpressionStatement.
      * @param e Expression involved in the statement.
      */
-    public ExpressionStatement(Expression e) {
+    public ExpressionStatement(final Expression e) {
         expr = e;
     }
 
@@ -40,17 +43,20 @@ public final class ExpressionStatement extends Statement implements Countable
     }
 
     @Override
-    public String getDotId() { return null; }
+    public String getDotId() {
+        return null;
+    }
 
     @Override
-    public boolean equals(Object o)
-    {
-        if (o instanceof ExpressionStatement)
-        {
+    public boolean equals(final Object o) {
+
+        if (o instanceof ExpressionStatement) {
             ExpressionStatement other = (ExpressionStatement) o;
             return this.expr.equals(other.expr);
         }
+
         return false;
+
     }
 
     @Override
@@ -68,26 +74,30 @@ public final class ExpressionStatement extends Statement implements Countable
         return expr.getCharge();
     }
 
+    /**
+     * Getter method. Gets the expression involved in this statement.
+     * @return The expression involved in this statement.
+     */
     Expression getExpression() {
         return this.expr;
     }
 
     @Override
-    public String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
-        result.append("digraph chemical_syntax_tree {\n");
-        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
-        result.append(expr.getDotCode());
-        result.append("}\n");
-        return result.toString();
+    public String getDotCode() {
+
+        return "digraph chemical_syntax_tree {\n"
+                + "\tnode [shape=record,penwidth=2,splines=ortho];\n\n"
+                + expr.getDotCode()
+                + "}\n";
+
     }
 
     @Override
-    public boolean weaklyEquivalent(Statement s)
-    {
-        if (!(s instanceof ExpressionStatement))
+    public boolean weaklyEquivalent(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
             return false;
+        }
 
         ExpressionStatement other = (ExpressionStatement) s;
 
@@ -103,11 +113,13 @@ public final class ExpressionStatement extends Statement implements Countable
      * as it is quite time consuming.
      *
      * @param s Statement to be compared against.
+     * @return True if both statemetns are weakly equivalent, and contains same state symbols in relevant terms.
      */
-    public boolean sameStateSymbols(Statement s)
-    {
-        if (!(s instanceof ExpressionStatement))
+    boolean sameStateSymbols(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
             return false;
+        }
 
         ExpressionStatement other = (ExpressionStatement) s;
 
@@ -123,11 +135,13 @@ public final class ExpressionStatement extends Statement implements Countable
      * as it is quite time consuming.
      *
      * @param s Statement to be compared against.
+     * @return True if both statement are weakly equivalent and contains same coefficients in relevant terms.
      */
-    public boolean sameCoefficients(Statement s)
-    {
-        if (!(s instanceof ExpressionStatement))
+    boolean sameCoefficients(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
             return false;
+        }
 
         ExpressionStatement other = (ExpressionStatement) s;
 
@@ -135,72 +149,72 @@ public final class ExpressionStatement extends Statement implements Countable
     }
 
     @Override
-    public String getDotString()
-    {
+    public String getDotString() {
         return null;
     }
 
     @Override
-    public ArrayList<Term> getWrongTerms(Statement e)
-    {
-        if (e instanceof ExpressionStatement)
+    public ArrayList<Term> getWrongTerms(final Statement e) {
+
+        if (e instanceof ExpressionStatement) {
             return expr.getWrongTerms(((ExpressionStatement) e).expr);
-        else
+        } else {
             return new ArrayList<>();
+        }
+
     }
 
     @Override
-    public boolean check(Statement input)
-    {
-        if (!(input instanceof ExpressionStatement))
-        {
+    public boolean check(final Statement input) {
+
+        if (!(input instanceof ExpressionStatement)) {
             // Not even ExpressionStatement
             System.out.println("Not an ExpressionStatement!");
             return false;
         }
 
-        if (input.containsError())
-        {
+        if (input.containsError()) {
             // Error term exists in argument
             System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
             return false;
         }
 
-        if (equals(input))
+        if (equals(input)) {
             return true;
+        }
 
-        ExpressionStatement e_input = (ExpressionStatement) input;
+        ExpressionStatement exprInput = (ExpressionStatement) input;
 
-        if (!weaklyEquivalent(input))
-        {
+        if (!weaklyEquivalent(input)) {
             // not even weakly equivalent: some molecules are unrelated to solution
             System.out.println("Unrelated terms exist in equation, and/or missing some terms.");
-            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+            System.out.println("Wrong terms: " + getWrongTerms(exprInput));
 
             return false;
         }
 
-        if (!sameCoefficients(input))
-        {
+        if (!sameCoefficients(input)) {
             // wrong coefficients
             System.out.println("Some terms have incorrect coefficients.");
-            System.out.println("Wrong terms: " + getWrongTerms(e_input));
+            System.out.println("Wrong terms: " + getWrongTerms(exprInput));
 
             return false;
         }
 
-        if (!sameStateSymbols(input))
-        {
+        if (!sameStateSymbols(input)) {
             // wrong state symbols
             System.out.println("Some terms have incorrect state symbols.");
-        }
-        else
-        {
+        } else {
             // correct coefficients, state symbols, but misplaced.
             System.out.println("Coefficient/state symbols are misplaced.");
         }
 
-        System.out.println("Wrong terms: " + getWrongTerms(e_input));
+        System.out.println("Wrong terms: " + getWrongTerms(exprInput));
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

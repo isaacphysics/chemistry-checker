@@ -18,15 +18,33 @@ package org.isaacphysics.labs.chemistry.checker;
 
 /**
  * An instance of electron (in nuclear equations).
+ *
  * Created by Ryan on 20/06/2016.
  */
-public final class PhysicalElectron extends SpecialNuclear
-{
-    public PhysicalElectron(Integer mass, Integer atom)
-    {
+public final class PhysicalElectron extends SpecialNuclear {
+
+    /**
+     * Constructor method of PhysicalElectron.
+     *
+     * @param mass Mass number inputted by user.
+     * @param atom Atom number inputted by user.
+     */
+    public PhysicalElectron(final Integer mass, final Integer atom) {
         super(0, -1, mass, atom, -1, "Electron", "electron", "e&zwj;&zwj;-&zwnj;");
     }
 
     @Override
-    public boolean equals(Object o) { return (o instanceof PhysicalElectron); }
+    public boolean equals(final Object o) {
+        if (!(o instanceof PhysicalElectron)) {
+            return false;
+        }
+
+        PhysicalElectron p = (PhysicalElectron) o;
+        return p.getAtomicNumber().equals(getAtomicNumber()) && p.getMassNumber().equals(getMassNumber());
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

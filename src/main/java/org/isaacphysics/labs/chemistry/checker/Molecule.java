@@ -16,25 +16,28 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public abstract class Molecule extends Formula
-{
+/**
+ *
+ */
+public abstract class Molecule extends Formula {
+
     /**
      * Constructor method of Molecule.
      * Does nothing, except from invoking constructor of parent.
      */
-    public Molecule()
-    {
+    public Molecule() {
         super();
     }
 
     @Override
-    public Integer getCharge()
-    {
+    public Integer getCharge() {
         return 0;
     }
 
     /**
      * Returns number of molecules involved.
+     *
+     * @return Number of molecules involved.
      */
     public abstract Integer getNumber();
 
@@ -42,14 +45,17 @@ public abstract class Molecule extends Formula
     public abstract boolean equals(Object o);
 
     @Override
-    public Integer getMassNumber() throws NuclearException
-    {
+    public Integer getMassNumber() throws NuclearException {
         throw new NuclearException("Mass number undefined for Molecule.");
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException
-    {
+    public Integer getAtomicNumber() throws NuclearException {
         throw new NuclearException("Atomic number undefined for Molecule.");
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

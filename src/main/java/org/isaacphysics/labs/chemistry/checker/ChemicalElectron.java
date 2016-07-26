@@ -20,22 +20,20 @@ import java.util.HashMap;
 
 /**
  * Special class of Formula that only cares about electrons in chemical equations.
+ *
  * Created by Ryan on 17/06/2016.
  */
-public final class ChemicalElectron extends Formula
-{
+public final class ChemicalElectron extends Formula {
     /**
      * Constructor function of ChemicalElectron.
      */
-    public ChemicalElectron()
-    {
+    public ChemicalElectron() {
         super();
     }
 
     @Override
-    public boolean equals(Object o)
-    {
-        return (o instanceof ChemicalElectron);
+    public boolean equals(final Object o) {
+        return o instanceof ChemicalElectron;
     }
 
     @Override
@@ -44,53 +42,46 @@ public final class ChemicalElectron extends Formula
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException
-    {
+    public Integer getAtomicNumber() throws NuclearException {
         throw new NuclearException("Atomic number undefined for ChemicalElectron.");
     }
 
     @Override
-    public Integer getMassNumber() throws NuclearException
-    {
+    public Integer getMassNumber() throws NuclearException {
         throw new NuclearException("Mass number undefined for ChemicalElectron.");
     }
 
     @Override
-    public Integer getCharge()
-    {
+    public Integer getCharge() {
         return -1;
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount()
-    {
+    public HashMap<String, Integer> getAtomCount() {
         return new HashMap<>();
     }
 
     @Override
-    public String getDotId()
-    {
-        return "electron_" + dotId;
+    public String getDotId() {
+        return "electron_" + getdotId();
     }
 
     @Override
-    public String getDotCode()
-    {
-        StringBuilder result = new StringBuilder();
-
-        result.append("\t");
-        result.append(getDotId());
-
-        result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;PhysicalElectron&zwnj;|\\n");
-        result.append(getDotString());
-
-        result.append("\n\n}\",color=\"#4c7fbe\"];\n");
-        return result.toString();
+    public String getDotCode() {
+        return "\t"
+                + getDotId()
+                + " [label=\"{&zwj;&zwj;&zwj;&zwj;PhysicalElectron&zwnj;|\\n"
+                + getDotString()
+                + "\n\n}\",color=\"#4c7fbe\"];\n";
     }
 
     @Override
-    public String getDotString()
-    {
+    public String getDotString() {
         return "e&zwj;&zwj;-&zwnj;";
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

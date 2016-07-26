@@ -21,8 +21,8 @@ package org.isaacphysics.labs.chemistry.checker;
  * A singleton class for returning an instance of single arrow for chemical equations.
  * Also provides method for pretty printing strings.
  */
-public final class SingleArrow extends AbstractArrow
-{
+final class SingleArrow extends AbstractArrow {
+
     /**
      * The single class instance for SingleArrow.
      */
@@ -31,31 +31,39 @@ public final class SingleArrow extends AbstractArrow
     /**
      * Constructor function for SingleArrow.
      */
-    private SingleArrow() {}
+    private SingleArrow() {
+        // Nothing to do here. This is a singleton.
+    }
 
     /**
      * Getter method. Returns the only class instance of SingleArrow.
      * @return Class instance of SingleArrow
      */
-    public static SingleArrow getSingleArrow()
-    {
-        if (singleton == null)
+    static SingleArrow getSingleArrow() {
+
+        if (singleton == null) {
             singleton = new SingleArrow();
+        }
 
         return singleton;
     }
 
     @Override
-    public String toString() { return " -> "; }
-
-    @Override
-    String getDotCode()
-    {
-        return "\tarrow [label=\"{&zwj;&zwj;&zwj;&zwj;SingleArrow&zwnj;|\\n" +
-                "&#8594;\\n\\n" +
-                "}\",color=\"#4c7fbe\"];\n";
+    public String toString() {
+        return " -> ";
     }
 
     @Override
-    String getDotString() { return " &#8594; "; }
+    String getDotCode() {
+
+        return "\tarrow [label=\"{&zwj;&zwj;&zwj;&zwj;SingleArrow&zwnj;|\\n"
+                + "&#8594;\\n\\n"
+                + "}\",color=\"#4c7fbe\"];\n";
+
+    }
+
+    @Override
+    String getDotString() {
+        return " &#8594; ";
+    }
 }
