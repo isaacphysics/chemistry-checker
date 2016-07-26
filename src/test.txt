@@ -14,7 +14,7 @@ Mg(CH3COO)2;
 
 /* Check if equation has balanced charge, in presence of ions. */
 CH3CO2H + H2O <=> CH3CO2^{-} + H3O^{+};
-Co^{2+} -> Co^{3+} + e^{-};
+Co^{2+} -> Co^{3+} + \electron;
 8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);
 3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(g);
 

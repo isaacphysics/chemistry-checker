@@ -101,12 +101,6 @@ import java_cup.runtime.Symbol;
     T[abcehilm]|Uu[opst]|Xe|Yb      { return new Symbol(sym.ELEMENT, yytext()); }
 
     /**
-     * Electrons used in chemical (half) equations.
-     */
-    e\^\{-\}                        { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
-    e[\s]*-                         { return new Symbol(sym.C_ELECTRON, new ChemicalElectron()); }
-
-    /**
      * Hydrate part (. NUM H2O):
      * The tail part of a hydrated crystal formula.
      */
@@ -135,7 +129,7 @@ import java_cup.runtime.Symbol;
     \\"gammaray"                     { return new Symbol(sym.GAMMA); }
     \\"neutrino"                     { return new Symbol(sym.NEUTRINO); }
     \\"antineutrino"                 { return new Symbol(sym.ANTI_NEUTRINO); }
-    \\"electron"                     { return new Symbol(sym.P_ELECTRON); }
+    \\"electron"                     { return new Symbol(sym.ELECTRON); }
     \\"positron"                     { return new Symbol(sym.POSITRON); }
     \\"neutron"                      { return new Symbol(sym.NEUTRON); }
     \\"proton"                       { return new Symbol(sym.PROTON); }

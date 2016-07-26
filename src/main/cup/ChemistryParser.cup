@@ -24,8 +24,7 @@ terminal DoubleArrow DTO;
 terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
-terminal ChemicalElectron C_ELECTRON;
-terminal ALPHA, BETA, GAMMA, NEUTRINO, P_ELECTRON, POSITRON, NEUTRON, PROTON, ANTI_NEUTRINO;
+terminal ALPHA, BETA, GAMMA, NEUTRINO, ELECTRON, POSITRON, NEUTRON, PROTON, ANTI_NEUTRINO;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -105,7 +104,7 @@ expr            ::=   expr:e PLUS term:t                    {: RESULT = e; RESUL
 term            ::=   opt_number:n r_term:t opt_state:s     {: RESULT = new Term(n, t, s); :}
                     | opt_number:n compound:c WATER:w opt_state:s
                                                             {: RESULT = new Term(n, new Hydrate(c, w), s); :}
-                    | opt_number:n C_ELECTRON:e             {: RESULT = new Term(n, e, null); :}
+                    | opt_number:n ELECTRON                 {: RESULT = new Term(n, new ChemicalElectron(), null); :}
                     ;
 
 /**
@@ -174,8 +173,8 @@ nuclear         ::=   SUP:sup SUB:sub ALPHA                 {: RESULT = new Alph
                     | SUB:sub SUP:sup NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
                     | SUP:sup SUB:sub ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
                     | SUB:sub SUP:sup ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
-                    | SUP:sup SUB:sub P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
-                    | SUB:sub SUP:sup P_ELECTRON            {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUP:sup SUB:sub ELECTRON              {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUB:sub SUP:sup ELECTRON              {: RESULT = new PhysicalElectron(sup, sub); :}
                     | SUP:sup SUB:sub POSITRON              {: RESULT = new Positron(sup, sub); :}
                     | SUB:sub SUP:sup POSITRON              {: RESULT = new Positron(sup, sub); :}
                     | SUP:sup SUB:sub NEUTRON               {: RESULT = new Neutron(sup, sub); :}
