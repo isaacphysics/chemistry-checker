@@ -45,3 +45,6 @@ CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
 
 /* See if program can pick up the invalid atomic number 6. */
 ^{14}_{6}Na -> ^{14}_{7}N^{+} + ^{0}_{-1}\electron + ^{0}_{0}\gammaray;
+
+/* See if program deals with fractions properly! */
+C6H14 + \frac{19}{2}O2 -> 6CO2 + 7H2O

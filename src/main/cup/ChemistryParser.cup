@@ -25,6 +25,7 @@ terminal String STATE, ERROR;
 terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
 terminal ALPHA, BETA, GAMMA, NEUTRINO, ELECTRON, POSITRON, NEUTRON, PROTON, ANTI_NEUTRINO;
+terminal FracCoeff FRACTION;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
@@ -40,6 +41,7 @@ non terminal Compound compound, some_eb, b;
 non terminal Nuclear nuclear;
 non terminal Integer opt_number;
 non terminal String opt_state;
+non terminal Coefficient opt_coeff;
 
 start with result;
 
@@ -101,10 +103,10 @@ expr            ::=   expr:e PLUS term:t                    {: RESULT = e; RESUL
  * The code may look messy, but I cannot further simplify terms.
  * Further simplifications introduce shift/reduce conflicts.
  */
-term            ::=   opt_number:n r_term:t opt_state:s     {: RESULT = new Term(n, t, s); :}
-                    | opt_number:n compound:c WATER:w opt_state:s
+term            ::=   opt_coeff:n r_term:t opt_state:s      {: RESULT = new Term(n, t, s); :}
+                    | opt_coeff:n compound:c WATER:w opt_state:s
                                                             {: RESULT = new Term(n, new Hydrate(c, w), s); :}
-                    | opt_number:n ELECTRON                 {: RESULT = new Term(n, new ChemicalElectron(), null); :}
+                    | opt_coeff:n ELECTRON                  {: RESULT = new Term(n, new ChemicalElectron(), null); :}
                     ;
 
 /**
@@ -143,10 +145,10 @@ n_expr          ::=   n_expr:e PLUS n_term:t                {: RESULT = e; RESUL
  * Parses a single nuclear term with trailing PLUS.
  * A nuclear term is either an isotope, or a special term like /alpha_particle.
  */
-n_term          ::=   SUP:sup SUB:sub isotope:i             {: RESULT = new Term(1, new Isotope(sup, sub, i), null); :}
-                    | SUB:sub SUP:sup isotope:i             {: RESULT = new Term(1, new Isotope(sup, sub, i), null); :}
-                    | nuclear:e                             {: RESULT = new Term(1, e, null); :}
-                    | NUMBER:n nuclear:e                    {: RESULT = new Term(n, e, null); :}
+n_term          ::=   SUP:sup SUB:sub isotope:i             {: RESULT = new Term(new IntCoeff(1), new Isotope(sup, sub, i), null); :}
+                    | SUB:sub SUP:sup isotope:i             {: RESULT = new Term(new IntCoeff(1), new Isotope(sup, sub, i), null); :}
+                    | nuclear:e                             {: RESULT = new Term(new IntCoeff(1), e, null); :}
+                    | NUMBER:n nuclear:e                    {: RESULT = new Term(new IntCoeff(n), e, null); :}
                     ;
 
 /**
@@ -250,4 +252,14 @@ opt_number      ::=   NUMBER:n                              {: RESULT = n; :}
  */
 opt_state       ::=   STATE:s                               {: RESULT = s; :}
                     |                                       {: RESULT = null; :}
+                    ;
+
+/**
+ * Non-terminal Coefficient opt_coeff (optional coefficient):
+ * Parses the coefficient part of a term.
+ * Could be fraction, integer, or nothing at all.
+ */
+opt_coeff       ::=   NUMBER:n                              {: RESULT = new IntCoeff(n); :}
+                    |                                       {: RESULT = new IntCoeff(1); :}
+                    | FRACTION:f                            {: RESULT = f; :}
                     ;

@@ -66,7 +66,7 @@ abstract class AbstractTerm implements Countable {
      * @return Mass number of term.
      * @throws NuclearException The particle is not nuclear.
      */
-    public abstract Integer getMassNumber() throws NuclearException;
+    public abstract Fraction getMassNumber() throws NuclearException;
 
     /**
      * Defined for nuclear terms only.
@@ -74,7 +74,7 @@ abstract class AbstractTerm implements Countable {
      * @return Atomic number of term.
      * @throws NuclearException The particle is not nuclear.
      */
-    public abstract Integer getAtomicNumber() throws NuclearException;
+    public abstract Fraction getAtomicNumber() throws NuclearException;
 
     /**
      * Method only applicable to nuclear formula.

@@ -30,8 +30,8 @@ public abstract class Molecule extends Formula {
     }
 
     @Override
-    public Integer getCharge() {
-        return 0;
+    public Fraction getCharge() {
+        return new Fraction(0, 1);
     }
 
     /**

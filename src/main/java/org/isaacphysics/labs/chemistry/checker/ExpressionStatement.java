@@ -65,12 +65,12 @@ public final class ExpressionStatement extends Statement implements Countable {
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return expr.getAtomCount();
     }
 
     @Override
-    public Integer getCharge() {
+    public Fraction getCharge() {
         return expr.getCharge();
     }
 

@@ -22,6 +22,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java_cup.runtime.DefaultSymbolFactory;
 
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,37 +64,37 @@ public final class RunParser {
      */
     public static void main(final String[] args) throws Exception {
         //noinspection deprecation (We know DefaultSymbolFactory is depracated!)
-        /*@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         ArrayList<Statement> statements = (ArrayList<Statement>) new ChemistryParser(new ChemistryLexer(
-        new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
+            new InputStreamReader(new FileInputStream("src/test.txt")))).parse().value;
         System.err.flush();
         System.out.flush();
         System.out.println();
-        for (Statement statement : statements)
-        {
+
+        for (Statement statement : statements) {
             System.out.println(statement);
 
-            if (statement.containsError())
-            {
+            if (statement.containsError()) {
+
                 System.out.println("It contains error terms.");
-            }
-            else if (statement instanceof NuclearExpressionStatement)
-            {
+
+            } else if (statement instanceof NuclearExpressionStatement) {
+
                 NuclearExpressionStatement s = (NuclearExpressionStatement) statement;
 
                 System.out.println("Are atomic numbers valid? " + s.isValid());
                 System.out.println("Total atomic#: " + s.getAtomicCount());
                 System.out.println("Total mass#: " + s.getMassCount());
-            }
-            else if (statement instanceof ExpressionStatement)
-            {
+
+            } else if (statement instanceof ExpressionStatement) {
+
                 ExpressionStatement s = (ExpressionStatement) statement;
 
                 System.out.println("Total atoms: " + s.getAtomCount());
                 System.out.println("Total charge: " + s.getCharge());
-            }
-            else if (statement instanceof EquationStatement)
-            {
+
+            } else if (statement instanceof EquationStatement) {
+
                 EquationStatement s = (EquationStatement) statement;
 
                 System.out.println("Is balanced? " + s.isBalanced());
@@ -100,9 +102,9 @@ public final class RunParser {
                 System.out.println("Total atoms RHS: " + s.getRightExpression().getAtomCount());
                 System.out.println("Total charge LHS: " + s.getLeftExpression().getCharge());
                 System.out.println("Total charge RHS: " + s.getRightExpression().getCharge());
-            }
-            else
-            {
+
+            } else {
+
                 NuclearEquationStatement s = (NuclearEquationStatement) statement;
 
                 System.out.println("Is balanced? " + s.isBalanced());
@@ -111,10 +113,11 @@ public final class RunParser {
                 System.out.println("Total atomic# RHS: " + s.getRightExpression().getAtomicCount());
                 System.out.println("Total mass# LHS: " + s.getLeftExpression().getMassCount());
                 System.out.println("Total mass# RHS: " + s.getRightExpression().getMassCount());
+
             }
-            //System.out.printf("Dot code:\n%s\n", statement.getDotCode());
+            System.out.printf("Dot code:\n%s\n", statement.getDotCode());
             System.out.println("\n");
-        }*/
+        }
 
 
         /*String acid_base = "NaOH(aq) + HCl(aq) -> NaCl(aq) + H2O(l)";
@@ -131,7 +134,7 @@ public final class RunParser {
         //checkExpressionTest();
         */
 
-        System.out.println(check("C2H4(g) + O2(g) -> H2O(l) + CO2(g)", "C2H4(g) + 3O2(g) -> 2CO2(g) + 2H2O(l)"));
+        // System.out.println(check("C2H4(g) + O2(g) -> H2O(l) + CO2(g)", "C2H4(g) + 3O2(g) -> 2CO2(g) + 2H2O(l)"));
     }
 
     /**
@@ -156,11 +159,11 @@ public final class RunParser {
                 node.put("input", statementString);
                 node.put("result", exprStatement.toString());
                 node.put("containsError", exprStatement.containsError());
-                node.put("charge", exprStatement.getCharge());
-                HashMap<String, Integer> atomCount = exprStatement.getAtomCount();
+                node.put("charge", exprStatement.getCharge().toString());
+                HashMap<String, Fraction> atomCount = exprStatement.getAtomCount();
                 ObjectNode atomCountNode = node.putObject("atom_count");
                 for (String element : atomCount.keySet()) {
-                    atomCountNode.put(element, atomCount.get(element));
+                    atomCountNode.put(element, atomCount.get(element).toString());
                 }
             } else if (statement instanceof EquationStatement) {
                 EquationStatement eqnStatement = (EquationStatement) statement;
@@ -175,21 +178,21 @@ public final class RunParser {
                 ObjectNode leftHandSide = node.putObject("left");
                 Expression left = eqnStatement.getLeftExpression();
                 leftHandSide.put("containsError", left.containsError());
-                leftHandSide.put("charge", left.getCharge());
-                HashMap<String, Integer> atomCountLeft = left.getAtomCount();
+                leftHandSide.put("charge", left.getCharge().toString());
+                HashMap<String, Fraction> atomCountLeft = left.getAtomCount();
                 ObjectNode atomCountLeftNode = leftHandSide.putObject("atom_count");
                 for (String element : atomCountLeft.keySet()) {
-                    atomCountLeftNode.put(element, atomCountLeft.get(element));
+                    atomCountLeftNode.put(element, atomCountLeft.get(element).toString());
                 }
 
                 ObjectNode rightHandSide = node.putObject("right");
                 Expression right = eqnStatement.getRightExpression();
                 rightHandSide.put("containsError", right.containsError());
-                rightHandSide.put("charge", right.getCharge());
-                HashMap<String, Integer> atomCountRight = right.getAtomCount();
+                rightHandSide.put("charge", right.getCharge().toString());
+                HashMap<String, Fraction> atomCountRight = right.getAtomCount();
                 ObjectNode atomCountRightNode = rightHandSide.putObject("atom_count");
                 for (String element : atomCountRight.keySet()) {
-                    atomCountRightNode.put(element, atomCountRight.get(element));
+                    atomCountRightNode.put(element, atomCountRight.get(element).toString());
                 }
             }
             return mapper.writeValueAsString(node);

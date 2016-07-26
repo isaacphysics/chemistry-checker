@@ -117,9 +117,9 @@ public final class Expression implements Countable {
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, Fraction> h = new HashMap<>();
 
         for (AbstractTerm t : terms) {
             for (String e : t.getAtomCount().keySet()) {
@@ -127,7 +127,7 @@ public final class Expression implements Countable {
                 if (!h.containsKey(e)) {
                     h.put(e, t.getAtomCount().get(e));
                 } else {
-                    h.put(e, h.get(e) + t.getAtomCount().get(e));
+                    h.put(e, h.get(e).plus(t.getAtomCount().get(e)));
                 }
 
             }
@@ -137,12 +137,12 @@ public final class Expression implements Countable {
     }
 
     @Override
-    public Integer getCharge() {
+    public Fraction getCharge() {
 
-        Integer c = 0;
+        Fraction c = terms.get(0).getCharge();
 
-        for (AbstractTerm t : terms) {
-            c += t.getCharge();
+        for (int i = 1; i < terms.size(); i++) {
+            c = c.plus(terms.get(i).getCharge());
         }
 
         return c;
@@ -256,8 +256,8 @@ public final class Expression implements Countable {
         }
 
         // Key = (Formula, Coefficient).
-        HashMap<Pair<Formula, Integer>, Integer> htable1 = new HashMap<>();
-        HashMap<Pair<Formula, Integer>, Integer> htable2 = new HashMap<>();
+        HashMap<Pair<Formula, Coefficient>, Integer> htable1 = new HashMap<>();
+        HashMap<Pair<Formula, Coefficient>, Integer> htable2 = new HashMap<>();
 
         for (AbstractTerm t: terms) {
 
@@ -269,9 +269,9 @@ public final class Expression implements Countable {
 
                 Term foo = (Term) t;
                 Formula f = foo.getFormula();
-                Integer coeff = foo.getNumber();
+                Coefficient coeff = foo.getNumber();
 
-                Pair<Formula, Integer> temp = new Pair<>(f, coeff);
+                Pair<Formula, Coefficient> temp = new Pair<>(f, coeff);
 
                 if (htable1.containsKey(temp)) {
                     htable1.put(temp, htable1.get(temp) + 1);
@@ -291,9 +291,9 @@ public final class Expression implements Countable {
 
                 Term foo = (Term) t;
                 Formula f = foo.getFormula();
-                Integer coeff = foo.getNumber();
+                Coefficient coeff = foo.getNumber();
 
-                Pair<Formula, Integer> temp = new Pair<>(f, coeff);
+                Pair<Formula, Coefficient> temp = new Pair<>(f, coeff);
 
                 if (htable2.containsKey(temp)) {
 
@@ -486,12 +486,12 @@ public final class Expression implements Countable {
      * @return Total mass number of AbstractTerms.
      * @throws NuclearException Called this function on non-nuclear expressions.
      */
-    Integer getMassCount() throws NuclearException {
+    Fraction getMassCount() throws NuclearException {
 
-        Integer mass = 0;
+        Fraction mass = terms.get(0).getMassNumber();
 
-        for (AbstractTerm t: terms) {
-            mass += t.getMassNumber();
+        for (int i = 1; i < terms.size(); i++) {
+            mass = mass.plus(terms.get(i).getMassNumber());
         }
 
         return mass;
@@ -504,12 +504,12 @@ public final class Expression implements Countable {
      * @return Total atomic number of AbstractTerms.
      * @throws NuclearException Called this function on non-nuclear expressions.
      */
-    Integer getAtomicCount() throws NuclearException {
+    Fraction getAtomicCount() throws NuclearException {
 
-        Integer atomic = 0;
+        Fraction atomic = terms.get(0).getAtomicNumber();
 
-        for (AbstractTerm t: terms) {
-            atomic += t.getAtomicNumber();
+        for (int i = 1; i < terms.size(); i++) {
+            atomic = atomic.plus(terms.get(i).getAtomicNumber());
         }
 
         return atomic;

@@ -45,21 +45,21 @@ public final class IonChain extends Formula {
     }
 
     @Override
-    public Integer getCharge() {
+    public Fraction getCharge() {
 
-        Integer totalCharge = 0;
+        Fraction totalCharge = new Fraction(0, 1);
 
         for (Formula f: formulas) {
-            totalCharge += f.getCharge();
+            totalCharge = totalCharge.plus(f.getCharge());
         }
 
         return totalCharge;
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, Fraction> h = new HashMap<>();
 
         for (Formula f : formulas) {
             for (String e : f.getAtomCount().keySet()) {
@@ -67,7 +67,7 @@ public final class IonChain extends Formula {
                 if (!h.containsKey(e)) {
                     h.put(e, f.getAtomCount().get(e));
                 } else {
-                    h.put(e, h.get(e) + f.getAtomCount().get(e));
+                    h.put(e, h.get(e).plus(f.getAtomCount().get(e)));
                 }
             }
         }

@@ -62,7 +62,7 @@ public final class Term extends AbstractTerm {
     /**
      * Coefficient of this term.
      */
-    private Integer coefficient;
+    private Coefficient coefficient;
 
     /**
      * Physical state of this term.
@@ -75,7 +75,7 @@ public final class Term extends AbstractTerm {
      * @param m Chemical formula involved in the term
      * @param s State of the formula
      */
-    public Term(final int n, final Formula m, final String s) {
+    public Term(final Coefficient n, final Formula m, final String s) {
         super();
 
         this.coefficient = n;
@@ -93,7 +93,7 @@ public final class Term extends AbstractTerm {
 
         String t = "";
 
-        if (coefficient > 1) {
+        if (!(coefficient instanceof IntCoeff && ((IntCoeff) coefficient).getCoefficient() == 1)) {
             t += coefficient.toString();
         }
 
@@ -130,30 +130,30 @@ public final class Term extends AbstractTerm {
     }
 
     @Override
-    public Integer getMassNumber() throws NuclearException {
-        return coefficient * formula.getMassNumber();
+    public Fraction getMassNumber() throws NuclearException {
+        return coefficient.toFraction().times(formula.getMassNumber());
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException {
-        return coefficient * formula.getAtomicNumber();
+    public Fraction getAtomicNumber() throws NuclearException {
+        return coefficient.toFraction().times(formula.getAtomicNumber());
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, Fraction> h = new HashMap<>();
 
         for (String element: formula.getAtomCount().keySet()) {
-            h.put(element, formula.getAtomCount().get(element) * coefficient);
+            h.put(element, formula.getAtomCount().get(element).times(coefficient.toFraction()));
         }
 
         return h;
     }
 
     @Override
-    public Integer getCharge() {
-        return formula.getCharge() * coefficient;
+    public Fraction getCharge() {
+        return formula.getCharge().times(coefficient.toFraction());
     }
 
     /**
@@ -168,7 +168,7 @@ public final class Term extends AbstractTerm {
      * Getter function. Returns coefficient.
      * @return Coefficient of this term
      */
-    public Integer getNumber() {
+    public Coefficient getNumber() {
         return this.coefficient;
     }
 
@@ -194,7 +194,7 @@ public final class Term extends AbstractTerm {
         result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n");
         result.append(getDotString());
         result.append("\\n\\n|&zwj;&zwj;&zwj;coefficient&zwnj;: ");
-        result.append(coefficient);
+        result.append(coefficient.getDotString());
         result.append("|&zwj;&zwj;&zwj;state&zwnj;: ");
 
         if (state != null) {
@@ -220,8 +220,8 @@ public final class Term extends AbstractTerm {
     public String getDotString() {
         String t = "";
 
-        if (coefficient > 1) {
-            t += coefficient.toString();
+        if (!(coefficient instanceof IntCoeff && ((IntCoeff) coefficient).getCoefficient() == 1)) {
+            t += coefficient.getDotString();
         }
 
         t += formula.getDotString();

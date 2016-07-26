@@ -24,6 +24,10 @@ import java.util.HashMap;
  * Created by Ryan on 17/06/2016.
  */
 public final class ChemicalElectron extends Formula {
+
+    private static final int Charge = -1;
+    private static final Fraction ChargeFrac = new Fraction(Charge, 1);
+
     /**
      * Constructor function of ChemicalElectron.
      */
@@ -52,12 +56,12 @@ public final class ChemicalElectron extends Formula {
     }
 
     @Override
-    public Integer getCharge() {
-        return -1;
+    public Fraction getCharge() {
+        return ChargeFrac;
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return new HashMap<>();
     }
 

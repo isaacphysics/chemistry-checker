@@ -49,12 +49,12 @@ public final class Ion extends Formula {
     }
 
     @Override
-    public Integer getCharge() {
-        return charge;
+    public Fraction getCharge() {
+        return new Fraction(charge, 1);
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return molecule.getAtomCount();
     }
 

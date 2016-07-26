@@ -93,16 +93,16 @@ public class TestParser
         Term term = (Term) t;
 
         // Asserts that coefficient of term is 1.
-        assertTrue("Implicit count of 1 for Terms failed, got " + term.getNumber() + "!", term.getNumber() == 1);
+        assertTrue("Implicit count of 1 for Terms failed, got " + term.getNumber() + "!", term.getNumber().equals(new IntCoeff(1)));
 
         // Asserts number of oxygen atoms in term is 4.
-        HashMap<String, Integer> atomCount = term.getAtomCount();
+        HashMap<String, Fraction> atomCount = term.getAtomCount();
         assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
-                atomCount.get("O") == 4);
+                atomCount.get("O").equals(new Fraction(4, 1)));
 
         // Asserts that the charge of molecule is 0.
         assertTrue("Charge of parsed molecule incorrect! Expected no charge (0), got " + term.getCharge() + "!",
-                term.getCharge() == 0);
+                term.getCharge().equals(new Fraction(0, 1)));
 
         // Asserts the state of molecule is not defined.
         assertTrue("Physical State of parsed molecule incorrect! Expected null, got " + term.getState() + "!",
@@ -132,12 +132,12 @@ public class TestParser
 
         // Asserts coefficient of term = 2.
         assertTrue("Setting number of molecule in term failed! Expected 2, got " + term.getNumber() + "!",
-                term.getNumber() == 2);
+                term.getNumber().toString().equals("2"));
 
         // Asserts number of oxygen atoms in expression = 4.
-        HashMap<String, Integer> atomCount = term.getAtomCount();
+        HashMap<String, Fraction> atomCount = term.getAtomCount();
         assertTrue("Parsed oxygen atom count incorrect! Expected 4, got " + atomCount.get("O") + "!",
-                atomCount.get("O") == 4);
+                atomCount.get("O").toString().equals("4"));
     }
 
     /**
@@ -184,7 +184,7 @@ public class TestParser
         Term term = (Term) ((ExpressionStatement) result).getExpression().getTerms().get(0);
 
         // Asserts charge of molecule = 1.
-        assertTrue("Charge of parsed molecule incorrect! Expected 1, got " + term.getCharge() + "!", term.getCharge() == 1);
+        assertTrue("Charge of parsed molecule incorrect! Expected 1, got " + term.getCharge() + "!", term.getCharge().toString().equals("1"));
     }
 
     /**
@@ -209,9 +209,9 @@ public class TestParser
         assertTrue("Expected 2 terms, got " + expr.getTerms().size() + "!", expr.getTerms().size() == 2);
 
         // Asserts only 6 oxygen atoms in the whole expression.
-        HashMap<String, Integer> atomCount = expr.getAtomCount();
+        HashMap<String, Fraction> atomCount = expr.getAtomCount();
         assertTrue("Parsed oxygen atom count incorrect! Expected 6, got " + atomCount.get("O") + "!" ,
-                                                                            atomCount.get("O") == 6);
+                                                                            atomCount.get("O").toString().equals("6"));
 
         // Asserts the string form of first term to be in correct mhchem format.
         AbstractTerm t = expr.getTerms().get(0);
@@ -287,9 +287,9 @@ public class TestParser
         ExpressionStatement exprStatement = (ExpressionStatement) result;
 
         // Asserts number of oxygen atoms in expression = 36.
-        HashMap<String, Integer> atomCount = exprStatement.getAtomCount();
+        HashMap<String, Fraction> atomCount = exprStatement.getAtomCount();
         assertTrue("Count of Oxygen atoms in nested group incorrect! Expected 36, got " + atomCount.get("O") + "!",
-                                                                                          atomCount.get("O") == 36);
+                                                                                          atomCount.get("O").toString().equals("36"));
     }
 
     /**
@@ -491,6 +491,8 @@ public class TestParser
         NuclearEquationStatement eq2 = (NuclearEquationStatement) second;
 
         // Assumes first statement to be balanced and valid.
+        //System.out.printf("Left expression atomic count:  %s\n", eq.getLeftExpression().getAtomicCount());
+        //System.out.printf("Right expression atomic count: %s\n", eq.getRightExpression().getAtomicCount());
         assertTrue(c14_decay + " should have balanced atomic and mass numbers.", eq.isBalanced());
         assertTrue(c14_decay + " should have valid atomic numbers.", eq.isValid());
 

@@ -118,18 +118,18 @@ public final class Compound extends Molecule {
     //public int hashCode() {return groups.size();}
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, Fraction> h = new HashMap<>();
 
         for (Molecule m : groups) {
 
             for (String element : m.getAtomCount().keySet()) {
 
                 if (!h.containsKey(element)) {
-                    h.put(element, m.getAtomCount().get(element) * number);
+                    h.put(element, m.getAtomCount().get(element).times(number));
                 } else {
-                    h.put(element, h.get(element) + m.getAtomCount().get(element) * number);
+                    h.put(element, h.get(element).plus(m.getAtomCount().get(element).times(number)));
                 }
             }
         }

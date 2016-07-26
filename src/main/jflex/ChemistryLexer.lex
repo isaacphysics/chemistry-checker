@@ -84,6 +84,18 @@ import java_cup.runtime.Symbol;
     [1-9][0-9]*                     { return new Symbol(sym.NUMBER, new Integer(yytext())); }
 
     /**
+     * Fractions. Scary things with ugly regex that should not be used as coefficients.
+     * But there are physics students.
+     */
+    \\frac\{[1-9][0-9]*\}\{[1-9][0-9]*\}
+                                    { String s = yytext();
+                                        s = s.substring(6, s.length() - 1);
+                                        String[] twoPart = s.split("\\}\\{");
+                                        System.out.printf("Left: %s\nRight: %s\n", twoPart[0], twoPart[1]);
+                                        return new Symbol(sym.FRACTION, new
+                                                        FracCoeff(new Integer(twoPart[0]), new Integer(twoPart[1]))); }
+
+    /**
      * All possible state symbols.
      */
     \((s|l|g|m|aq)\)                { return new Symbol(sym.STATE, yytext().substring(1, yytext().length() - 1)); }

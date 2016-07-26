@@ -67,12 +67,12 @@ public final class NuclearExpressionStatement extends Statement implements Count
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return expr.getAtomCount();
     }
 
     @Override
-    public Integer getCharge() {
+    public Fraction getCharge() {
         return expr.getCharge();
     }
 
@@ -126,7 +126,7 @@ public final class NuclearExpressionStatement extends Statement implements Count
      * @return Sum of atomic numbers in nuclear expression.
      * @throws NuclearException Some terms are not nuclear.
      */
-    public Integer getAtomicCount() throws NuclearException {
+    public Fraction getAtomicCount() throws NuclearException {
         return expr.getAtomicCount();
     }
 
@@ -136,7 +136,7 @@ public final class NuclearExpressionStatement extends Statement implements Count
      * @return Sum of mass numbers in nuclear expression.
      * @throws NuclearException Some terms are not nuclear.
      */
-    public Integer getMassCount() throws NuclearException {
+    public Fraction getMassCount() throws NuclearException {
         return expr.getMassCount();
     }
 

@@ -36,11 +36,6 @@ public abstract class SpecialNuclear extends Nuclear {
     private Integer atom;
 
     /**
-     * Charge.
-     */
-    private Integer charge;
-
-    /**
      * Actual atomic number (user input).
      */
     private Integer actualAtom;
@@ -66,6 +61,11 @@ public abstract class SpecialNuclear extends Nuclear {
     private String abbr;
 
     /**
+     * Fraction form of charge.
+     */
+    private Fraction chargeFrac;
+
+    /**
      * Constructor method of SpecialNuclear.
      * @param mass Actual mass number
      * @param atom Actual atomic number
@@ -82,10 +82,10 @@ public abstract class SpecialNuclear extends Nuclear {
         this.atom = atom;
         this.actualMass = actualMass;
         this.actualAtom = actualAtom;
-        this.charge = charge;
         this.name = name;
         this.syntax = syntax;
         this.abbr = abbr;
+        this.chargeFrac = new Fraction(charge, 1);
     }
 
     @Override
@@ -99,12 +99,12 @@ public abstract class SpecialNuclear extends Nuclear {
     }
 
     @Override
-    public Integer getCharge() {
-        return charge;
+    public Fraction getCharge() {
+        return chargeFrac;
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return new HashMap<>();
     }
 

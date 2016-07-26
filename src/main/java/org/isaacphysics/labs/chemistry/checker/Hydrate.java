@@ -45,26 +45,26 @@ public final class Hydrate extends Formula {
     }
 
     @Override
-    public Integer getCharge() {
-        return 0;
+    public Fraction getCharge() {
+        return new Fraction(0, 1);
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> temp = compound.getAtomCount();
+        HashMap<String, Fraction> temp = compound.getAtomCount();
 
         // Put water atoms...
         if (temp.containsKey("H")) {
-            temp.put("H", temp.get("H") + 2 * waterCount);
+            temp.put("H", temp.get("H").plus(2 * waterCount));
         } else {
-            temp.put("H", 2 * waterCount);
+            temp.put("H", new Fraction(2 * waterCount, 1));
         }
 
         if (temp.containsKey("O")) {
-            temp.put("O", temp.get("O") + waterCount);
+            temp.put("O", temp.get("O").plus(waterCount));
         } else {
-            temp.put("O", waterCount);
+            temp.put("O", new Fraction(waterCount, 1));
         }
 
         return temp;

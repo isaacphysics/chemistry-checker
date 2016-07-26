@@ -43,23 +43,23 @@ public final class ErrorTerm extends AbstractTerm {
     }
 
     @Override
-    public Integer getMassNumber() throws NuclearException {
+    public Fraction getMassNumber() throws NuclearException {
         throw new NuclearException("Mass number not defined for ErrorTerm.");
     }
 
     @Override
-    public Integer getAtomicNumber() throws NuclearException {
+    public Fraction getAtomicNumber() throws NuclearException {
         throw new NuclearException("Atomic number not defined for ErrorTerm.");
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return new HashMap<>();
     }
 
     @Override
-    public Integer getCharge() {
-        return 0;
+    public Fraction getCharge() {
+        return new Fraction(0, 1);
     }
 
     @Override

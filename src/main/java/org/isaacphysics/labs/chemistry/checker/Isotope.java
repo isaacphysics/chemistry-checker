@@ -88,12 +88,12 @@ public final class Isotope extends Nuclear {
     }
 
     @Override
-    public Integer getCharge() {
+    public Fraction getCharge() {
         return formula.getCharge();
     }
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
         return formula.getAtomCount();
     }
 

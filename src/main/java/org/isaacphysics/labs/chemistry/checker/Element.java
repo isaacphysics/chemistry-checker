@@ -84,12 +84,12 @@ public final class Element extends Molecule {
     }*/
 
     @Override
-    public HashMap<String, Integer> getAtomCount() {
+    public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, Fraction> h = new HashMap<>();
 
         if (element != null) {
-            h.put(element, number);
+            h.put(element, new Fraction(number, 1));
         }
 
         return h;

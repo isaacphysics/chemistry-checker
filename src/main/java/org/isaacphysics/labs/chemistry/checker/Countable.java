@@ -27,14 +27,14 @@ interface Countable {
      * Getter function. Returns total charge of a countable term.
      * @return Total charge of a term
      */
-    Integer getCharge();
+    Fraction getCharge();
 
     /**
      * Gives a list of all atoms involved in a countable term, as well as their corresponding numbers.
      * Subparticles like electrons and gamma rays are not involved.
      * @return A list of (atom, number) pairs
      */
-    HashMap<String, Integer> getAtomCount();
+    HashMap<String, Fraction> getAtomCount();
 
     @Override
     boolean equals(Object o);
