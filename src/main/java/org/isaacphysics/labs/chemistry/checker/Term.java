@@ -18,155 +18,228 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.HashMap;
 
-public class Term extends AbstractTerm {
+/**
+ * An instance of a term that contains no syntax error.
+ */
+public final class Term extends AbstractTerm {
+    /**
+     *  States that can be used in a chemical term.
+     *  If state is not provided, physical state is set to null.
+     */
+    enum PhysicalState {
 
-    // Solid, Liquid, Gas, Aqueous in standard chemical notation
-    public enum PhysicalState {
+        /**
+         * Solid state.
+         */
         s,
+
+        /**
+         * Liquid state.
+         */
         l,
+
+        /**
+         * Gas state.
+         */
         g,
+
+        /**
+         * Metal state.
+         */
+        m,
+
+        /**
+         * Aqueous state.
+         */
         aq
     }
 
-    private Molecule molecule;
-    private Integer number;
-    private PhysicalState state;
-    private static int dotIdTracker = 0;
-    private int dotId;
+    /**
+     * Chemical formula associated to this term.
+     */
+    private Formula formula;
 
-    public Term(int n, Molecule m, String s) {
-        this.number = n;
-        this.molecule = m;
+    /**
+     * Coefficient of this term.
+     */
+    private Coefficient coefficient;
+
+    /**
+     * Physical state of this term.
+     */
+    private PhysicalState state;
+
+    /**
+     * Constructor function of Term.
+     * @param n Coefficient of term
+     * @param m Chemical formula involved in the term
+     * @param s State of the formula
+     */
+    public Term(final Coefficient n, final Formula m, final String s) {
+        super();
+
+        this.coefficient = n;
+        this.formula = m;
+
         if (null == s) {
             this.state = null;
-        } else if (s.equals("s")) {
-            this.state = PhysicalState.s;
-        } else if (s.equals("l")) {
-            this.state = PhysicalState.l;
-        } else if (s.equals("g")) {
-            this.state = PhysicalState.g;
-        } else if (s.equals("aq")) {
-            this.state = PhysicalState.aq;
+        } else {
+            this.state = PhysicalState.valueOf(s);
         }
-        dotId = dotIdTracker;
-        dotIdTracker += 1;
-    }
-
-    public Term(int n, Molecule m) {
-        this(n, m, null);
-    }
-
-    public Term(Molecule m, String state) {
-        this(1, m, state);
-    }
-
-    public Term(Molecule m) {
-        this(1, m);
     }
 
     @Override
     public String toString() {
+
         String t = "";
-        if (number > 1) {
-            t += number.toString();
+
+        if (!(coefficient instanceof IntCoeff && ((IntCoeff) coefficient).getCoefficient() == 1)) {
+            t += coefficient.toString();
         }
-        t += molecule.toString();
+
+        t += formula.toString();
+
         if (state != null) {
             t += "(" + state.toString() + ")";
         }
+
         return t;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
+
+        //System.out.printf("Checking if %s and %s are equal...\n", toString(), o.toString());
+
         if (o instanceof ErrorTerm) {
+            //System.out.println("One is ErrorTerm, no.");
             return false;
+
         } else if (o instanceof Term) {
             Term other = (Term) o;
-            return (this.molecule.equals(other.molecule)
-                    && this.number.equals(other.number)
-                    && (this.state == other.state));
+            /*System.out.printf("Formula: %b, Coefficient: %b, State: %b\n",
+                    this.formula.equals(other.formula),
+                    this.coefficient.equals(other.coefficient),
+                    this.state == other.state);*/
+            return this.formula.equals(other.formula)
+                    && this.coefficient.equals(other.coefficient)
+                    && (this.state == other.state);
         }
+        //System.out.println("One is not even a term, no.");
         return false;
     }
 
     @Override
-    public int hashCode () {
-        if (null != molecule) {
-            return this.molecule.hashCode();
-        } else {
-            return super.hashCode();
-        }
+    public Fraction getMassNumber() throws NuclearException {
+        return coefficient.toFraction().times(formula.getMassNumber());
     }
 
-    public HashMap<String, Integer> getAtomCount() {
-        HashMap<String, Integer> h = new HashMap<String, Integer>();
-        for (String element: molecule.getAtomCount().keySet()) {
-            h.put(element, molecule.getAtomCount().get(element) * number);
+    @Override
+    public Fraction getAtomicNumber() throws NuclearException {
+        return coefficient.toFraction().times(formula.getAtomicNumber());
+    }
+
+    @Override
+    public HashMap<String, Fraction> getAtomCount() {
+
+        HashMap<String, Fraction> h = new HashMap<>();
+
+        for (String element: formula.getAtomCount().keySet()) {
+            h.put(element, formula.getAtomCount().get(element).times(coefficient.toFraction()));
         }
+
         return h;
     }
 
-    public Integer getCharge() {
-        return molecule.getCharge() * number;
+    @Override
+    public Fraction getCharge() {
+        return formula.getCharge().times(coefficient.toFraction());
     }
 
-    public Molecule getMolecule() {
-        return this.molecule;
+    /**
+     * Getter function. Returns chemical formula related to this term.
+     * @return Formula of this term
+     */
+    public Formula getFormula() {
+        return this.formula;
     }
 
-    public Integer getNumber() {
-        return this.number;
+    /**
+     * Getter function. Returns coefficient.
+     * @return Coefficient of this term
+     */
+    public Coefficient getNumber() {
+        return this.coefficient;
     }
 
+    /**
+     * Getter function. Returns physical state of this term.
+     * @return State of this term
+     */
     public PhysicalState getState() {
         return this.state;
     }
 
-    public boolean contains(Molecule m) {
-        return this.molecule.equals(m);
-    }
-
+    @Override
     public String getDotId() {
-        return "term_" + dotId;
+        return "term_" + getdotId();
     }
 
+    @Override
     public String getDotCode() {
+
         StringBuilder result = new StringBuilder();
         result.append("\t");
         result.append(getDotId());
         result.append(" [label=\"{&zwj;&zwj;&zwj;&zwj;Term&zwnj;|\\n");
         result.append(getDotString());
-        result.append("\\n\\n|&zwj;&zwj;&zwj;number&zwnj;: ");
-        result.append(number);
+        result.append("\\n\\n|&zwj;&zwj;&zwj;coefficient&zwnj;: ");
+        result.append(coefficient.getDotString());
         result.append("|&zwj;&zwj;&zwj;state&zwnj;: ");
+
         if (state != null) {
             result.append(state.toString());
         } else {
             result.append("none");
         }
-        result.append("|&zwj;&zwj;&zwj;molecule&zwnj;}\",color=\"#49902a\"];\n");
+
+        result.append("|&zwj;&zwj;&zwj;formula&zwnj;}\",color=\"#49902a\"];\n");
 
         result.append("\t");
         result.append(getDotId());
         result.append(":s -> ");
-        result.append(molecule.getDotId());
+        result.append(formula.getDotId());
         result.append(":n;\n");
 
-        result.append(molecule.getDotCode());
+        result.append(formula.getDotCode());
         result.append("\n");
         return result.toString();
     }
 
+    @Override
     public String getDotString() {
         String t = "";
-        if (number > 1) {
-            t += number.toString();
+
+        if (!(coefficient instanceof IntCoeff && ((IntCoeff) coefficient).getCoefficient() == 1)) {
+            t += coefficient.getDotString();
         }
-        t += molecule.getDotString();
+
+        t += formula.getDotString();
+
         if (state != null) {
             t += "(" + state.toString() + ")";
         }
+        
         return t;
+    }
+
+    @Override
+    public boolean isValidAtomicNumber() {
+        return formula.isValidAtomicNumber();
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
     }
 }

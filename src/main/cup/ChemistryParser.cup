@@ -18,52 +18,261 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-
-terminal END, PLUS, TO, LPAREN, RPAREN;
-terminal String STATE, CHARGE;
-terminal Integer NUMBER;
+terminal END, PLUS, LPAREN, RPAREN, LSQUARE, RSQUARE;
+terminal SingleArrow TO;
+terminal DoubleArrow DTO;
+terminal String STATE, ERROR;
+terminal Integer NUMBER, CHARGE, SUP, SUB, WATER;
 terminal String ELEMENT;
+terminal ALPHA, BETA, GAMMA, NEUTRINO, ELECTRON, POSITRON, NEUTRON, PROTON, ANTI_NEUTRINO;
+terminal FracCoeff FRACTION;
 
 non terminal ArrayList<Statement> result;
 non terminal ArrayList<Statement> statement_list;
 non terminal Statement statement;
-non terminal Expression expr;
-non terminal Term term;
+non terminal Expression expr, n_expr;
+non terminal Term term, n_term;
+non terminal Formula r_term;
+non terminal IonChain i_chain;
+non terminal Formula isotope;
 non terminal Molecule molecule;
-non terminal Group group;
+non terminal Element element;
+non terminal Compound compound, some_eb, b;
+non terminal Nuclear nuclear;
+non terminal Integer opt_number;
+non terminal String opt_state;
+non terminal Coefficient opt_coeff;
 
-precedence left PLUS;
-precedence left TO;
+start with result;
 
+/**
+ * Non-terminal ArrayList<Statement> result:
+ * The starting non-terminal. Reads a list of statement, separated by END token.
+ * Result could end with an END token.
+ */
+result          ::=   statement_list:l                      {: RESULT = l; :}
+                    | statement_list:l END                  {: RESULT = l; :}
+                    ;
 
-result      ::= statement_list:l                        {: RESULT=new ArrayList<Statement>(l); :}
-                | expr:e                                {: RESULT=new ArrayList<Statement>(); RESULT.add(new ExpressionStatement(e)); :}
-                | expr:l TO expr:r                      {: RESULT=new ArrayList<Statement>(); RESULT.add(new EquationStatement(l, r)); :}
-                ;
-statement_list  ::= statement_list:l statement:s        {: RESULT=new ArrayList<Statement>(l); RESULT.add(s); :}
-                | statement: s                          {: RESULT=new ArrayList<Statement>(); RESULT.add(s); :}
-                ;
-statement   ::= expr:e END                              {: RESULT=new ExpressionStatement(e); :}
-                | expr:l TO expr:r END                  {: RESULT=new EquationStatement(l, r); :}
-                ;
-expr        ::=  expr:l PLUS term:r                     {: RESULT=new Expression(l, r); :}
-                | term:t                                {: RESULT=new Expression(t); :}
-                | expr:e PLUS error                     {: RESULT=new Expression(e, new ErrorTerm()); :}
-                | error                                 {: RESULT=new Expression(new ErrorTerm()); :}
-                ;
-term        ::=  NUMBER:n molecule:m STATE:s            {: RESULT=new Term(n, m, s); :}
-                | NUMBER:n molecule:m                   {: RESULT=new Term(n, m); :}
-                | molecule:m STATE:s                    {: RESULT=new Term(m, s); :}
-                | molecule:m                            {: RESULT=new Term(m); :}
-                ;
-molecule    ::= group:g                                 {: RESULT=new Molecule(g); :}
-                | molecule:m group:g                    {: RESULT=new Molecule(m, g); :}
-                ;
-group       ::= ELEMENT:e                               {: RESULT=new Group(e, 1); :}
-                | ELEMENT:e NUMBER:n                    {: RESULT=new Group(e, n); :}
-                | ELEMENT:e CHARGE:c NUMBER:n           {: RESULT=new Group(e, n, c, true); :}
-                | ELEMENT:e NUMBER:n CHARGE:c           {: RESULT=new Group(e, n, c, false); :}
-                | ELEMENT:e CHARGE:c                    {: RESULT=new Group(e, 1, c, false); :}
-                | LPAREN molecule:m RPAREN NUMBER:n     {: RESULT=new Group(m, n); :}
-                ;
+/**
+ * Non-terminal ArrayList<Statement> statement_list:
+ * Parses a list of statements separated by END tokens.
+ */
+statement_list  ::=   statement_list:l END statement:s      {: RESULT = l; RESULT.add(s); :}
+                    | statement:s                           {: RESULT = new ArrayList<Statement>(); RESULT.add(s); :}
+                    ;
 
+/**
+ * Non-terminal Statement statement:
+ * Parses a statement. A statement could be in four forms:
+ * 1. expr:             An expression that consists of only chemical terms.
+ * 2. n_expr:           An expression that consists of only isotopes and other nuclear terms.
+ * 3. expr TO expr:     A chemical equation.
+ * 4. n_expr TO n_expr: A nuclear equation.
+ */
+statement       ::=   expr:e                                {: RESULT = new ExpressionStatement(e); :}
+                    | n_expr:e                              {: RESULT = new NuclearExpressionStatement(e); :}
+                    | expr:l TO:a expr:r                    {: RESULT = new EquationStatement(l, a, r); :}
+                    | expr:l DTO:a expr:r                   {: RESULT = new EquationStatement(l, a, r); :}
+                    | n_expr:l TO:a n_expr:r                {: RESULT = new NuclearEquationStatement(l, r); :}
+                    ;
+
+/**
+ * Non-terminal Expression expr (expression):
+ * Parses a chemical expression.
+ *
+ * A chemical expression consists of list of chemical terms, separated by PLUS.
+ *
+ */
+expr            ::=   expr:e PLUS term:t                    {: RESULT = e; RESULT.add(t); :}
+                    | expr:e error                          {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+                    | error                                 {: RESULT = new Expression(new ErrorTerm()); :}
+                    | term:t                                {: RESULT = new Expression(t); :}
+                    ;
+
+/**
+ * Non-terminal Term term:
+ * Parses a term. A term could be:
+ * 1. An ion, i.e. charged molecule.
+ * 2. An uncharged molecule.
+ * 3. A chain of ions (Say Na+Cl-...)
+ * 4. A hydrate.
+ * 5. Electrons.
+ *
+ * The parsing considers all possibilities mentioned above, and reads the trailing PLUS as well.
+ * The code may look messy, but I cannot further simplify terms.
+ * Further simplifications introduce shift/reduce conflicts.
+ */
+term            ::=   opt_coeff:n r_term:t opt_state:s      {: RESULT = new Term(n, t, s); :}
+                    | opt_coeff:n compound:c WATER:w opt_state:s
+                                                            {: RESULT = new Term(n, new Hydrate(c, w), s); :}
+                    | opt_coeff:n ELECTRON                  {: RESULT = new Term(n, new ChemicalElectron(), null); :}
+                    ;
+
+/**
+ * Non-terminal Term r_term (regular term):
+ * Parses a regular term. That means:
+ * 1. Uncharged atom/compound.
+ * 2. Charged atom/compound.
+ * 3. Charged chain of ions.
+ */
+r_term          ::=   molecule:m                            {: RESULT = m; :}
+                    | molecule:m CHARGE:c                   {: RESULT = new Ion(m, c); :}
+                    | molecule:m CHARGE:c i_chain:i         {: i.add(new Ion(m, c)); i.reverse(); RESULT = i; :}
+                    ;
+
+/**
+ * Non-terminal i_chain (ion chain):
+ * Parses a charged chain of ions.
+ */
+i_chain         ::=   molecule:m CHARGE:c i_chain:i         {: RESULT = i; RESULT.add(new Ion(m, c)); :}
+                    | molecule:m                            {: RESULT = new IonChain(m); :}
+                    | molecule:m CHARGE:c                   {: RESULT = new IonChain(new Ion(m, c)); :}
+                    ;
+
+/**
+ * Non-terminal Expression n_expr (nuclear expression):
+ * Parses a list of nuclear terms (n_term), separated by PLUS.
+ *
+ */
+n_expr          ::=   n_expr:e PLUS n_term:t                {: RESULT = e; RESULT.add(t); :}
+                    | n_expr:e error                        {: RESULT = e; RESULT.add(new ErrorTerm()); :}
+                    | n_term:t                              {: RESULT = new Expression(t); :}
+                    ;
+
+/**
+ * Non-terminal Term n_term (nuclear term):
+ * Parses a single nuclear term with trailing PLUS.
+ * A nuclear term is either an isotope, or a special term like /alpha_particle.
+ */
+n_term          ::=   SUP:sup SUB:sub isotope:i             {: RESULT = new Term(new IntCoeff(1), new Isotope(sup, sub, i), null); :}
+                    | SUB:sub SUP:sup isotope:i             {: RESULT = new Term(new IntCoeff(1), new Isotope(sup, sub, i), null); :}
+                    | nuclear:e                             {: RESULT = new Term(new IntCoeff(1), e, null); :}
+                    | NUMBER:n nuclear:e                    {: RESULT = new Term(new IntCoeff(n), e, null); :}
+                    ;
+
+/**
+ * Non-terminal Formula isotope:
+ * Parses an isotope. An isotope consists of two parts:
+ * 1. Element ELEMENT:   The relevant element.
+ * 2. Optional charge:   Charge of the isotope.
+ */
+isotope         ::=   ELEMENT:e                             {: RESULT = new Element(e, 1); :}
+                    | ELEMENT:e CHARGE:c                    {: RESULT = new Ion(new Element(e, 1), c); :}
+                    ;
+
+/**
+ * Non-terminal Nuclear nuclear:
+ * Parses special nuclear particles like ALPHA, BETA. It is rather straightforward.
+ */
+nuclear         ::=   SUP:sup SUB:sub ALPHA                 {: RESULT = new AlphaParticle(sup, sub); :}
+                    | SUB:sub SUP:sup ALPHA                 {: RESULT = new AlphaParticle(sup, sub); :}
+                    | SUP:sup SUB:sub BETA                  {: RESULT = new BetaParticle(sup, sub); :}
+                    | SUB:sub SUP:sup BETA                  {: RESULT = new BetaParticle(sup, sub); :}
+                    | SUP:sup SUB:sub GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
+                    | SUB:sub SUP:sup GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
+                    | SUP:sup SUB:sub NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
+                    | SUB:sub SUP:sup NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}
+                    | SUP:sup SUB:sub ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
+                    | SUB:sub SUP:sup ANTI_NEUTRINO         {: RESULT = new AntiNeutrino(sup, sub); :}
+                    | SUP:sup SUB:sub ELECTRON              {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUB:sub SUP:sup ELECTRON              {: RESULT = new PhysicalElectron(sup, sub); :}
+                    | SUP:sup SUB:sub POSITRON              {: RESULT = new Positron(sup, sub); :}
+                    | SUB:sub SUP:sup POSITRON              {: RESULT = new Positron(sup, sub); :}
+                    | SUP:sup SUB:sub NEUTRON               {: RESULT = new Neutron(sup, sub); :}
+                    | SUB:sub SUP:sup NEUTRON               {: RESULT = new Neutron(sup, sub); :}
+                    | SUP:sup SUB:sub PROTON                {: RESULT = new Proton(sup, sub); :}
+                    | SUB:sub SUP:sup PROTON                {: RESULT = new Proton(sup, sub); :}
+                    ;
+
+/**
+ * Non-terminal Molecule molecule:
+ * Parse a molecule. A molecule is either an element or a compound, and both have very different ways of parsing.
+ * See annotations for non-terminals element and compound for more details.
+ */
+molecule        ::=   element:e                             {: RESULT = e; :}
+                    | compound:c                            {: RESULT = c; :}
+                    ;
+
+/**
+ * Non-terminal Element element:
+ * Parses an element. An element could be in form:
+ * 1. ELEMENT        (e.g. Na)
+ * 2. ELEMENT NUMBER (e.g. Na3)
+ * 3. ELEMENT SUB    (e.g. Na_{3})
+ */
+element         ::=   ELEMENT:e opt_number:n                {: RESULT = new Element(e, n); :}
+                    | ELEMENT:e SUB:n                       {: RESULT = new Element(e, n); :}
+                    ;
+
+/**
+ * Non-terminal Compound compound:
+ * Parses a compound. A compound is either:
+ * 1. Something that consists of two or more elements (e.g. NaCl). Let element term be E.
+ * 2. A thing with brackets, where bracketed term is compound. (e.g. Na(HCO)3). Let bracketed term be B.
+ *
+ * So, regular expression of compound would be B(E|B)* | E(E|B)+. The following grammar simulates such expression.
+ */
+compound        ::=   b:b some_eb:eb                        {:
+                                                               if (eb.equals(new Compound(null))) {
+                                                                  RESULT = b;
+                                                               } else {
+                                                                  RESULT = new Compound(b); RESULT.addCompound(eb);
+                                                               }
+                                                             :}
+
+                    | element:e1 element:e2 some_eb:eb      {: RESULT = new Compound(e1); RESULT.add(e2);
+                                                               RESULT.addCompound(eb); :}
+                    | element:e b:b some_eb:eb              {: RESULT = new Compound(e); RESULT.add(b);
+                                                               RESULT.addCompound(eb); :}
+                    ;
+
+/**
+ * Non-terminal Compound some_eb:
+ * Parses (E|B)* part of a compound. See annotations of non-terminal compound for more details.
+ */
+some_eb         ::=                                         {: RESULT = new Compound(null); :}
+                    | some_eb:e element:elem                {: RESULT = e; RESULT.add(elem); :}
+                    | some_eb:e b:b                         {: RESULT = e; RESULT.add(b); :}
+                    ;
+
+/**
+ * Non-terminal Compound b:
+ * Parses bracketed terms (B) of a compound. See annotations of non-terminal compound for more details.
+ */
+b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n);
+                                                               RESULT.setBracketType(Compound.BracketType.ROUND); :}
+                    | LPAREN compound:c RPAREN              {: RESULT = c; RESULT.setNumber(1);
+                                                               RESULT.setBracketType(Compound.BracketType.ROUND); :}
+                    | LSQUARE compound:c RSQUARE NUMBER:n   {: RESULT = c; RESULT.setNumber(n);
+                                                               RESULT.setBracketType(Compound.BracketType.SQUARE); :}
+                    | LSQUARE compound:c RSQUARE            {: RESULT = c; RESULT.setNumber(1);
+                                                               RESULT.setBracketType(Compound.BracketType.SQUARE); :}
+                    ;
+
+/**
+ * Non-terminal Integer opt_number (optional number):
+ * Coefficients of chemical formulae.
+ * Returns 1 if optional number not specified (e.g. Coefficient of Na = 1.)
+ */
+opt_number      ::=   NUMBER:n                              {: RESULT = n; :}
+                    |                                       {: RESULT = 1; :}
+                    ;
+/**
+ * Non-terminal String opt_state (optional state):
+ * Parses the 'state' part of a chemical formula. (e.g. (aq), (s), ...)
+ * Returns null if state is not specified.
+ */
+opt_state       ::=   STATE:s                               {: RESULT = s; :}
+                    |                                       {: RESULT = null; :}
+                    ;
+
+/**
+ * Non-terminal Coefficient opt_coeff (optional coefficient):
+ * Parses the coefficient part of a term.
+ * Could be fraction, integer, or nothing at all.
+ */
+opt_coeff       ::=   NUMBER:n                              {: RESULT = new IntCoeff(n); :}
+                    |                                       {: RESULT = new IntCoeff(1); :}
+                    | FRACTION:f                            {: RESULT = f; :}
+                    ;

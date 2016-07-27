@@ -16,13 +16,73 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-public abstract class AbstractTerm implements Countable {
+/**
+ * The abstract base class for all possible terms in an equation/expression.
+ *
+ * Created by Ryan on 17/06/2016.
+ */
+abstract class AbstractTerm implements Countable {
 
-    abstract boolean contains(Molecule m);
+    /**
+     * Helper static variable for issuing unique IDs.
+     */
+    private static int dotIdTracker = 0;
 
-    abstract String getDotId();
+    /**
+     * Stores unique ID for every Term.
+     */
+    private int dotId;
 
-    abstract String getDotCode();
+    /**
+     * Constructor function.
+     * Initializes dotId, so that every term has an unique ID number.
+     */
+    AbstractTerm() {
+        dotId = dotIdTracker;
+        dotIdTracker += 1;
+    }
 
-    abstract String getDotString();
+    /**
+     * Gives the private unique ID for an abstract term.
+     *
+     * @return Unique ID for an abstract term.
+     */
+    int getdotId() {
+        return dotId;
+    }
+
+    @Override
+    public abstract boolean equals(Object o);
+
+    @Override
+    public int hashCode() {
+        //System.out.printf("HashCode of %s: %d\n", toString(), toString().hashCode());
+        return toString().hashCode();
+    }
+
+    /**
+     * Defined for nuclear terms only.
+     *
+     * @return Mass number of term.
+     * @throws NuclearException The particle is not nuclear.
+     */
+    public abstract Fraction getMassNumber() throws NuclearException;
+
+    /**
+     * Defined for nuclear terms only.
+     *
+     * @return Atomic number of term.
+     * @throws NuclearException The particle is not nuclear.
+     */
+    public abstract Fraction getAtomicNumber() throws NuclearException;
+
+    /**
+     * Method only applicable to nuclear formula.
+     * Checks if atomic number of isotope is valid.
+     *
+     * @return The validity of atomic number in nuclear formula.
+     */
+    public boolean isValidAtomicNumber() {
+        return false;
+    }
 }

@@ -16,13 +16,24 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ExpressionStatement extends Statement implements Countable {
+/**
+ *
+ */
+public final class ExpressionStatement extends Statement implements Countable {
 
+    /**
+     * Expression involved in statement.
+     */
     private Expression expr;
 
-    public ExpressionStatement(Expression e) {
+    /**
+     * Constructor method of ExpressionStatement.
+     * @param e Expression involved in the statement.
+     */
+    public ExpressionStatement(final Expression e) {
         expr = e;
     }
 
@@ -32,46 +43,178 @@ public class ExpressionStatement extends Statement implements Countable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public String getDotId() {
+        return null;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+
         if (o instanceof ExpressionStatement) {
             ExpressionStatement other = (ExpressionStatement) o;
             return this.expr.equals(other.expr);
         }
+
         return false;
+
     }
 
+    @Override
     public boolean containsError() {
         return expr.containsError();
     }
 
-    public HashMap<String, Integer> getAtomCount() {
+    @Override
+    public HashMap<String, Fraction> getAtomCount() {
         return expr.getAtomCount();
     }
 
-    public Integer getCharge() {
+    @Override
+    public Fraction getCharge() {
         return expr.getCharge();
     }
 
-    public boolean sameMolecules(Statement statement) {
-        if (statement instanceof ExpressionStatement) {
-            ExpressionStatement exprStatement = (ExpressionStatement) statement;
-            return expr.containsAll(exprStatement.expr) && exprStatement.expr.containsAll(expr);
-        } else {
-            return false;
-        }
-    }
-
-    public Expression getExpression() {
+    /**
+     * Getter method. Gets the expression involved in this statement.
+     * @return The expression involved in this statement.
+     */
+    Expression getExpression() {
         return this.expr;
     }
 
+    @Override
     public String getDotCode() {
-        StringBuilder result = new StringBuilder();
-        result.append("digraph chemical_syntax_tree {\n");
-        result.append("\tnode [shape=record,penwidth=2,splines=ortho];\n\n");
-        result.append(expr.getDotCode());
-        result.append("}\n");
-        return result.toString();
+
+        return "digraph chemical_syntax_tree {\n"
+                + "\tnode [shape=record,penwidth=2,splines=ortho];\n\n"
+                + expr.getDotCode()
+                + "}\n";
+
     }
 
+    @Override
+    public boolean weaklyEquivalent(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
+            return false;
+        }
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.weaklyEquivalent(other.expr);
+    }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same state symbols in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 20NaOH (aq) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     * @return True if both statemetns are weakly equivalent, and contains same state symbols in relevant terms.
+     */
+    boolean sameStateSymbols(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
+            return false;
+        }
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.sameStateSymbols(other.expr);
+    }
+
+    /**
+     * Checks if both statements are weakly equivalent, AND contains same coefficients in relevant terms.
+     *
+     * E.g. 2NaOH (aq), 2NaOH (g) should return true.
+     *
+     * Should assert that both expressions are weakly equivalent before executing this code,
+     * as it is quite time consuming.
+     *
+     * @param s Statement to be compared against.
+     * @return True if both statement are weakly equivalent and contains same coefficients in relevant terms.
+     */
+    boolean sameCoefficients(final Statement s) {
+
+        if (!(s instanceof ExpressionStatement)) {
+            return false;
+        }
+
+        ExpressionStatement other = (ExpressionStatement) s;
+
+        return expr.sameCoefficients(other.expr);
+    }
+
+    @Override
+    public String getDotString() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<Term> getWrongTerms(final Statement e) {
+
+        if (e instanceof ExpressionStatement) {
+            return expr.getWrongTerms(((ExpressionStatement) e).expr);
+        } else {
+            return new ArrayList<>();
+        }
+
+    }
+
+    @Override
+    public boolean check(final Statement input) {
+
+        if (!(input instanceof ExpressionStatement)) {
+            // Not even ExpressionStatement
+            System.out.println("Not an ExpressionStatement!");
+            return false;
+        }
+
+        if (input.containsError()) {
+            // Error term exists in argument
+            System.out.printf("Input: %s\nPlease correct the error.\n", input.toString());
+            return false;
+        }
+
+        if (equals(input)) {
+            return true;
+        }
+
+        ExpressionStatement exprInput = (ExpressionStatement) input;
+
+        if (!weaklyEquivalent(input)) {
+            // not even weakly equivalent: some molecules are unrelated to solution
+            System.out.println("Unrelated terms exist in equation, and/or missing some terms.");
+            System.out.println("Wrong terms: " + getWrongTerms(exprInput));
+
+            return false;
+        }
+
+        if (!sameCoefficients(input)) {
+            // wrong coefficients
+            System.out.println("Some terms have incorrect coefficients.");
+            System.out.println("Wrong terms: " + getWrongTerms(exprInput));
+
+            return false;
+        }
+
+        if (!sameStateSymbols(input)) {
+            // wrong state symbols
+            System.out.println("Some terms have incorrect state symbols.");
+        } else {
+            // correct coefficients, state symbols, but misplaced.
+            System.out.println("Coefficient/state symbols are misplaced.");
+        }
+
+        System.out.println("Wrong terms: " + getWrongTerms(exprInput));
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }

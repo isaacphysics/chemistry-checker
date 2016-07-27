@@ -1,36 +1,53 @@
+/* Long chemical compound: Used to check correctness of getAtomCount method. */
+MgNaAl5((Si2O4)2O2)3(OH)6;
+Co3(Fe(CN)6)2;
+3H2O2 + 5C2O4H2;
 
+/* Check if Na++Cl- could be successfully parsed as Na^{+} + Cl^{-}. */
+Na++Cl-;
+
+/* Simple test cases */
 NH3;
-
 HNO3;
-
 Ca(NO3)2;
-
-C2O4H2 + H2O2 -> 2CO2 + 2H2O;
-
-Co^{2+} -> Co^{3+} + e^{-};
-
-8H^{+}(aq) + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);
-
-3CH3(CH2)2OH(l) + Cr2O7^{2-}(aq) + 8H^{+}(aq) -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(g);
-
-2BaFeO4(s) + 16HCl(aq) -> 2BaCl2(aq) + 2FeCl3(aq) + 8H2O(l) + 3Cl2(g);
-
-C_{2}O_{4}H^{+};
-
 Mg(CH3COO)2;
 
+/* Check if equation has balanced charge, in presence of ions. */
+CH3CO2H + H2O <=> CH3CO2^{-} + H3O^{+};
+Co^{2+} -> Co^{3+} + \electron;
+8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> 2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);
+3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+}(aq) -> 3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(g);
+
+/* Complicated equation - check if equation has balanced atom count. */
+C2O4H2 + H2O2 -> 2CO2 + 2H2O;
+2BaFeO4(s) + 16HCl(aq) -> 2BaCl2(aq) + 2FeCl3(aq) + 8H2O(l) + 3Cl2(g);
 Bi2(MoO4)3 + Fe3H2Na2O45Si + MgNaAl5(Si4O10)3(OH)6 -> MnPb8(Si2O7)3;
 
+/* Test alternative notation for chemical compound C2O4H^{+}. */
+C_{2}O_{4}H^{+};
+
+/* Test ion chains. */
 (CH3)2S^{+}CH2CH2COO^{-};
+NaFe3^{2+}Al6(BO3)3Si6O18O3F;
 
-Co3(Fe(CN)6)2;
-
-NaFe^{2+}3Al6(BO3)3Si6O18O3F;
-
+/* Intentionally invalid grammar. */
 2H2SO4 + Jjj2H2 -> H2) + Hibberish!;
-
 H(33 -> (He;
-
 This sentence contains a Chemical Formula, H2SO4, and 3 confusing capital letters!;
 
-3H2O2 + 5C2O4H2;
+/* Simple test for nuclear equations. */
+^{222}_{88}Ra ->  ^{4}_{2}He + ^{218}_{86}Rn;
+^{14}_{6}Na -> ^{14}_{7}N + ^{0}_{0}\gammaray + ^{0}_{-1}\electron ;
+^{14}_{7}N + 3^{0}_{-1}\electron + ^{0}_{0}\gammaray;
+
+/* Test for hydrates. */
+CoCl2. 6 H2O + 4C5H5N -> CoCl2(C5H5N)4 + 6 H2O;
+
+/* See if program can pick up the invalid atomic number 6. */
+^{14}_{6}Na -> ^{14}_{7}N^{+} + ^{0}_{-1}\electron + ^{0}_{0}\gammaray;
+
+/* See if program deals with fractions properly! */
+C6H14 + \frac{19}{2}O2 -> 6CO2 + 7H2O;
+
+/* Checks if program love square brackets! */
+[H(CO2)3]4^{2+}

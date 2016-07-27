@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 James Sharkey
+ * Copyright 2016 Ryan Lau
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,37 +16,15 @@
 
 package org.isaacphysics.labs.chemistry.checker;
 
-import java.util.HashMap;
-
 /**
- * An interface where all countable chemical/physical objects should implement.
- * Forces the classes to implement useful methods.
+ * Base class of arrows in equations.
+ * May be extended in the future to include items on top of arrows, e.g. heat, catalyst.
+ * Created by Ryan on 16/06/2016.
  */
-interface Countable {
-    /**
-     * Getter function. Returns total charge of a countable term.
-     * @return Total charge of a term
-     */
-    Fraction getCharge();
-
-    /**
-     * Gives a list of all atoms involved in a countable term, as well as their corresponding numbers.
-     * Subparticles like electrons and gamma rays are not involved.
-     * @return A list of (atom, number) pairs
-     */
-    HashMap<String, Fraction> getAtomCount();
+abstract class AbstractArrow {
 
     @Override
-    boolean equals(Object o);
-
-    @Override
-    String toString();
-
-    /**
-     * Getter function. Gives unique ID of the term.
-     * @return Unique ID of the term
-     */
-    String getDotId();
+    public abstract String toString();
 
     /**
      * Returns Graphviz code that generates syntax tree of chemical term.
@@ -62,11 +40,11 @@ interface Countable {
      *
      * @return Graphviz code that generates the abstract syntax tree
      */
-    String getDotCode();
+    abstract String getDotCode();
 
     /**
      * Returns pretty-printed chemical term/equation/expression.
      * @return Pretty printed chemical term/equation/expression
      */
-    String getDotString();
+    abstract String getDotString();
 }
