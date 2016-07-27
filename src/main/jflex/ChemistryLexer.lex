@@ -131,20 +131,28 @@ import java_cup.runtime.Symbol;
      */
     "("                             { return new Symbol(sym.LPAREN); }
     ")"                             { return new Symbol(sym.RPAREN); }
+    "["                             { return new Symbol(sym.LSQUARE); }
+    "]"                             { return new Symbol(sym.RSQUARE); }
+
+    /**
+     * Syntactic sugar for electron.
+     * Physics students seem to like this.
+     */
+    "e^{-}"                         { return new Symbol(sym.ELECTRON); }
 
     /**
      * Special nuclear particles:
      * Including alpha, beta particles, gamma rays, neutrinoes, electrons and positrons.
      */
-    \\"alphaparticle"                { return new Symbol(sym.ALPHA); }
-    \\"betaparticle"                 { return new Symbol(sym.BETA); }
-    \\"gammaray"                     { return new Symbol(sym.GAMMA); }
-    \\"neutrino"                     { return new Symbol(sym.NEUTRINO); }
-    \\"antineutrino"                 { return new Symbol(sym.ANTI_NEUTRINO); }
-    \\"electron"                     { return new Symbol(sym.ELECTRON); }
-    \\"positron"                     { return new Symbol(sym.POSITRON); }
-    \\"neutron"                      { return new Symbol(sym.NEUTRON); }
-    \\"proton"                       { return new Symbol(sym.PROTON); }
+    \\"alphaparticle"               { return new Symbol(sym.ALPHA); }
+    \\"betaparticle"                { return new Symbol(sym.BETA); }
+    \\"gammaray"                    { return new Symbol(sym.GAMMA); }
+    \\"neutrino"                    { return new Symbol(sym.NEUTRINO); }
+    \\"antineutrino"                { return new Symbol(sym.ANTI_NEUTRINO); }
+    \\"electron"                    { return new Symbol(sym.ELECTRON); }
+    \\"positron"                    { return new Symbol(sym.POSITRON); }
+    \\"neutron"                     { return new Symbol(sym.NEUTRON); }
+    \\"proton"                      { return new Symbol(sym.PROTON); }
 
     /**
      * White space: No special purpose.

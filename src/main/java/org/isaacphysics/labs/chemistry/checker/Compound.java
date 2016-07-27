@@ -25,6 +25,13 @@ import java.util.HashMap;
  * Created by Ryan on 15/06/2016.
  */
 public final class Compound extends Molecule {
+
+    /**
+     * Type of bracket surrounding the compound.
+     */
+    public enum BracketType { ROUND, SQUARE }
+
+
     /**
      * The groups of molecules involved in the term.
      */
@@ -35,6 +42,11 @@ public final class Compound extends Molecule {
      * For instance number of (HCO)3 is 3, and number of NaOH is 1.
      */
     private Integer number;
+
+    /**
+     * Bracket surrounding the compound.
+     */
+    private BracketType bracketType;
 
     /**
      * Constructor function of Compound.
@@ -49,6 +61,7 @@ public final class Compound extends Molecule {
         }
 
         number = 1;
+        bracketType = null;
     }
 
     /**
@@ -77,26 +90,36 @@ public final class Compound extends Molecule {
         number = n;
     }
 
+    /**
+     * Setter function. Changes the bracket of this instance.
+     * @param b New bracket type of this instance.
+     */
+    public void setBracketType(final BracketType b) {
+        bracketType = b;
+    }
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
 
-        if (number > 1) {
-
+        if (bracketType == BracketType.SQUARE) {
+            b.append("[");
+        } else if (bracketType == BracketType.ROUND) {
             b.append("(");
+        }
 
-            for (Molecule m : groups) {
-                b.append(m.toString());
-            }
+        for (Molecule m : groups) {
+            b.append(m.toString());
+        }
 
+        if (bracketType == BracketType.SQUARE) {
+            b.append("]");
+        } else if (bracketType == BracketType.ROUND) {
             b.append(")");
+        }
+
+        if (number > 1) {
             b.append(number.toString());
-
-        } else {
-
-            for (Molecule m : groups) {
-                b.append(m.toString());
-            }
         }
 
         return b.toString();
@@ -174,21 +197,26 @@ public final class Compound extends Molecule {
     public String getDotString() {
         StringBuilder b = new StringBuilder();
 
-        if (number > 1) {
+        if (bracketType == BracketType.SQUARE) {
+            b.append("[");
+        } else if (bracketType == BracketType.ROUND) {
             b.append("(");
+        }
 
-            for (Molecule m : groups) {
-                b.append(m.getDotString());
-            }
+        for (Molecule m : groups) {
+            b.append(m.toString());
+        }
 
-            b.append(")&zwj;");
+        if (bracketType == BracketType.SQUARE) {
+            b.append("]");
+        } else if (bracketType == BracketType.ROUND) {
+            b.append(")");
+        }
+
+        if (number > 1) {
+            b.append("&zwj;");
             b.append(number.toString());
             b.append("&zwnj;");
-
-        } else {
-            for (Molecule m : groups) {
-                b.append(m.getDotString());
-            }
         }
 
         return b.toString();

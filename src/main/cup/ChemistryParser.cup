@@ -18,7 +18,7 @@ package org.isaacphysics.labs.chemistry.checker;
 
 import java.util.ArrayList;
 
-terminal END, PLUS, LPAREN, RPAREN;
+terminal END, PLUS, LPAREN, RPAREN, LSQUARE, RSQUARE;
 terminal SingleArrow TO;
 terminal DoubleArrow DTO;
 terminal String STATE, ERROR;
@@ -213,7 +213,14 @@ element         ::=   ELEMENT:e opt_number:n                {: RESULT = new Elem
  *
  * So, regular expression of compound would be B(E|B)* | E(E|B)+. The following grammar simulates such expression.
  */
-compound        ::=   b:b some_eb:eb                        {: RESULT = new Compound(b); RESULT.addCompound(eb); :}
+compound        ::=   b:b some_eb:eb                        {:
+                                                               if (eb.equals(new Compound(null))) {
+                                                                  RESULT = b;
+                                                               } else {
+                                                                  RESULT = new Compound(b); RESULT.addCompound(eb);
+                                                               }
+                                                             :}
+
                     | element:e1 element:e2 some_eb:eb      {: RESULT = new Compound(e1); RESULT.add(e2);
                                                                RESULT.addCompound(eb); :}
                     | element:e b:b some_eb:eb              {: RESULT = new Compound(e); RESULT.add(b);
@@ -233,8 +240,14 @@ some_eb         ::=                                         {: RESULT = new Comp
  * Non-terminal Compound b:
  * Parses bracketed terms (B) of a compound. See annotations of non-terminal compound for more details.
  */
-b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n); :}
-                    | LPAREN compound:c RPAREN              {: RESULT = c; RESULT.setNumber(1); :}
+b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n);
+                                                               RESULT.setBracketType(Compound.BracketType.ROUND); :}
+                    | LPAREN compound:c RPAREN              {: RESULT = c; RESULT.setNumber(1);
+                                                               RESULT.setBracketType(Compound.BracketType.ROUND); :}
+                    | LSQUARE compound:c RSQUARE NUMBER:n   {: RESULT = c; RESULT.setNumber(n);
+                                                               RESULT.setBracketType(Compound.BracketType.SQUARE); :}
+                    | LSQUARE compound:c RSQUARE            {: RESULT = c; RESULT.setNumber(1);
+                                                               RESULT.setBracketType(Compound.BracketType.SQUARE); :}
                     ;
 
 /**
