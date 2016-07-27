@@ -1,5 +1,6 @@
 package org.isaacphysics.labs.chemistry.checker;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServlet;
@@ -33,24 +34,25 @@ public class ParserServlet extends HttpServlet {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        @SuppressWarnings("unchecked")
-        HashMap<String, String> req = mapper.readValue(requestString, HashMap.class);
-
-        // Get mhchem expressions from JSON object
-        String targetMhchemExpression = req.get("target");
-
-        // Debug print
-        System.out.println("Parse target: " + targetMhchemExpression);
-
         try {
+            @SuppressWarnings("unchecked")
+            HashMap<String, String> req = mapper.readValue(requestString, HashMap.class);
+
+
+            // Get mhchem expressions from JSON object
+            String testMhchemExpression = req.get("test");
+
+            // Debug print
+            System.out.println("Parsed: " + testMhchemExpression);
+
 
             // Return
-            response.getWriter().println(RunParser.parseFromString(targetMhchemExpression));
+            response.getWriter().println(RunParser.parseFromString(testMhchemExpression));
 
         } catch (Exception e) {
 
             // Got an exception when checking expressions.
-            response.getWriter().println("{\"error\" : true}");
+            response.getWriter().println("{\"error\" : \"Can't parse input!\"}");
 
         }
     }

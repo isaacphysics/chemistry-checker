@@ -26,4 +26,14 @@
         <url-pattern>/parse</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FormParse</servlet-name>
+        <servlet-class>org.isaacphysics.labs.chemistry.checker.FormParserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FormParse</servlet-name>
+        <url-pattern>/parse_form</url-pattern>
+    </servlet-mapping>
+
 </web-app>
