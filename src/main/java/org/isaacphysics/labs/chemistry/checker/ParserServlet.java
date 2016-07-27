@@ -1,6 +1,5 @@
 package org.isaacphysics.labs.chemistry.checker;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.http.HttpServlet;
@@ -21,6 +20,8 @@ public class ParserServlet extends HttpServlet {
     @Override
     protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
 
+        System.out.println("==================================================");
+
         BufferedReader requestStringReader = request.getReader();
         String requestString = "";
         String line;
@@ -38,23 +39,43 @@ public class ParserServlet extends HttpServlet {
             @SuppressWarnings("unchecked")
             HashMap<String, String> req = mapper.readValue(requestString, HashMap.class);
 
+            if (req.containsKey("description")) {
+                System.out.println(req.get("description"));
+                System.out.println("==================================================");
+            }
 
-            // Get mhchem expressions from JSON object
-            String testMhchemExpression = req.get("test");
+            if (req.containsKey("test")) {
+                // Get mhchem expressions from JSON object
+                String testMhchemExpression = req.get("test");
 
-            // Debug print
-            System.out.println("Parsed: " + testMhchemExpression);
+                // Debug print
+                System.out.println("Parsed: " + testMhchemExpression);
 
+                String result = RunParser.parseFromString(testMhchemExpression);
 
-            // Return
-            response.getWriter().println(RunParser.parseFromString(testMhchemExpression));
+                // Return
+                response.getWriter().println(result);
+
+                if (result.contains("ERROR")) {
+                    System.out.println("Parse success, but input contained errors.");
+                } else {
+                    System.out.println("Parse success!");
+                }
+
+            } else {
+                response.getWriter().println("{\"error\" : \"No input!\"}");
+                System.out.println("ERROR: No input!");
+            }
 
         } catch (Exception e) {
 
             // Got an exception when checking expressions.
             response.getWriter().println("{\"error\" : \"Can't parse input!\"}");
+            System.out.println("ERROR: Parser cannot parse input!");
 
         }
+
+        System.out.println("==================================================\n");
     }
 
 }

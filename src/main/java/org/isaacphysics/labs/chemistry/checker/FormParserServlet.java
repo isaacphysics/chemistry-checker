@@ -44,7 +44,7 @@ public class FormParserServlet extends HttpServlet {
             System.out.println("Parsing: " + input.get("test")[0]);
             String result = RunParser.parseFromString(input.get("test")[0]);
             response.getWriter().println(result);
-            if (result.contains("error")) {
+            if (result.contains("ERROR")) {
                 System.out.println("Parse success, but input contained errors.");
             } else {
                 System.out.println("Parse success!");
