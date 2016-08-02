@@ -44,7 +44,7 @@ import java_cup.runtime.Symbol;
     ";"                             { return new Symbol(sym.END); }
 
     /* Arrows */
-    "<=>"                          { return new Symbol(sym.DTO, DoubleArrow.getDoubleArrow()); }
+    "<=>"                           { return new Symbol(sym.DTO, DoubleArrow.getDoubleArrow()); }
     "->"                            { return new Symbol(sym.TO, SingleArrow.getSingleArrow()); }
 
     /**

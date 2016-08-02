@@ -29,7 +29,7 @@ public final class Compound extends Molecule {
     /**
      * Type of bracket surrounding the compound.
      */
-    public enum BracketType { ROUND, SQUARE }
+    enum BracketType { ROUND, SQUARE }
 
 
     /**
@@ -94,8 +94,16 @@ public final class Compound extends Molecule {
      * Setter function. Changes the bracket of this instance.
      * @param b New bracket type of this instance.
      */
-    public void setBracketType(final BracketType b) {
+    void setBracketType(final BracketType b) {
         bracketType = b;
+    }
+
+    /**
+     * Getter method. Gets the bracket of this instance.
+     * @return The bracket type of this instance.
+     */
+    BracketType getBracketType() {
+        return bracketType;
     }
 
     @Override

@@ -240,13 +240,21 @@ some_eb         ::=                                         {: RESULT = new Comp
  * Non-terminal Compound b:
  * Parses bracketed terms (B) of a compound. See annotations of non-terminal compound for more details.
  */
-b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: RESULT = c; RESULT.setNumber(n);
+b               ::=   LPAREN compound:c RPAREN NUMBER:n     {: if (c.getBracketType() == null) RESULT = c;
+                                                               else RESULT = new Compound(c);
+                                                               RESULT.setNumber(n);
                                                                RESULT.setBracketType(Compound.BracketType.ROUND); :}
-                    | LPAREN compound:c RPAREN              {: RESULT = c; RESULT.setNumber(1);
+                    | LPAREN compound:c RPAREN              {: if (c.getBracketType() == null) RESULT = c;
+                                                               else RESULT = new Compound(c);
+                                                               RESULT.setNumber(1);
                                                                RESULT.setBracketType(Compound.BracketType.ROUND); :}
-                    | LSQUARE compound:c RSQUARE NUMBER:n   {: RESULT = c; RESULT.setNumber(n);
+                    | LSQUARE compound:c RSQUARE NUMBER:n   {: if (c.getBracketType() == null) RESULT = c;
+                                                               else RESULT = new Compound(c);
+                                                               RESULT.setNumber(n);
                                                                RESULT.setBracketType(Compound.BracketType.SQUARE); :}
-                    | LSQUARE compound:c RSQUARE            {: RESULT = c; RESULT.setNumber(1);
+                    | LSQUARE compound:c RSQUARE            {: if (c.getBracketType() == null) RESULT = c;
+                                                               else RESULT = new Compound(c);
+                                                               RESULT.setNumber(1);
                                                                RESULT.setBracketType(Compound.BracketType.SQUARE); :}
                     ;
 

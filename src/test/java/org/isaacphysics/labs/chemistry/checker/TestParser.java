@@ -45,7 +45,8 @@ public class TestParser
     private String equationStatement2 = "3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> " +
                                             "3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);";
     private String syntaxError = "2H2S(O4;";
-    private String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6";
+    private String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6;";
+    private String nestedGroupMolecule2 = "((((((((((OH2)2)2)2)2)2)2)2)2)2)2";
 
     /**
      * Invokes ChemicalParser to parse the argument string.
@@ -282,14 +283,23 @@ public class TestParser
     @Test
     public void testNestedGroupMolecule() throws Exception
     {
-        ArrayList<Statement> statements = stringParser(nestedGroupMolecule);
+        ArrayList<Statement> statements = stringParser(nestedGroupMolecule + nestedGroupMolecule2);
         Statement result = statements.get(0);
+        Statement result2 = statements.get(1);
         ExpressionStatement exprStatement = (ExpressionStatement) result;
+        ExpressionStatement exprStatement2 = (ExpressionStatement) result2;
 
         // Asserts number of oxygen atoms in expression = 36.
         HashMap<String, Fraction> atomCount = exprStatement.getAtomCount();
         assertTrue("Count of Oxygen atoms in nested group incorrect! Expected 36, got " + atomCount.get("O") + "!",
                                                                                           atomCount.get("O").toString().equals("36"));
+
+        // Asserts number of oxygen atoms in expression = 4098.
+        HashMap<String, Fraction> atomCount2 = exprStatement2.getAtomCount();
+        assertTrue("Count of Oxygen atoms in nested group incorrect! Expected 1024, got " + atomCount2.get("O") + "!",
+            atomCount2.get("O").toString().equals("1024"));
+        assertTrue("Count of Hydrogen atoms in nested group incorrect! Expected 2048, got " + atomCount2.get("H") + "!",
+                atomCount2.get("H").toString().equals("2048"));
     }
 
     /**
