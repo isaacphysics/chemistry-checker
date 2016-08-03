@@ -35,6 +35,11 @@ public final class Element extends Molecule {
     private Integer number;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount;
+
+    /**
      * Constructor function of Element.
      * @param e Element
      * @param n Subscript of element
@@ -86,13 +91,15 @@ public final class Element extends Molecule {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> h = new HashMap<>();
+        if (savedAtomCount == null) {
+            savedAtomCount = new HashMap<>();
 
-        if (element != null) {
-            h.put(element, new Fraction(number, 1));
+            if (element != null) {
+                savedAtomCount.put(element, new Fraction(number, 1));
+            }
         }
 
-        return h;
+        return savedAtomCount;
     }
 
     //public Integer getCharge() {return charge;}

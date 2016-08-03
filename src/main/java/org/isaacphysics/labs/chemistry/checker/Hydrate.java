@@ -35,6 +35,11 @@ public final class Hydrate extends Formula {
     private Integer waterCount;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor function for hydrate.
      * @param compound Formula of associated salt compound.
      * @param count Number of water molecules per formula.
@@ -52,22 +57,24 @@ public final class Hydrate extends Formula {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> temp = compound.getAtomCount();
+        if (savedAtomCount == null) {
+            savedAtomCount = compound.getAtomCount();
 
-        // Put water atoms...
-        if (temp.containsKey("H")) {
-            temp.put("H", temp.get("H").plus(2 * waterCount));
-        } else {
-            temp.put("H", new Fraction(2 * waterCount, 1));
+            // Put water atoms...
+            if (savedAtomCount.containsKey("H")) {
+                savedAtomCount.put("H", savedAtomCount.get("H").plus(2 * waterCount));
+            } else {
+                savedAtomCount.put("H", new Fraction(2 * waterCount, 1));
+            }
+
+            if (savedAtomCount.containsKey("O")) {
+                savedAtomCount.put("O", savedAtomCount.get("O").plus(waterCount));
+            } else {
+                savedAtomCount.put("O", new Fraction(waterCount, 1));
+            }
         }
 
-        if (temp.containsKey("O")) {
-            temp.put("O", temp.get("O").plus(waterCount));
-        } else {
-            temp.put("O", new Fraction(waterCount, 1));
-        }
-
-        return temp;
+        return savedAtomCount;
     }
 
     @Override

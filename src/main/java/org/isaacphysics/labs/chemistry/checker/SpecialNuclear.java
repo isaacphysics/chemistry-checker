@@ -66,6 +66,11 @@ public abstract class SpecialNuclear extends Nuclear {
     private Fraction chargeFrac;
 
     /**
+     * Saved atom count.
+     */
+    private static HashMap<String, Fraction> atomCount = new HashMap<>();
+
+    /**
      * Constructor method of SpecialNuclear.
      * @param mass Actual mass number
      * @param atom Actual atomic number
@@ -105,7 +110,7 @@ public abstract class SpecialNuclear extends Nuclear {
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return new HashMap<>();
+        return atomCount;
     }
 
     @Override

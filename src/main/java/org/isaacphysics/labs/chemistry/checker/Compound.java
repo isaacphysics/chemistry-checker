@@ -49,6 +49,11 @@ public final class Compound extends Molecule {
     private BracketType bracketType;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor function of Compound.
      * @param m A molecule that is involved in the compound
      */
@@ -151,20 +156,24 @@ public final class Compound extends Molecule {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> h = new HashMap<>();
+        if (savedAtomCount == null) {
+            savedAtomCount = new HashMap<>();
 
-        for (Molecule m : groups) {
+            for (Molecule m : groups) {
 
-            for (String element : m.getAtomCount().keySet()) {
+                for (String element : m.getAtomCount().keySet()) {
 
-                if (!h.containsKey(element)) {
-                    h.put(element, m.getAtomCount().get(element).times(number));
-                } else {
-                    h.put(element, h.get(element).plus(m.getAtomCount().get(element).times(number)));
+                    if (!savedAtomCount.containsKey(element)) {
+                        savedAtomCount.put(element, m.getAtomCount().get(element).times(number));
+                    } else {
+                        savedAtomCount.put(element,
+                                savedAtomCount.get(element).plus(m.getAtomCount().get(element).times(number)));
+                    }
                 }
             }
         }
-        return h;
+
+        return savedAtomCount;
     }
 
 /*    public Integer getCharge()

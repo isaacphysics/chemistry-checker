@@ -18,6 +18,11 @@ public final class IonChain extends Formula {
     private ArrayList<Formula> formulas;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor function of IonChain.
      * @param f First formula in IonChain.
      */
@@ -59,19 +64,22 @@ public final class IonChain extends Formula {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> h = new HashMap<>();
+        if (savedAtomCount == null) {
+            savedAtomCount = new HashMap<>();
 
-        for (Formula f : formulas) {
-            for (String e : f.getAtomCount().keySet()) {
+            for (Formula f : formulas) {
+                for (String e : f.getAtomCount().keySet()) {
 
-                if (!h.containsKey(e)) {
-                    h.put(e, f.getAtomCount().get(e));
-                } else {
-                    h.put(e, h.get(e).plus(f.getAtomCount().get(e)));
+                    if (!savedAtomCount.containsKey(e)) {
+                        savedAtomCount.put(e, f.getAtomCount().get(e));
+                    } else {
+                        savedAtomCount.put(e, savedAtomCount.get(e).plus(f.getAtomCount().get(e)));
+                    }
                 }
             }
         }
-        return h;
+
+        return savedAtomCount;
     }
 
     @Override

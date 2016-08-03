@@ -42,6 +42,11 @@ public final class Expression implements Countable {
     private int dotId;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount;
+
+    /**
      * Construction method for Expression.
      * @param t Term involved in expression.
      */
@@ -119,21 +124,22 @@ public final class Expression implements Countable {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> h = new HashMap<>();
+        if (savedAtomCount == null) {
+            savedAtomCount = new HashMap<>();
 
-        for (AbstractTerm t : terms) {
-            for (String e : t.getAtomCount().keySet()) {
+            for (AbstractTerm t : terms) {
+                for (String e : t.getAtomCount().keySet()) {
+                    if (!savedAtomCount.containsKey(e)) {
+                        savedAtomCount.put(e, t.getAtomCount().get(e));
+                    } else {
+                        savedAtomCount.put(e, savedAtomCount.get(e).plus(t.getAtomCount().get(e)));
+                    }
 
-                if (!h.containsKey(e)) {
-                    h.put(e, t.getAtomCount().get(e));
-                } else {
-                    h.put(e, h.get(e).plus(t.getAtomCount().get(e)));
                 }
-
             }
         }
 
-        return h;
+        return savedAtomCount;
     }
 
     @Override

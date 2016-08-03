@@ -30,6 +30,11 @@ public final class ExpressionStatement extends Statement implements Countable {
     private Expression expr;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor method of ExpressionStatement.
      * @param e Expression involved in the statement.
      */
@@ -66,7 +71,10 @@ public final class ExpressionStatement extends Statement implements Countable {
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return expr.getAtomCount();
+        if (savedAtomCount == null) {
+            savedAtomCount = expr.getAtomCount();
+        }
+        return savedAtomCount;
     }
 
     @Override

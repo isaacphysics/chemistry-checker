@@ -31,6 +31,11 @@ public final class NuclearExpressionStatement extends Statement implements Count
     private Expression expr;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor method of ExpressionStatement.
      * @param e Expression involved in the statement.
      */
@@ -68,7 +73,11 @@ public final class NuclearExpressionStatement extends Statement implements Count
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return expr.getAtomCount();
+        if (savedAtomCount == null) {
+            savedAtomCount = expr.getAtomCount();
+        }
+
+        return savedAtomCount;
     }
 
     @Override
@@ -126,7 +135,7 @@ public final class NuclearExpressionStatement extends Statement implements Count
      * @return Sum of atomic numbers in nuclear expression.
      * @throws NuclearException Some terms are not nuclear.
      */
-    public Fraction getAtomicCount() throws NuclearException {
+    Fraction getAtomicCount() throws NuclearException {
         return expr.getAtomicCount();
     }
 
@@ -136,7 +145,7 @@ public final class NuclearExpressionStatement extends Statement implements Count
      * @return Sum of mass numbers in nuclear expression.
      * @throws NuclearException Some terms are not nuclear.
      */
-    public Fraction getMassCount() throws NuclearException {
+    Fraction getMassCount() throws NuclearException {
         return expr.getMassCount();
     }
 

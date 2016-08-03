@@ -257,7 +257,7 @@ public final class RunParser {
             }
             return mapper.writeValueAsString(node);
         } catch (Exception e) {
-            return "";
+            return "{\"error\" : true}";
         }
     }
 

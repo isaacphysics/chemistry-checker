@@ -54,7 +54,7 @@ import java_cup.runtime.Symbol;
     \^\{[1-9][0-9]*[+-]\}           { String s = yytext();
                                         s = s.charAt(s.length() - 2) + s.substring(2, s.length() - 2);
                                         // System.out.println(s); // s = correctly formatted integer
-                                        return new Symbol(sym.CHARGE, new Integer(s)); }
+                                        return new Symbol(sym.CHARGE, Integer.parseInt(s)); }
     \^\{"+"\}                       { return new Symbol(sym.CHARGE, 1); }
     \^\{"-"\}                       { return new Symbol(sym.CHARGE, -1); }
 
@@ -65,23 +65,23 @@ import java_cup.runtime.Symbol;
     \^\{([1-9][0-9]*|0)\}           { String s = yytext();
                                         s = s.substring(2, s.length() - 1);
                                         //System.out.println(s); // s = correctly formatted integer
-                                        return new Symbol(sym.SUP, new Integer(s)); }
+                                        return new Symbol(sym.SUP, Integer.parseInt(s)); }
     "_{"([1-9][0-9]*|0)\}
                                     { String s = yytext();
                                         s = s.substring(2, s.length() - 1);
                                         //System.out.println(s); // s = correctly formatted integer
-                                        return new Symbol(sym.SUB, new Integer(s)); }
+                                        return new Symbol(sym.SUB, Integer.parseInt(s)); }
 
     "_{-"[1-9][0-9]*\}              { String s = yytext();
                                         s = s.substring(2, s.length() - 1);
                                         //System.out.println(s); // s = correctly formatted integer
-                                        return new Symbol(sym.SUB, new Integer(s)); }
+                                        return new Symbol(sym.SUB, Integer.parseInt(s)); }
 
     /**
      * Numbers without leading zeroes.
      * Usually used for coefficients in chemical formulas.
      */
-    [1-9][0-9]*                     { return new Symbol(sym.NUMBER, new Integer(yytext())); }
+    [1-9][0-9]*                     { return new Symbol(sym.NUMBER, Integer.parseInt(yytext())); }
 
     /**
      * Fractions. Scary things with ugly regex that should not be used as coefficients.
@@ -91,9 +91,10 @@ import java_cup.runtime.Symbol;
                                     { String s = yytext();
                                         s = s.substring(6, s.length() - 1);
                                         String[] twoPart = s.split("\\}\\{");
-                                        System.out.printf("Left: %s\nRight: %s\n", twoPart[0], twoPart[1]);
+                                        // System.out.printf("Left: %s\nRight: %s\n", twoPart[0], twoPart[1]);
                                         return new Symbol(sym.FRACTION, new
-                                                        FracCoeff(new Integer(twoPart[0]), new Integer(twoPart[1]))); }
+                                                        FracCoeff(Integer.parseInt(twoPart[0]),
+                                                        Integer.parseInt(twoPart[1]))); }
 
     /**
      * All possible state symbols.
@@ -118,7 +119,7 @@ import java_cup.runtime.Symbol;
      */
     "."[\s]*[1-9][0-9]*[\s]*H2O     { String s = yytext(); s = s.replaceAll("\\s+","");
                                       s = s.substring(1, s.length() - 3);
-                                      return new Symbol(sym.WATER, new Integer(s)); }
+                                      return new Symbol(sym.WATER, Integer.parseInt(s)); }
     "."[\s]*H2O                     { return new Symbol(sym.WATER, 1); }
 
     /**

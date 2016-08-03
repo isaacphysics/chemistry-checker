@@ -29,6 +29,11 @@ public final class Isotope extends Nuclear {
      */
     private static HashMap<String, Integer> periodicTable;
 
+    /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount;
+
     static {
 
         periodicTable = new HashMap<>();
@@ -94,7 +99,10 @@ public final class Isotope extends Nuclear {
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return formula.getAtomCount();
+        if (savedAtomCount == null) {
+            savedAtomCount = formula.getAtomCount();
+        }
+        return savedAtomCount;
     }
 
     @Override

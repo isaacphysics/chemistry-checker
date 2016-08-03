@@ -29,6 +29,11 @@ public final class ChemicalElectron extends Formula {
     private static final Fraction ChargeFrac = new Fraction(Charge, 1);
 
     /**
+     * Saved atom count.
+     */
+    private static HashMap<String, Fraction> savedAtomCount = new HashMap<>();
+
+    /**
      * Constructor function of ChemicalElectron.
      */
     public ChemicalElectron() {
@@ -62,7 +67,7 @@ public final class ChemicalElectron extends Formula {
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return new HashMap<>();
+        return savedAtomCount;
     }
 
     @Override

@@ -70,6 +70,11 @@ public final class Term extends AbstractTerm {
     private PhysicalState state;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomCount = null;
+
+    /**
      * Constructor function of Term.
      * @param n Coefficient of term
      * @param m Chemical formula involved in the term
@@ -142,13 +147,15 @@ public final class Term extends AbstractTerm {
     @Override
     public HashMap<String, Fraction> getAtomCount() {
 
-        HashMap<String, Fraction> h = new HashMap<>();
+        if (savedAtomCount == null) {
+            savedAtomCount = new HashMap<>();
 
-        for (String element: formula.getAtomCount().keySet()) {
-            h.put(element, formula.getAtomCount().get(element).times(coefficient.toFraction()));
+            for (String element: formula.getAtomCount().keySet()) {
+                savedAtomCount.put(element, formula.getAtomCount().get(element).times(coefficient.toFraction()));
+            }
         }
 
-        return h;
+        return savedAtomCount;
     }
 
     @Override

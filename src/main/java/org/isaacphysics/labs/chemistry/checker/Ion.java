@@ -36,6 +36,11 @@ public final class Ion extends Formula {
     private Integer charge;
 
     /**
+     * Saved atom count.
+     */
+    private HashMap<String, Fraction> savedAtomicCount = null;
+
+    /**
      * Constructor function of Ion.
      *
      * @param m Molecule involved for this ion.
@@ -55,7 +60,10 @@ public final class Ion extends Formula {
 
     @Override
     public HashMap<String, Fraction> getAtomCount() {
-        return molecule.getAtomCount();
+        if (savedAtomicCount == null) {
+            savedAtomicCount = molecule.getAtomCount();
+        }
+        return savedAtomicCount;
     }
 
     @Override
