@@ -302,6 +302,7 @@ public final class RunParser {
      */
     public static String check(final String testString, final String targetString) throws Exception {
 
+        System.out.println("Parse Expressions");
         @SuppressWarnings("unchecked, deprecation")
             ArrayList<Statement> testStatements = (ArrayList<Statement>) new ChemistryParser(
                     new ChemistryLexer(new StringReader(testString))).parse().value;
@@ -320,11 +321,13 @@ public final class RunParser {
         node.put("targetString", targetString);
         node.put("test", testStatement.toString());
         node.put("target", targetStatement.toString());
+        System.out.println("Parsed target: '" + targetStatement.toString() + "'");
+        System.out.println("Parsed test: '" + testStatement.toString() + "'");
 
         if (targetStatement.containsError()) {
-            System.err.println("Trusted string contains error!");
-            System.err.println("\t\"" + targetString + "\"");
-            System.err.println("\t\"" + targetStatement.toString() + "\"");
+            System.out.println("ERROR: Trusted string contains error!");
+            System.out.println("\t\"" + targetString + "\"");
+            System.out.println("\t\"" + targetStatement.toString() + "\"");
         }
         node.put("containsError", testStatement.containsError());
         node.put("equal", targetStatement.equals(testStatement));
@@ -332,6 +335,10 @@ public final class RunParser {
         node.put("expectedType", targetStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
         node.put("receivedType", testStatement.getClass().getSimpleName().replace("Statement", "").toLowerCase());
         node.put("weaklyEquivalent", targetStatement.weaklyEquivalent(testStatement));
+        System.out.println("Equality:");
+        System.out.println("\tEqual: " + node.get("equal"));
+        System.out.println("\tWeakly equivalent: " + node.get("weaklyEquivalent"));
+        System.out.println("\tContains Error: " + node.get("containsError"));
 
         if (targetStatement instanceof ExpressionStatement) {
 

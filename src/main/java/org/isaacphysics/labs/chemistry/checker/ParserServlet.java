@@ -66,7 +66,7 @@ public class ParserServlet extends HttpServlet {
                 testMhchemExpression = req.get("test");
 
                 // Debug print
-                System.out.println("Parsed: " + testMhchemExpression);
+                System.out.println("Input string: " + testMhchemExpression);
 
                 String result = RunParser.parseFromString(testMhchemExpression);
 
@@ -81,6 +81,7 @@ public class ParserServlet extends HttpServlet {
 
             } else {
                 response.getWriter().println("{\"error\" : \"No input!\"}");
+                response.setStatus(400);
                 System.out.println("ERROR: No input!");
             }
 

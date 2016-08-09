@@ -57,7 +57,7 @@ public class CheckerServlet extends HttpServlet {
 
             if (req.containsKey("description")) {
                 System.out.println(req.get("description"));
-                System.out.println("==================================================");
+                System.out.println("--------------------------------------------------");
             }
 
             if (req.containsKey("target") && req.containsKey("test")) {
@@ -67,22 +67,34 @@ public class CheckerServlet extends HttpServlet {
                 String testMhchemExpresion = req.get("test");
 
                 // Debug print
-                System.out.println("Parsed target: " + targetMhchemExpression);
-                System.out.println("Parsed test: " + testMhchemExpresion);
+                System.out.println("Target string: '" + targetMhchemExpression + "'");
+                System.out.println("Test string: '" + testMhchemExpresion + "'");
 
                 // Return
-                response.getWriter().println(RunParser.check(testMhchemExpresion, targetMhchemExpression));
+                String result = RunParser.check(testMhchemExpresion, targetMhchemExpression);
+                response.getWriter().println(result);
 
             } else {
-                response.getWriter().println("{\"error\" : \"No input!\"}");
-                System.out.println("ERROR: No input!");
+                if (req.containsKey("target")) {
+                    System.out.println("Target string: '" + req.get("target") + "'");
+                } else {
+                    System.out.println("Target string: ''");
+                }
+                if (req.containsKey("test")) {
+                    System.out.println("Test string: '" + req.get("test") + "'");
+                } else {
+                    System.out.println("Test string: ''");
+                }
+                response.getWriter().println("{\"error\" : \"Bad input!\"}");
+                response.setStatus(400);
+                System.out.println("ERROR: Bad input!");
             }
 
 
         } catch (Exception e) {
 
             // Got an exception when checking expressions.
-            response.getWriter().println("{\"error\" : true}");
+            response.getWriter().println("{\"error\" : \"" + e.getClass().getSimpleName() + "\"}");
             System.out.println("ERROR: Parser cannot parse input!");
 
         }
