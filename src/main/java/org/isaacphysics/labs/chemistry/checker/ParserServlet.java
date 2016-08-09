@@ -50,6 +50,7 @@ public class ParserServlet extends HttpServlet {
         }
 
         ObjectMapper mapper = new ObjectMapper();
+        String testMhchemExpression = null;
 
         try {
             @SuppressWarnings("unchecked")
@@ -62,7 +63,7 @@ public class ParserServlet extends HttpServlet {
 
             if (req.containsKey("test")) {
                 // Get mhchem expressions from JSON object
-                String testMhchemExpression = req.get("test");
+                testMhchemExpression = req.get("test");
 
                 // Debug print
                 System.out.println("Parsed: " + testMhchemExpression);
@@ -86,7 +87,9 @@ public class ParserServlet extends HttpServlet {
         } catch (Exception e) {
 
             // Got an exception when checking expressions.
-            response.getWriter().println("{\"error\" : \"Can't parse input!\"}");
+            response.getWriter().println("{\"error\" : \"Can't parse input!\", "
+                    + "\"input\": \"" + testMhchemExpression + "\"}");
+            
             System.out.println("ERROR: Parser cannot parse input!");
 
         }

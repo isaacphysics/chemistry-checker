@@ -64,7 +64,7 @@ class Fraction {
             num /= gcd;
             denom /= gcd;
         } else if (num < 0) {
-            Integer gcd = gcd(-num, denom);
+            Integer gcd = gcd(Math.multiplyExact(-1, num), denom);
             num /= gcd;
             denom /= gcd;
         } else {
@@ -106,7 +106,7 @@ class Fraction {
      * @return The product of two fractions, simplified.
      */
     Fraction times(final Fraction f) {
-        return new Fraction(this.num * f.num, this.denom * f.denom);
+        return new Fraction(Math.multiplyExact(this.num, f.num), Math.multiplyExact(this.denom, f.denom));
     }
 
     /**
@@ -116,7 +116,7 @@ class Fraction {
      * @return The product of the fraction and integer, simplified.
      */
     Fraction times(final Integer n) {
-        return new Fraction(n * this.num, this.denom);
+        return new Fraction(Math.multiplyExact(n, this.num), this.denom);
     }
 
     /**
@@ -126,7 +126,8 @@ class Fraction {
      * @return The sum of two fractions, simplified.
      */
     Fraction plus(final Fraction f) {
-        return new Fraction(this.num * f.denom + this.denom * f.num, this.denom * f.denom);
+        return new Fraction(Math.addExact(Math.multiplyExact(this.num, f.denom), Math.multiplyExact(this.denom, f.num)),
+                Math.multiplyExact(this.denom, f.denom));
     }
 
     /**
@@ -136,6 +137,6 @@ class Fraction {
      * @return The sum of the fraction and integer, simplified.
      */
     Fraction plus(final Integer n) {
-        return new Fraction(this.num + this.denom * n, this.denom);
+        return new Fraction(Math.addExact(this.num, Math.multiplyExact(this.denom, n)), this.denom);
     }
 }
