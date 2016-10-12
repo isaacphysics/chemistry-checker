@@ -90,6 +90,7 @@ public class CheckerServlet extends HttpServlet {
                 System.out.println("ERROR: Bad input!");
             }
 
+            response.setContentType("application/json");
 
         } catch (Exception e) {
 

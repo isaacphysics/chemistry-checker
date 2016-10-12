@@ -56,6 +56,7 @@ public class FormParserServlet extends HttpServlet {
             response.getWriter().println("{\"error\" : \"No input!\"}");
             System.out.println("ERROR: No input!");
         }
+        response.setContentType("application/json");
         System.out.println("==================================================\n");
     }
 

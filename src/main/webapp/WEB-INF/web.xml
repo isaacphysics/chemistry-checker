@@ -36,4 +36,14 @@
         <url-pattern>/parse_form</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Status</servlet-name>
+        <servlet-class>org.isaacphysics.labs.chemistry.checker.StatusServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Status</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
 </web-app>

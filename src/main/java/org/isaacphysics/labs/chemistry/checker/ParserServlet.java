@@ -84,6 +84,7 @@ public class ParserServlet extends HttpServlet {
                 response.setStatus(400);
                 System.out.println("ERROR: No input!");
             }
+            response.setContentType("application/json");
 
         } catch (Exception e) {
 
