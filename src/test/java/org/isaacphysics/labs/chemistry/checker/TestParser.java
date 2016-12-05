@@ -35,18 +35,20 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestParser
 {
-    private String simpleMolecule = "H2SO4;";
-    private String simpleMoleculeNumber = "2NO2;";
-    private String simpleMoleculeState = "NH3(aq);";
-    private String diffNotationAndMoleculeCharge = "C_{2}O_{4}H^{+};";
-    private String expressionStatement = "C2O4H2 + H2O2";
-    private String equationStatement1 = "8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> " +
+    private final String simpleMolecule = "H2SO4;";
+    private final String simpleMoleculeNumber = "2NO2;";
+    private final String simpleMoleculeState = "NH3(aq);";
+    private final String diffNotationAndMoleculeCharge = "C_{2}O_{4}H^{+};";
+    private final String expressionStatement = "C2O4H2 + H2O2";
+    private final String equationStatement1 = "8H^{+} + Cr2O7^{2-}(aq) + 3CH3CH2CH2OH(l) -> " +
                                             "2Cr^{3+}(aq) + 3CH3CH2CHO(l) + 7H2O(l);";
-    private String equationStatement2 = "3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> " +
+    private final String equationStatement2 = "3CH3CH2CH2OH(l) + Cr2O7^{2-}(aq) + 8H^{+} -> " +
                                             "3CH3CH2CHO(l) + 2Cr^{3+}(aq) + 7H2O(l);";
-    private String syntaxError = "2H2S(O4;";
-    private String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6;";
-    private String nestedGroupMolecule2 = "((((((((((OH2)2)2)2)2)2)2)2)2)2)2";
+    private final String syntaxError = "2H2S(O4;";
+    private final String chargedElectron = "\\electron^{-}";
+    private final String badlyChargedElectron = "\\electron^{-2}";
+    private final String nestedGroupMolecule = "MgNaAl5((Si2O4)2O2)3(OH)6;";
+    private final String nestedGroupMolecule2 = "((((((((((OH2)2)2)2)2)2)2)2)2)2)2";
 
     /**
      * Invokes ChemicalParser to parse the argument string.
@@ -681,6 +683,25 @@ public class TestParser
 
         // Expect both statements to be equivalent.
         assertTrue("Expected alphaDecay == sameDecay.", first.equals(second));
+    }
+
+    /**
+     * Test out charges on electrons.
+     * @throws Exception
+     */
+    @Test
+    public void testChargedElectrons() throws Exception {
+        ArrayList<Statement> statements1 = stringParser(chargedElectron);
+        assertTrue("Expected 1 statement, got " + statements1.size(), statements1.size() == 1);
+
+        Statement s1 = statements1.get(0);
+        assertFalse("Expected successful parse of electron with charge: " + s1.toString(), s1.containsError());
+
+        ArrayList<Statement> statements2 = stringParser(badlyChargedElectron);
+        assertTrue("Expected 1 statement, got " + statements2.size(), statements2.size() == 1);
+
+        Statement s2 = statements2.get(0);
+        assertTrue("Expected parse error of electron with charge != to '-' : " + s2.toString(), s2.containsError());
     }
 
 }

@@ -136,10 +136,11 @@ import java_cup.runtime.Symbol;
     "]"                             { return new Symbol(sym.RSQUARE); }
 
     /**
-     * Syntactic sugar for electron.
+     * Syntactic sugar for (chemical) electrons.
      * Physics students seem to like this.
      */
     "e^{-}"                         { return new Symbol(sym.ELECTRON); }
+    \\"electron^{-}"                { return new Symbol(sym.ELECTRON); }
 
     /**
      * Special nuclear particles:
