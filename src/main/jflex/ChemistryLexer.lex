@@ -164,6 +164,9 @@ import java_cup.runtime.Symbol;
     /* Comments */
     {Comment}                       { /* ignore */ }
 
+    /* LaTeX No-Op */
+    \{\}                            { /* ignore */ }
+
     /**
      * Error capturing symbol.
      */

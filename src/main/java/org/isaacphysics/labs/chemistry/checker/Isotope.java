@@ -121,7 +121,7 @@ public final class Isotope extends Nuclear {
 
     @Override
     public String toString() {
-        return "^{" + mass.toString() + "}_{" + atom.toString() + "}" + formula.toString();
+        return "{}^{" + mass.toString() + "}_{" + atom.toString() + "}" + formula.toString();
     }
 
     @Override
