@@ -1,6 +1,7 @@
 target/
 .idea/
 .vagrant
+*.iml
 
 # Suggested Maven stuff to ignore
 pom.xml.tag
