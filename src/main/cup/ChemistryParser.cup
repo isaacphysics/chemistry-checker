@@ -169,6 +169,10 @@ nuclear         ::=   SUP:sup SUB:sub ALPHA                 {: RESULT = new Alph
                     | SUB:sub SUP:sup ALPHA                 {: RESULT = new AlphaParticle(sup, sub); :}
                     | SUP:sup SUB:sub BETA                  {: RESULT = new BetaParticle(sup, sub); :}
                     | SUB:sub SUP:sup BETA                  {: RESULT = new BetaParticle(sup, sub); :}
+
+                    // In lieu of anything more sophisticated yet, allow gamma by itself:
+                    | GAMMA                                 {: RESULT = new GammaRay(0, 0); :}
+
                     | SUP:sup SUB:sub GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
                     | SUB:sub SUP:sup GAMMA                 {: RESULT = new GammaRay(sup, sub); :}
                     | SUP:sup SUB:sub NEUTRINO              {: RESULT = new Neutrino(sup, sub); :}

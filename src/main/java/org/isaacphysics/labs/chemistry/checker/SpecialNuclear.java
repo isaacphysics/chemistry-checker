@@ -118,7 +118,7 @@ public abstract class SpecialNuclear extends Nuclear {
 
     @Override
     public String toString() {
-        return "^{" + actualMass + "}" + "_{" + actualAtom + "}" + "\\" + syntax;
+        return "{}^{" + actualMass + "}" + "_{" + actualAtom + "}" + "\\" + syntax;
     }
 
     @Override
