@@ -11,11 +11,11 @@
 import sys
 
 if len(sys.argv) < 2:
-    print "No input file!"
+    print("No input file!")
     raise SystemExit
 else:
     fname = str(sys.argv[1])
-    print fname
+    print(fname)
 
 f = open(fname, 'r')
 filedata = f.read()
